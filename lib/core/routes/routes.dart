@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen.dart';
 import 'package:listme/crud/ui/home_screen.dart';
 
@@ -24,8 +23,8 @@ class AppRoutes {
           path: '/crudScreen',
           name: crudScreen,
           builder: (context, state) {
-            Lista extra = state.extra as Lista;
-            return CrudScreen(lista: extra);
+            String extra = state.extra as String;
+            return CrudScreen(id: extra);
           }),
     ],
   );
