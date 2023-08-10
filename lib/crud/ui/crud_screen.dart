@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:animate_do/animate_do.dart';
 import 'package:animated_list_plus/animated_list_plus.dart';
 import 'package:animated_list_plus/transitions.dart';
 import 'package:flutter/material.dart';
@@ -65,8 +66,6 @@ class _CrudScreenState extends State<CrudScreen> {
         body: ValueListenableBuilder(
           valueListenable: _box.listenable(),
           builder: (context, Box<Lista> box, _) {
-            //var lista = box.get(widget.id)!;
-
             if (_dbList.items.isEmpty) {
               return const Center(
                 child: Text("No contacts"),
@@ -116,19 +115,19 @@ class _CrudScreenState extends State<CrudScreen> {
                         color: color,
                         elevation: elevation!,
                         type: MaterialType.transparency,
-                        child: ListTile(
-                          tileColor: Colors.blue,
-                          title: Text(item.content),
-                          // The child of a Handle can initialize a drag/reorder.
-                          // This could for example be an Icon or the whole item itself. You can
-                          // use the delay parameter to specify the duration for how long a pointer
-                          // must press the child, until it can be dragged.
-                          trailing: const Handle(
-                            delay: Duration(milliseconds: 100),
-                            child: Icon(
-                              Icons.drag_handle_rounded,
-                              color: Colors.grey,
-                            ),
+                        child: Handle(
+                          delay: const Duration(milliseconds: 150),
+                          child: _ItemTile(
+                            text: item.content,
+                            isDone: item.isDone,
+                            onTapIsDone: () {
+                              item.isDone = !item.isDone;
+                              _dbList.save();
+                            },
+                            onTapClose: () {
+                              _dbList.items.remove(item);
+                              _dbList.save();
+                            },
                           ),
                         ),
                       ),
@@ -139,5 +138,63 @@ class _CrudScreenState extends State<CrudScreen> {
             );
           },
         ));
+  }
+}
+
+class _ItemTile extends StatelessWidget {
+  const _ItemTile({
+    required this.onTapIsDone,
+    required this.onTapClose,
+    required this.text,
+    required this.isDone,
+  });
+
+  final VoidCallback onTapClose;
+  final VoidCallback onTapIsDone;
+  final String text;
+  final bool isDone;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.all(4),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      decoration: BoxDecoration(
+        color: Colors.cyan.shade300,
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: () => onTapIsDone(),
+            icon: isDone ? const Icon(Icons.check_circle_rounded) : const Icon(Icons.circle_outlined),
+            padding: EdgeInsets.zero,
+            visualDensity: VisualDensity.compact,
+            iconSize: 20,
+          ),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                //color: isDone ? Colors.grey.shade500 : Colors.grey,
+                decoration: isDone ? TextDecoration.lineThrough : TextDecoration.none,
+                decorationColor: isDone ? Colors.grey.shade500 : Colors.grey,
+              ),
+            ),
+          ),
+          Visibility(
+            visible: isDone,
+            child: IconButton(
+              onPressed: () => onTapClose(),
+              padding: EdgeInsets.zero,
+              visualDensity: VisualDensity.compact,
+              iconSize: 20,
+              icon: const Icon(Icons.close_rounded),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
