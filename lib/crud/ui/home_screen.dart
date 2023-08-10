@@ -16,23 +16,30 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Box<Lista> _box = Hive.box(AppConstants.listsCollection);
   late Uuid _uuid;
+  late GlobalKey<AnimatedListState> _listKey;
+  final Duration _duration1 = const Duration(milliseconds: 400);
+  final Duration _duration2 = const Duration(milliseconds: 600);
 
   @override
   void initState() {
     super.initState();
     _box = Hive.box<Lista>(AppConstants.listsCollection);
     _uuid = const Uuid();
+    _listKey = GlobalKey<AnimatedListState>();
   }
 
-  void createNewList() {
+  void createNewList() async {
     final emptyList = Lista(
       title: "lista vacía",
       creationDate: DateTime.now(),
       items: [],
       id: _uuid.v4(),
     );
-    _box.put(emptyList.id, emptyList);
-    context.pushNamed(AppRoutes.crudScreen, extra: emptyList.id);
+    _box.put(emptyList.id, emptyList); // agregar a lal db
+    _listKey.currentState!.insertItem(0, duration: _duration1); // agregar a la lista animada
+    await Future.delayed(_duration2).then((value) {
+      context.pushNamed(AppRoutes.crudScreen, extra: emptyList.id); // esperar para que se vea la animacion y navegar
+    });
   }
 
   @override
@@ -65,32 +72,50 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 return Expanded(
-                  child: ListView.builder(
-                    itemCount: listas.length,
+                  child: AnimatedList(
+                    key: _listKey,
                     physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
+                    initialItemCount: listas.length,
+                    itemBuilder: (context, index, animation) {
                       var key = listas.keys.toList()[index];
                       var currentList = listas.get(key)!;
 
-                      List<String> subTitle = [];
-                      if (currentList.items.isNotEmpty) {
-                        for (var element in currentList.items) {
-                          if (element.content.length > 12) {
-                            subTitle.add('${element.content.substring(0, 12)}...');
-                          } else {
-                            subTitle.add(element.content);
-                          }
-                        }
-                      }
-
-                      return _ListTile(
+                      var deleteWidget = _ListTile(
                         titleText: currentList.title,
-                        subTitleText: subTitle.isEmpty ? 'lista vacía' : subTitle.toString(),
-                        onTap: () => context.pushNamed(AppRoutes.crudScreen, extra: key),
+                        subTitleText: "20-06-2023",
+                        onTap: () {},
                         keyId: currentList.id,
-                        onTapClose: () => currentList.delete(),
+                        onRemove: () {},
                       );
+
+                      return FadeTransition(
+                          key: UniqueKey(),
+                          opacity: animation,
+                          child: SizeTransition(
+                            key: UniqueKey(),
+                            sizeFactor: animation,
+                            child: _ListTile(
+                              titleText: currentList.title,
+                              subTitleText: "20-06-2023",
+                              onTap: () => context.pushNamed(AppRoutes.crudScreen, extra: key),
+                              keyId: currentList.id,
+                              onRemove: () {
+                                setState(() {
+                                  _listKey.currentState!.removeItem(index, (context, animation) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: SizeTransition(
+                                        sizeFactor: animation,
+                                        child: deleteWidget,
+                                      ),
+                                    );
+                                  });
+                                  currentList.delete();
+                                });
+                              },
+                            ),
+                          ));
                     },
                   ),
                 );
@@ -109,25 +134,26 @@ class _ListTile extends StatelessWidget {
     required this.subTitleText,
     required this.onTap,
     required this.keyId,
-    required this.onTapClose,
+    required this.onRemove,
   });
 
   final String titleText;
   final String subTitleText;
   final VoidCallback onTap;
   final String keyId;
-  final VoidCallback onTapClose;
+  final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context) {
     final style = Theme.of(context).textTheme;
+    final double widthScreen = MediaQuery.of(context).size.width;
 
     // dissmiss
     return InkWell(
       onTap: () => onTap(),
       child: Container(
         height: 75,
-        width: double.infinity,
+        width: widthScreen,
         margin: const EdgeInsets.all(4),
         //padding: const EdgeInsets.all(10),
         decoration: const BoxDecoration(
@@ -136,6 +162,7 @@ class _ListTile extends StatelessWidget {
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(width: 10),
             const _ProgressWidget(),
@@ -146,17 +173,21 @@ class _ListTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    titleText,
-                    maxLines: 2,
-                    overflow: TextOverflow.fade,
-                    style: style.bodyLarge,
+                  Flexible(
+                    child: Text(
+                      titleText,
+                      maxLines: 2,
+                      overflow: TextOverflow.fade,
+                      style: style.bodyLarge,
+                    ),
                   ),
-                  Text(
-                    subTitleText,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: style.bodySmall,
+                  Flexible(
+                    child: Text(
+                      subTitleText,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: style.bodySmall,
+                    ),
                   ),
                 ],
               ),
@@ -165,7 +196,7 @@ class _ListTile extends StatelessWidget {
             Align(
               alignment: Alignment.topRight,
               child: IconButton(
-                onPressed: () => onTapClose(),
+                onPressed: () => onRemove(),
                 padding: EdgeInsets.zero,
                 visualDensity: VisualDensity.compact,
                 iconSize: 20,

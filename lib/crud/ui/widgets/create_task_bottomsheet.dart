@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 void createTaskBottomSheet({
   required BuildContext context,
@@ -9,7 +10,7 @@ void createTaskBottomSheet({
 }) {
   showModalBottomSheet<dynamic>(
     isDismissible: true,
-    showDragHandle: enableDrag,
+    //showDragHandle: enableDrag,
     enableDrag: enableDrag,
     context: context,
     isScrollControlled: true,
@@ -24,16 +25,15 @@ void createTaskBottomSheet({
       return SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Stack(
+          child: Column(
             children: [
-              child, /////////// <- child
               Visibility(
                 visible: showClose,
                 child: Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
                     padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
-                    onPressed: onTapClose != null ? () => onTapClose() : null,
+                    onPressed: onTapClose != null ? () => onTapClose() : () => context.pop(),
                     icon: const Icon(
                       Icons.close_rounded,
                       color: Colors.grey,
@@ -41,6 +41,7 @@ void createTaskBottomSheet({
                   ),
                 ),
               ),
+              child, /////////// <- child
             ],
           ),
         ),

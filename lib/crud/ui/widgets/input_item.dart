@@ -1,34 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-// class InputItem extends StatelessWidget {
-//   const InputItem({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       mainAxisSize: MainAxisSize.min,
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.all(15.0),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               // FORM
-//               _CreateTaskForm(
-//                 onEditingComplete: () {},
-//               ),
-
-//               const SizedBox(height: 20),
-//             ],
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
+import 'package:listme/core/constants/typedefs.dart';
 
 class InputItem extends StatefulWidget {
   const InputItem({
@@ -96,8 +68,10 @@ class _InputItemState extends State<InputItem> {
             }
           },
           onEditingComplete: () {
-            widget.returnText(textController.text);
-            context.pop();
+            if (formStateKey.currentState!.validate()) {
+              widget.returnText(textController.text);
+              textController.clear();
+            }
           },
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
@@ -150,5 +124,3 @@ class _InputItemState extends State<InputItem> {
     );
   }
 }
-
-typedef ReturnText = void Function(String);
