@@ -18,7 +18,7 @@ class ItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.all(4),
+      margin: const EdgeInsets.symmetric(vertical: 2),
       padding: const EdgeInsets.symmetric(horizontal: 5),
       decoration: BoxDecoration(
         color: isDone ? Colors.cyan.shade300.withOpacity(0.5) : Colors.cyan.shade300,
@@ -39,12 +39,15 @@ class ItemTile extends StatelessWidget {
             iconSize: 20,
           ),
           Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                color: isDone ? Colors.black.withOpacity(0.5) : Colors.black,
-                decoration: isDone ? TextDecoration.lineThrough : TextDecoration.none,
-                decorationColor: isDone ? Colors.black.withOpacity(0.5) : Colors.black,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: isDone ? Colors.black.withOpacity(0.5) : Colors.black,
+                  decoration: isDone ? TextDecoration.lineThrough : TextDecoration.none,
+                  decorationColor: isDone ? Colors.black.withOpacity(0.5) : Colors.black,
+                ),
               ),
             ),
           ),

@@ -8,9 +8,9 @@ import 'package:listme/crud/models/item.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/widgets/create_task_bottomsheet.dart';
 import 'package:listme/crud/ui/widgets/input_item.dart';
+import 'package:listme/crud/ui/widgets/item_category_tile.dart';
 import 'package:listme/crud/ui/widgets/item_tile.dart';
 import 'package:listme/crud/ui/widgets/list_title.dart';
-import 'package:uuid/uuid.dart';
 
 class CrudScreen extends StatefulWidget {
   const CrudScreen({
@@ -25,20 +25,21 @@ class CrudScreen extends StatefulWidget {
 class _CrudScreenState extends State<CrudScreen> {
   late Box<Lista> _box;
   late Lista _dbList;
-  late Uuid _uuid;
+
+  final List<Map<String, dynamic>> categories = [];
 
   @override
   void initState() {
     super.initState();
     _box = Hive.box<Lista>(AppConstants.listsCollection);
     _dbList = _box.get(widget.id)!;
-    _uuid = const Uuid();
   }
 
   @override
   Widget build(BuildContext context) {
     var date = Helpers.longDateFormater(_dbList.creationDate);
-    final txtStyle = Theme.of(context).textTheme;
+    final TextTheme txtStyle = Theme.of(context).textTheme;
+    final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
       // APP BAR //
@@ -59,73 +60,101 @@ class _CrudScreenState extends State<CrudScreen> {
       ),
 
       // BODY //
-      body: Padding(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-        child: Column(
-          children: [
-            // TÍTULO //
-            ListTitle(
-              initialValue: _dbList.title,
-              onEditingComplete: (value) {
-                setState(() {
-                  _dbList.title = value;
-                  _dbList.save();
-                });
-              },
-            ),
-            Text(
-              date,
-              style: txtStyle.bodySmall!.copyWith(color: Colors.grey),
-            ),
-            const SizedBox(height: 20),
+        child: Expanded(
+          child: Column(
+            children: [
+              // TÍTULO //
+              ListTitle(
+                initialValue: _dbList.title,
+                onEditingComplete: (value) {
+                  setState(() {
+                    _dbList.title = value;
+                    _dbList.save();
+                  });
+                },
+              ),
+              Text(
+                date,
+                style: txtStyle.bodySmall!.copyWith(color: Colors.grey),
+              ),
+              const SizedBox(height: 20),
 
-            // COMIENZO LISTA //
-            ImplicitlyAnimatedReorderableList<Item>(
-              items: _dbList.items.reversed.toList(),
-              reverse: false,
-              shrinkWrap: true,
-              areItemsTheSame: (oldItem, newItem) => oldItem.id == newItem.id,
-              // Updates the underlying data when the list has been reordered.
-              onReorderFinished: (item, from, to, newItems) {
-                setState(() {
-                  _dbList.items
-                    ..clear()
-                    ..addAll(newItems.reversed.toList());
-                  _dbList.save();
-                });
-              },
-              // Each item must be wrapped in a Reorderable widget and have an unique key.
-              itemBuilder: (context, itemAnimation, item, index) {
-                return Reorderable(
-                  key: ValueKey(item),
-                  builder: (context, dragAnimation, inDrag) {
-                    // TODO con estos valores se puede cambiar el widget mientras es arrastrado
-                    // buscar mas info del widget "Reorderable"
-                    // print('aver dragAnimation: ${dragAnimation.status}');
-                    // print('aver inDrag: $inDrag');
-                    // if (inDrag) {
-                    //   return Text('IN DARG');
-                    // }
+              // COMIENZO LISTA //
+              ImplicitlyAnimatedReorderableList<Item>(
+                items: _dbList.items.reversed.toList(),
+                reverse: false,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                areItemsTheSame: (oldItem, newItem) => oldItem.id == newItem.id,
+                // Updates the underlying data when the list has been reordered.
+                onReorderFinished: (item, from, to, newItems) {
+                  setState(() {
+                    _dbList.items
+                      ..clear()
+                      ..addAll(newItems.reversed.toList());
+                    _dbList.save();
+                  });
+                },
+                // Each item must be wrapped in a Reorderable widget and have an unique key.
+                itemBuilder: (context, itemAnimation, item, index) {
+                  return Reorderable(
+                    key: ValueKey(item),
+                    builder: (context, dragAnimation, inDrag) {
+                      // TODO con estos valores se puede cambiar el widget mientras es arrastrado
+                      // buscar mas info del widget "Reorderable"
+                      // print('aver dragAnimation: ${dragAnimation.status}');
+                      // print('aver inDrag: $inDrag');
+                      // if (inDrag) {
+                      //   return Text('IN DARG');
+                      // }
 
-                    return SizeFadeTransition(
-                      sizeFraction: inDrag ? 1 : 0.2,
-                      curve: Curves.easeInOut,
-                      animation: itemAnimation,
-                      child: Handle(
-                        delay: const Duration(milliseconds: 100),
-                        child: ItemTile(
-                          onTapIsDone: () => onDone(item),
-                          onTapClose: () => onClose(item),
-                          text: item.content,
-                          isDone: item.isDone,
+                      // scroll or jump to the category
+
+                      // GlobalKey? itemKey;
+                      // if (item.isCategory) {
+                      //   itemKey = GlobalKey();
+                      //   categories.add({'name': item.content, 'gKey': itemKey});
+                      // }
+
+                      return SizeFadeTransition(
+                        sizeFraction: inDrag ? 1 : 0.2,
+                        curve: Curves.easeInOut,
+                        animation: itemAnimation,
+                        child: Handle(
+                          delay: const Duration(milliseconds: 250),
+                          child: item.isCategory
+                              ? ItemCategoryTile(
+                                  key: item.key,
+                                  text: item.content,
+                                  onTap: () async {
+                                    await Scrollable.ensureVisible(
+                                      item.key!.currentContext!,
+                                      curve: Curves.easeIn,
+                                      duration: const Duration(milliseconds: 300),
+                                    );
+                                    onInserNewItem(index);
+                                  },
+                                )
+                              : ItemTile(
+                                  onTapIsDone: () => onDone(item),
+                                  onTapClose: () => onClose(item),
+                                  text: item.content,
+                                  isDone: item.isDone,
+                                ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ],
+                      );
+                    },
+                  );
+                },
+              ),
+              SizedBox(
+                height: screenSize.height,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -145,16 +174,37 @@ class _CrudScreenState extends State<CrudScreen> {
     });
   }
 
-  void onCreateNewItem() {
+  void onInserNewItem(int index) {
     createTaskBottomSheet(
       context: context,
       showClose: true,
       child: InputItem(
-        returnText: (value) {
+        dbList: _dbList,
+        returnItem: (value) {
+          setState(() {
+            //debido a que la lista está invertida hay que calcular donde caerá el insert
+            var idxInsert = _dbList.items.length - (index + 1);
+            //guardar en la db
+            _dbList.items.insert(idxInsert, value);
+            _dbList.save();
+          });
+        },
+      ),
+      enableDrag: true,
+    );
+  }
+
+  void onCreateNewItem() {
+    print('cososos ${categories.length}');
+    createTaskBottomSheet(
+      context: context,
+      showClose: true,
+      child: InputItem(
+        dbList: _dbList,
+        returnItem: (value) {
           setState(() {
             //guardar en la db
-            var id = _uuid.v4();
-            _dbList.items.add(Item(content: value, isDone: false, id: id));
+            _dbList.items.add(value);
             _dbList.save();
           });
         },
@@ -163,8 +213,6 @@ class _CrudScreenState extends State<CrudScreen> {
     );
   }
 }
-
-
 
 /*
       body: ValueListenableBuilder(

@@ -20,19 +20,22 @@ class ItemAdapter extends TypeAdapter<Item> {
       content: fields[0] as String,
       isDone: fields[1] as bool,
       id: fields[2] as String,
+      isCategory: fields[3] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Item obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.content)
       ..writeByte(1)
       ..write(obj.isDone)
       ..writeByte(2)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(3)
+      ..write(obj.isCategory);
   }
 
   @override
