@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:listme/core/constants/constants.dart';
+import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:uuid/uuid.dart';
@@ -35,10 +35,15 @@ class _HomeScreenState extends State<HomeScreen> {
       items: [],
       id: _uuid.v4(),
     );
-    _box.put(emptyList.id, emptyList); // agregar a lal db
-    _listKey.currentState!.insertItem(0, duration: _duration1); // agregar a la lista animada
+    // agregar a la db
+    _box.put(emptyList.id, emptyList);
+    // agregar a la lista animada
+    if (_listKey.currentState != null) {
+      _listKey.currentState!.insertItem(0, duration: _duration1);
+    }
+    // esperar para que se vea la animacion y navegar
     await Future.delayed(_duration2).then((value) {
-      context.pushNamed(AppRoutes.crudScreen, extra: emptyList.id); // esperar para que se vea la animacion y navegar
+      context.pushNamed(AppRoutes.crudScreen, extra: emptyList.id);
     });
   }
 

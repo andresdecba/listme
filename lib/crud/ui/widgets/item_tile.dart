@@ -21,14 +21,19 @@ class ItemTile extends StatelessWidget {
       margin: const EdgeInsets.all(4),
       padding: const EdgeInsets.symmetric(horizontal: 5),
       decoration: BoxDecoration(
-        color: Colors.cyan.shade300,
+        color: isDone ? Colors.cyan.shade300.withOpacity(0.5) : Colors.cyan.shade300,
         borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
       child: Row(
         children: [
           IconButton(
             onPressed: () => onTapIsDone(),
-            icon: isDone ? const Icon(Icons.check_circle_rounded) : const Icon(Icons.circle_outlined),
+            icon: isDone
+                ? Icon(
+                    Icons.check_circle_rounded,
+                    color: Colors.black.withOpacity(0.5),
+                  )
+                : const Icon(Icons.circle_outlined),
             padding: EdgeInsets.zero,
             visualDensity: VisualDensity.compact,
             iconSize: 20,
@@ -37,9 +42,9 @@ class ItemTile extends StatelessWidget {
             child: Text(
               text,
               style: TextStyle(
-                //color: isDone ? Colors.grey.shade500 : Colors.grey,
+                color: isDone ? Colors.black.withOpacity(0.5) : Colors.black,
                 decoration: isDone ? TextDecoration.lineThrough : TextDecoration.none,
-                decorationColor: isDone ? Colors.grey.shade500 : Colors.grey,
+                decorationColor: isDone ? Colors.black.withOpacity(0.5) : Colors.black,
               ),
             ),
           ),
@@ -50,7 +55,10 @@ class ItemTile extends StatelessWidget {
               padding: EdgeInsets.zero,
               visualDensity: VisualDensity.compact,
               iconSize: 20,
-              icon: const Icon(Icons.close_rounded),
+              icon: Icon(
+                Icons.close_rounded,
+                color: Colors.black.withOpacity(0.5),
+              ),
             ),
           ),
         ],

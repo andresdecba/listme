@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:listme/core/constants/typedefs.dart';
+import 'package:listme/core/commons/typedefs.dart';
 
 class InputItem extends StatefulWidget {
   const InputItem({
