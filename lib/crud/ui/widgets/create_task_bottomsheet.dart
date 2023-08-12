@@ -6,10 +6,10 @@ void createTaskBottomSheet({
   required Widget child,
   bool enableDrag = true,
   bool showClose = false,
-  VoidCallback? onTapClose,
+  VoidCallback? onClose,
 }) {
   showModalBottomSheet<dynamic>(
-    isDismissible: true,
+    isDismissible: false,
     //showDragHandle: enableDrag,
     enableDrag: enableDrag,
     context: context,
@@ -33,7 +33,7 @@ void createTaskBottomSheet({
                   alignment: Alignment.topRight,
                   child: IconButton(
                     padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
-                    onPressed: onTapClose != null ? () => onTapClose() : () => context.pop(),
+                    onPressed: () => context.pop(),
                     icon: const Icon(
                       Icons.close_rounded,
                       color: Colors.grey,
@@ -47,7 +47,10 @@ void createTaskBottomSheet({
         ),
       );
     },
-  );
+  ).then((void value) {
+    onClose != null ? onClose() : null;
+    print(' hahahaha si se cerró el BottomSheet');
+  });
 }
 
-//() => Get.find<CreateTaskPageController>().closeAndRestoreValues(),
+//() => Get.find<CreateTaskPageController>().closeAndRestoreValues(), print('hohohho si se cerró')

@@ -1,3 +1,4 @@
+import 'package:chip_list/chip_list.dart';
 import 'package:flutter/material.dart';
 import 'package:listme/core/commons/typedefs.dart';
 import 'package:listme/crud/models/item.dart';
@@ -25,6 +26,9 @@ class _InputItemState extends State<InputItem> {
   late Uuid _uuid;
   int counter = 0;
   bool isCategory = false;
+  // chips
+  int currentIndex = 0;
+  List<Item> listOfChips = [];
 
   @override
   void initState() {
@@ -33,6 +37,14 @@ class _InputItemState extends State<InputItem> {
     focusNode = FocusNode();
     textController = TextEditingController();
     _uuid = const Uuid();
+    if (widget.dbList.items.isNotEmpty) {
+      for (var e in widget.dbList.items) {
+        if (e.isCategory) {
+          listOfChips.add(e);
+        }
+      }
+    }
+
     textController.addListener(() {
       setState(() {
         counter = textController.text.length;
@@ -56,12 +68,12 @@ class _InputItemState extends State<InputItem> {
       isDone: false,
       id: _uuid.v4(),
       isCategory: isCategory,
-      key: isCategory ? GlobalKey() : null,
     );
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 5, 15, 25),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // FORMULARIO //
           Form(
@@ -163,9 +175,25 @@ class _InputItemState extends State<InputItem> {
             //secondary: const Icon(Icons.category),
           ),
 
-          // CHIPS // chip_list
-
-          // TODO: iterar dbList y buscar las categorias
+          // CHIPS //
+          // ChipList(
+          //   shouldWrap: false,
+          //   listOfChipNames: listOfChips.map((e) => e.content).toList(),
+          //   inactiveBgColorList: [Colors.grey.shade300],
+          //   inactiveTextColorList: [Colors.grey.shade500],
+          //   inactiveBorderColorList: [Colors.grey.shade300],
+          //   activeBgColorList: const [Colors.cyan],
+          //   activeTextColorList: const [Colors.black],
+          //   activeBorderColorList: const [Colors.cyan],
+          //   borderRadiiList: const [20],
+          //   style: txtStyle.bodySmall,
+          //   listOfChipIndicesCurrentlySeclected: [currentIndex], // no modificar, ver documentación
+          //   extraOnToggle: (i) {
+          //     setState(() {
+          //       currentIndex = i;
+          //     });
+          //   },
+          // ),
         ],
       ),
     );

@@ -30,7 +30,7 @@ class CustomListTile extends StatelessWidget {
         //padding: const EdgeInsets.all(10),
         decoration: const BoxDecoration(
           color: Colors.cyan,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
