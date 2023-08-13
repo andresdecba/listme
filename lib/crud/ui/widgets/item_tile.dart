@@ -19,12 +19,16 @@ class ItemTile extends StatefulWidget {
 }
 
 class _ItemTileState extends State<ItemTile> {
+  final _duration500 = const Duration(milliseconds: 500);
+  final _duration300 = const Duration(milliseconds: 400);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: _duration300,
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 2),
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
       decoration: BoxDecoration(
         color: widget.isDone ? Colors.cyan.shade100 : Colors.cyan.shade300,
         borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -38,7 +42,7 @@ class _ItemTileState extends State<ItemTile> {
               children: [
                 // is done btn //
                 AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 500),
+                  duration: _duration500,
                   transitionBuilder: (child, animation) {
                     return ScaleTransition(scale: animation, child: child);
                   },
@@ -57,7 +61,7 @@ class _ItemTileState extends State<ItemTile> {
                 // txt //
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.fromLTRB(0, 8, 5, 8),
                     child: Text(
                       widget.text,
                       style: TextStyle(
@@ -74,7 +78,7 @@ class _ItemTileState extends State<ItemTile> {
 
           // remove btn //
           AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
+            duration: _duration500,
             transitionBuilder: (child, animation) {
               return ScaleTransition(
                 scale: animation,
@@ -82,15 +86,19 @@ class _ItemTileState extends State<ItemTile> {
               );
             },
             child: widget.isDone
-                ? IconButton(
-                    key: ValueKey(widget.isDone),
-                    onPressed: () => widget.onRemove(),
-                    padding: EdgeInsets.zero,
-                    visualDensity: VisualDensity.compact,
-                    iconSize: 20,
-                    icon: const Icon(
-                      Icons.close_rounded,
-                      color: Colors.white,
+                ? SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: IconButton(
+                      key: ValueKey(widget.isDone),
+                      onPressed: () => widget.onRemove(),
+                      padding: EdgeInsets.zero,
+                      visualDensity: VisualDensity.compact,
+                      iconSize: 20,
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: Colors.white,
+                      ),
                     ),
                   )
                 : SizedBox(

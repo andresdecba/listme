@@ -8,12 +8,15 @@ void createTaskBottomSheet({
   bool showClose = false,
   VoidCallback? onClose,
 }) {
+  final screenSize = MediaQuery.of(context).size;
+
+  // MODAL //
   showModalBottomSheet<dynamic>(
+    isScrollControlled: true,
     isDismissible: false,
-    //showDragHandle: enableDrag,
+    showDragHandle: false,
     enableDrag: enableDrag,
     context: context,
-    isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(20.0),
@@ -22,34 +25,40 @@ void createTaskBottomSheet({
     ),
     useSafeArea: true,
     builder: (context) {
-      return SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Column(
-            children: [
-              Visibility(
-                visible: showClose,
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    padding: const EdgeInsets.fromLTRB(0, 10, 10, 0),
-                    onPressed: () => context.pop(),
-                    icon: const Icon(
-                      Icons.close_rounded,
-                      color: Colors.grey,
-                    ),
+      return Container(
+        //padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        height: screenSize.height * 0.8,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // close btn //
+            Visibility(
+              visible: showClose,
+              child: Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  padding: const EdgeInsets.all(15),
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () => context.pop(),
+                  icon: const Icon(
+                    Icons.close_rounded,
+                    color: Colors.grey,
                   ),
                 ),
               ),
-              child, /////////// <- child
-            ],
-          ),
+            ),
+            // child here //
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+              child: child,
+            ),
+          ],
         ),
       );
     },
   ).then((void value) {
     onClose != null ? onClose() : null;
-    print(' hahahaha si se cerró el BottomSheet');
+    debugPrint('si se cerró el BottomSheet :)');
   });
 }
 

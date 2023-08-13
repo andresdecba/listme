@@ -29,6 +29,7 @@ class _CrudScreenState extends State<CrudScreen> {
   late ScrollController _scrollCtlr;
   int idxInsert = 0;
   bool toNewCategory = false;
+  double bottomSpaceForScroll = 0.0;
 
   @override
   void initState() {
@@ -45,6 +46,8 @@ class _CrudScreenState extends State<CrudScreen> {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      extendBody: true,
+
       // APP BAR //
       appBar: AppBar(
         elevation: 0,
@@ -65,7 +68,7 @@ class _CrudScreenState extends State<CrudScreen> {
       // BODY //
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+        padding: EdgeInsets.fromLTRB(15, 0, 15, MediaQuery.of(context).viewInsets.bottom),
         controller: _scrollCtlr,
         child: Column(
           children: [
@@ -115,9 +118,9 @@ class _CrudScreenState extends State<CrudScreen> {
               // Each item must be wrapped in a Reorderable widget and have an unique key.
               itemBuilder: (context, itemAnimation, item, index) {
                 // scroll or jump to the category
-                GlobalKey? itemKey;
+                GlobalKey? scrollKey;
                 if (item.isCategory) {
-                  itemKey = GlobalKey();
+                  scrollKey = GlobalKey();
                 }
 
                 return Reorderable(
@@ -139,23 +142,24 @@ class _CrudScreenState extends State<CrudScreen> {
                         delay: item.isCategory ? const Duration(milliseconds: 500) : const Duration(milliseconds: 250),
                         child: item.isCategory
                             ? ItemCategoryTile(
-                                key: ValueKey(item.id),
+                                key: scrollKey,
                                 text: item.content,
                                 onRemove: () => onRemoveItem(item),
                                 onAdd: () async {
+                                  //setState(() => bottomSpaceForScroll = screenSize.height);
                                   await Scrollable.ensureVisible(
-                                    itemKey!.currentContext!,
+                                    scrollKey!.currentContext!,
                                     curve: Curves.easeIn,
                                     duration: const Duration(milliseconds: 300),
                                   );
-                                  onCreateCategoryBtn(index);
+                                  onCreateCategoryBtn(screenSize.height, index);
                                 },
                               )
                             : Padding(
                                 // espacio dinámico entre el título y el primer elemento de la lista
                                 padding: index == 0 ? const EdgeInsets.fromLTRB(0, 20, 0, 0) : EdgeInsets.zero,
                                 child: ItemTile(
-                                  key: ValueKey(item.id),
+                                  key: scrollKey,
                                   onTapIsDone: () => onDone(item),
                                   onRemove: () => onRemoveItem(item),
                                   text: item.content,
@@ -168,9 +172,8 @@ class _CrudScreenState extends State<CrudScreen> {
                 );
               },
             ),
-            // SizedBox(
-            //   height: screenSize.height,
-            // )
+            const SizedBox(height: 75),
+            //SizedBox(height: bottomSpaceForScroll),
           ],
         ),
       ),
@@ -191,12 +194,19 @@ class _CrudScreenState extends State<CrudScreen> {
     });
   }
 
-  void onCreateCategoryBtn(int index) {
+  void onCreateCategoryBtn(double screenHeight, int index) {
+    setState(() {
+      print('jajajaj $screenHeight');
+      bottomSpaceForScroll = screenHeight;
+    });
     createTaskBottomSheet(
       context: context,
       showClose: true,
       enableDrag: true,
-      onClose: () => toNewCategory = false,
+      onClose: () {
+        toNewCategory = false;
+        bottomSpaceForScroll = 0.0;
+      },
       child: InputItem(
         dbList: _dbList,
         returnItem: (value) {
@@ -235,7 +245,6 @@ class _CrudScreenState extends State<CrudScreen> {
               _dbList.items.add(value);
               _dbList.save();
             } else {
-              print('jajajaja ${_dbList.items.length} / $toNewCategory');
               _dbList.items.insert(idxInsert, value);
               _dbList.save();
             }
@@ -255,16 +264,16 @@ class _CrudScreenState extends State<CrudScreen> {
 }
 
 /*
-      ValueListenableBuilder(
-        valueListenable: _box.listenable(),
-        builder: (context, Box<Lista> box, _) {
-          // SI ESTÁ VACÍA //
-          if (_dbList.items.isEmpty) {
-            return const Center(
-              child: Text("NO ITEMS"),
-            );
-          }
-          return ;
-        },
-      ),
-      */
+ValueListenableBuilder(
+  valueListenable: _box.listenable(),
+  builder: (context, Box<Lista> box, _) {
+    // SI ESTÁ VACÍA //
+    if (_dbList.items.isEmpty) {
+      return const Center(
+        child: Text("NO ITEMS"),
+      );
+    }
+    return ;
+  },
+),
+*/

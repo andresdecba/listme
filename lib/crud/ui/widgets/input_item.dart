@@ -70,132 +70,124 @@ class _InputItemState extends State<InputItem> {
       isCategory: isCategory,
     );
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 5, 15, 25),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // FORMULARIO //
-          Form(
-            key: formStateKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: TextFormField(
-              //textAlign: TextAlign.center,
-              textAlignVertical: TextAlignVertical.center,
-              focusNode: focusNode,
-              autofocus: true,
-              controller: textController,
-              textInputAction: TextInputAction.done,
-              textCapitalization: TextCapitalization.sentences,
-              style: Theme.of(context).textTheme.titleLarge!,
-              maxLines: null,
-              maxLength: 120,
-              validator: (value) {
-                if (value != null && value.length < 3) {
-                  return 'Between 3 and 120 characters';
-                } else {
-                  return null;
-                }
-              },
-              onEditingComplete: () {
-                if (formStateKey.currentState!.validate()) {
-                  widget.returnItem(item);
-                  textController.clear();
-                  isCategory = false;
-                }
-              },
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-                isDense: true,
-                border: const OutlineInputBorder(),
-                hintText: 'description',
-                // styles
-                // hintStyle: kBodySmall.copyWith(fontStyle: FontStyle.italic, color: disabledGrey, fontWeight: FontWeight.normal, fontSize: 13),
-                // helperStyle: kBodySmall.copyWith(fontStyle: FontStyle.italic, color: disabledGrey, fontWeight: FontWeight.normal),
-                // errorStyle: kBodySmall.copyWith(fontStyle: FontStyle.italic, color: disabledGrey, fontWeight: FontWeight.normal),
-                // counterStyle: kBodySmall.copyWith(
-                //   fontStyle: FontStyle.italic,
-                //   fontWeight: controller.counter.value < 6 ? FontWeight.bold : FontWeight.normal,
-                //   color: controller.counter.value < 6 ? warning : disabledGrey,
-                // ),
-                // others
-                suffixIcon: counter == 0
-                    ? null
-                    : InkWell(
-                        onTap: () => textController.clear(),
-                        child: const Padding(
-                          padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
-                          child: Icon(
-                            Icons.close_rounded,
-                            size: 20,
-                            color: Colors.black,
-                          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // FORMULARIO //
+        Form(
+          key: formStateKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: TextFormField(
+            //textAlign: TextAlign.center,
+            textAlignVertical: TextAlignVertical.center,
+            focusNode: focusNode,
+            autofocus: true,
+            controller: textController,
+            textInputAction: TextInputAction.done,
+            textCapitalization: TextCapitalization.sentences,
+            style: Theme.of(context).textTheme.titleLarge!,
+            maxLines: null,
+            maxLength: 120,
+            validator: (value) {
+              if (value != null && value.length < 3) {
+                return 'Between 3 and 120 characters';
+              } else {
+                return null;
+              }
+            },
+            onEditingComplete: () {
+              if (formStateKey.currentState!.validate()) {
+                widget.returnItem(item);
+                textController.clear();
+                isCategory = false;
+              }
+            },
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              isDense: true,
+              border: const OutlineInputBorder(),
+              suffixIconConstraints: const BoxConstraints(maxHeight: 100),
+              suffixIcon: counter == 0
+                  ? null
+                  : InkWell(
+                      onTap: () => textController.clear(),
+                      child: const Padding(
+                        padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+                        child: Icon(
+                          Icons.close_rounded,
+                          size: 20,
+                          color: Colors.black,
                         ),
                       ),
-                suffixIconConstraints: const BoxConstraints(maxHeight: 100),
-                filled: true,
-                fillColor: Colors.grey.shade200,
-
-                // counter
-                counterText: "$counter",
-                counterStyle: const TextStyle(color: Colors.grey),
-                // border
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey.shade200),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey.shade200),
-                ),
-                // helper
-                helperText: 'between 3 and 120 characters',
-                helperStyle: const TextStyle(color: Colors.grey),
-                // error
-                errorBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 1.0),
-                ),
-                focusedErrorBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red, width: 1.0),
-                ),
+                    ),
+              // fill color
+              filled: true,
+              fillColor: Colors.grey.shade200,
+              // error STYLE
+              errorText: null,
+              errorStyle: txtStyle.bodyMedium!.copyWith(color: Colors.red.shade800, fontStyle: FontStyle.italic),
+              // hint STYLE
+              hintText: 'Description here',
+              hintStyle: txtStyle.bodyLarge!.copyWith(color: Colors.grey.shade400, fontStyle: FontStyle.italic),
+              // counter STYLE
+              counterText: "$counter",
+              counterStyle: txtStyle.bodyMedium!.copyWith(color: Colors.grey.shade400, fontStyle: FontStyle.italic),
+              // helper STYLE
+              helperText: 'between 3 and 120 characters',
+              helperStyle: txtStyle.bodyMedium!.copyWith(color: Colors.grey.shade400, fontStyle: FontStyle.italic),
+              // enabled BORDERS
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey.shade200),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey.shade200),
+              ),
+              // error BORDERS
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red.shade800, width: 1.0),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red.shade800, width: 1.0),
               ),
             ),
           ),
+        ),
 
-          // CREAR CATEGORIA //
-          //const Divider(),
-          CheckboxListTile(
-            value: isCategory,
-            onChanged: (value) {
-              setState(() {
-                isCategory = value!;
-              });
-            },
-            controlAffinity: ListTileControlAffinity.leading,
-            contentPadding: EdgeInsets.zero,
-            title: const Text('Create category'),
-            //secondary: const Icon(Icons.category),
-          ),
+        // CREAR CATEGORIA //
+        //const Divider(),
+        CheckboxListTile(
+          value: isCategory,
+          onChanged: (value) {
+            setState(() {
+              isCategory = value!;
+            });
+          },
+          controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Create category'),
+          //secondary: const Icon(Icons.category),
+        ),
 
-          // CHIPS //
-          // ChipList(
-          //   shouldWrap: false,
-          //   listOfChipNames: listOfChips.map((e) => e.content).toList(),
-          //   inactiveBgColorList: [Colors.grey.shade300],
-          //   inactiveTextColorList: [Colors.grey.shade500],
-          //   inactiveBorderColorList: [Colors.grey.shade300],
-          //   activeBgColorList: const [Colors.cyan],
-          //   activeTextColorList: const [Colors.black],
-          //   activeBorderColorList: const [Colors.cyan],
-          //   borderRadiiList: const [20],
-          //   style: txtStyle.bodySmall,
-          //   listOfChipIndicesCurrentlySeclected: [currentIndex], // no modificar, ver documentación
-          //   extraOnToggle: (i) {
-          //     setState(() {
-          //       currentIndex = i;
-          //     });
-          //   },
-          // ),
-        ],
-      ),
+        // CHIPS //
+        // ChipList(
+        //   shouldWrap: false,
+        //   listOfChipNames: listOfChips.map((e) => e.content).toList(),
+        //   inactiveBgColorList: [Colors.grey.shade300],
+        //   inactiveTextColorList: [Colors.grey.shade500],
+        //   inactiveBorderColorList: [Colors.grey.shade300],
+        //   activeBgColorList: const [Colors.cyan],
+        //   activeTextColorList: const [Colors.black],
+        //   activeBorderColorList: const [Colors.cyan],
+        //   borderRadiiList: const [20],
+        //   style: txtStyle.bodySmall,
+        //   listOfChipIndicesCurrentlySeclected: [currentIndex], // no modificar, ver documentación
+        //   extraOnToggle: (i) {
+        //     setState(() {
+        //       currentIndex = i;
+        //     });
+        //   },
+        // ),
+      ],
     );
   }
 }

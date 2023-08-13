@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class ItemCategoryTile extends StatefulWidget {
@@ -18,6 +20,7 @@ class ItemCategoryTile extends StatefulWidget {
 
 class _ItemCategoryTileState extends State<ItemCategoryTile> {
   bool isRemove = false;
+  Timer _timer = Timer(const Duration(seconds: 1), () {});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,10 @@ class _ItemCategoryTileState extends State<ItemCategoryTile> {
     final Widget removeBtn = IconButton(
       key: ValueKey(isRemove),
       visualDensity: VisualDensity.compact,
-      onPressed: () => widget.onRemove(),
+      onPressed: () {
+        _timer.cancel();
+        widget.onRemove();
+      },
       icon: const Icon(
         Icons.close_rounded,
         color: Colors.red,
@@ -44,24 +50,37 @@ class _ItemCategoryTileState extends State<ItemCategoryTile> {
 
     final txtStyle = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 25, 0, 2),
+      padding: const EdgeInsets.fromLTRB(0, 25, 4, 2),
       child: Row(
         children: [
+          ///
           IconButton(
             visualDensity: VisualDensity.compact,
             onPressed: () => setState(() {
-              isRemove = !isRemove;
+              if (!_timer.isActive) {
+                isRemove = !isRemove;
+                _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+                  if (timer.tick == 5) {
+                    setState(() {
+                      isRemove = !isRemove;
+                      _timer.cancel();
+                    });
+                  }
+                });
+              }
             }),
-            icon: Icon(
-              isRemove ? Icons.circle_outlined : Icons.circle,
+            icon: const Icon(
+              Icons.circle,
               size: 15,
             ),
           ),
           const SizedBox(width: 5),
           Text(
             widget.text,
-            style: txtStyle.labelLarge,
+            style: txtStyle.labelLarge!.copyWith(color: isRemove ? Colors.red.shade700 : Colors.black),
           ),
+
+          ///
           const Spacer(),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 500),
