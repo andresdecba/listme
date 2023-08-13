@@ -89,10 +89,10 @@ class _InputItemState extends State<InputItem> {
               textCapitalization: TextCapitalization.sentences,
               style: Theme.of(context).textTheme.titleLarge!,
               maxLines: null,
-              maxLength: 100,
+              maxLength: 120,
               validator: (value) {
                 if (value != null && value.length < 3) {
-                  return 'Between 3 and 100 characters';
+                  return 'Between 3 and 120 characters';
                 } else {
                   return null;
                 }
@@ -147,7 +147,7 @@ class _InputItemState extends State<InputItem> {
                   borderSide: BorderSide(color: Colors.grey.shade200),
                 ),
                 // helper
-                helperText: 'between 3 and 100 characters',
+                helperText: 'between 3 and 120 characters',
                 helperStyle: const TextStyle(color: Colors.grey),
                 // error
                 errorBorder: const OutlineInputBorder(

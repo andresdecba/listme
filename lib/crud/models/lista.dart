@@ -14,12 +14,15 @@ class Lista extends HiveObject {
   List<Item> items;
   @HiveField(3)
   String id;
+  @HiveField(4)
+  String? colorScheme;
 
   Lista({
     required this.title,
     required this.creationDate,
     required this.items,
     required this.id,
+    this.colorScheme,
   });
 
   @override

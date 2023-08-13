@@ -21,13 +21,14 @@ class ListaAdapter extends TypeAdapter<Lista> {
       creationDate: fields[1] as DateTime,
       items: (fields[2] as List).cast<Item>(),
       id: fields[3] as String,
+      colorScheme: fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Lista obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class ListaAdapter extends TypeAdapter<Lista> {
       ..writeByte(2)
       ..write(obj.items)
       ..writeByte(3)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(4)
+      ..write(obj.colorScheme);
   }
 
   @override

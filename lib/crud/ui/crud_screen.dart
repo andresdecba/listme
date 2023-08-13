@@ -58,7 +58,7 @@ class _CrudScreenState extends State<CrudScreen> {
 
       // BUTTON //
       floatingActionButton: FloatingActionButton(
-        onPressed: () => onCreateNewItem(),
+        onPressed: () => onCreateFloatingActionBtn(),
         child: const Icon(Icons.add),
       ),
 
@@ -139,7 +139,7 @@ class _CrudScreenState extends State<CrudScreen> {
                         delay: item.isCategory ? const Duration(milliseconds: 500) : const Duration(milliseconds: 250),
                         child: item.isCategory
                             ? ItemCategoryTile(
-                                key: itemKey,
+                                key: ValueKey(item.id),
                                 text: item.content,
                                 onRemove: () => onRemoveItem(item),
                                 onAdd: () async {
@@ -148,13 +148,14 @@ class _CrudScreenState extends State<CrudScreen> {
                                     curve: Curves.easeIn,
                                     duration: const Duration(milliseconds: 300),
                                   );
-                                  onInserNewItem(index);
+                                  onCreateCategoryBtn(index);
                                 },
                               )
                             : Padding(
                                 // espacio dinámico entre el título y el primer elemento de la lista
                                 padding: index == 0 ? const EdgeInsets.fromLTRB(0, 20, 0, 0) : EdgeInsets.zero,
                                 child: ItemTile(
+                                  key: ValueKey(item.id),
                                   onTapIsDone: () => onDone(item),
                                   onRemove: () => onRemoveItem(item),
                                   text: item.content,
@@ -190,7 +191,7 @@ class _CrudScreenState extends State<CrudScreen> {
     });
   }
 
-  void onInserNewItem(int index) {
+  void onCreateCategoryBtn(int index) {
     createTaskBottomSheet(
       context: context,
       showClose: true,
@@ -217,18 +218,27 @@ class _CrudScreenState extends State<CrudScreen> {
     );
   }
 
-  void onCreateNewItem() {
+  void onCreateFloatingActionBtn() {
     createTaskBottomSheet(
       context: context,
       showClose: true,
       enableDrag: true,
+      onClose: () => toNewCategory = false,
       child: InputItem(
         dbList: _dbList,
         returnItem: (value) {
           setState(() {
             scrollTo(0);
-            _dbList.items.add(value);
-            _dbList.save();
+            toNewCategory ? idxInsert = _dbList.items.length - 1 : idxInsert = _dbList.items.length;
+            if (value.isCategory) {
+              toNewCategory = true;
+              _dbList.items.add(value);
+              _dbList.save();
+            } else {
+              print('jajajaja ${_dbList.items.length} / $toNewCategory');
+              _dbList.items.insert(idxInsert, value);
+              _dbList.save();
+            }
           });
         },
       ),
