@@ -4,10 +4,10 @@ import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reord
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
 import 'package:listme/crud/models/item.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/widgets/create_task_bottomsheet.dart';
-import 'package:listme/crud/ui/widgets/input_item.dart';
-import 'package:listme/crud/ui/widgets/item_category_tile.dart';
-import 'package:listme/crud/ui/widgets/item_tile.dart';
+import 'package:listme/crud/ui/shared_widgets/create_task_bottomsheet.dart';
+import 'package:listme/crud/ui/shared_widgets/input_item.dart';
+import 'package:listme/crud/ui/crud_screen/widgets/item_category_tile.dart';
+import 'package:listme/crud/ui/crud_screen/widgets/item_tile.dart';
 
 class CrudList extends StatefulWidget {
   const CrudList({

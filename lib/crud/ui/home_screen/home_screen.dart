@@ -6,8 +6,8 @@ import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/widgets/list_tile.dart';
-import 'package:listme/crud/ui/widgets/lists_separator.dart';
+import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
+import 'package:listme/crud/ui/home_screen/widgets/lists_separator.dart';
 import 'package:uuid/uuid.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -132,61 +132,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             ),
-
-            //////////////// BORRAR /////////////////
-            const SizedBox(height: 20),
-
-            // CATEGORIAS //
-            const ListSeparator(text: 'Trabajo'),
-            const SizedBox(height: 10),
-
-            // MOSTRAR LISTAS //
-            ValueListenableBuilder(
-              valueListenable: Hive.box<Lista>(AppConstants.listsCollection).listenable(),
-              builder: (context, Box<Lista> listas, _) {
-                // no lists
-                if (listas.values.isEmpty) {
-                  return const Center(
-                    child: Text("No hay listas"),
-                  );
-                }
-
-                // lists
-                return ImplicitlyAnimatedList<Lista>(
-                  shrinkWrap: true,
-                  items: listas.values.toList(),
-                  areItemsTheSame: (a, b) => a.id == b.id,
-                  itemBuilder: (context, animation, item, index) {
-                    return SizeFadeTransition(
-                      sizeFraction: 0.7,
-                      curve: Curves.easeInOut,
-                      animation: animation,
-                      child: CustomListTile(
-                        titleText: item.title,
-                        subTitleText: "20-06-2023",
-                        onTap: () => context.pushNamed(AppRoutes.crudScreen, extra: item.id),
-                        keyId: item.id,
-                        onRemove: () {
-                          item.delete();
-                        },
-                      ),
-                    );
-                  },
-                  removeItemBuilder: (context, animation, oldItem) {
-                    return FadeTransition(
-                      opacity: animation,
-                      child: CustomListTile(
-                        titleText: oldItem.title,
-                        subTitleText: "20-06-2023",
-                        onTap: () {},
-                        keyId: oldItem.id,
-                        onRemove: () {},
-                      ),
-                    );
-                  },
-                );
-              },
-            )
           ],
         ),
       ),

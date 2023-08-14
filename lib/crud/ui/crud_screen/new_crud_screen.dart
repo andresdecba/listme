@@ -3,10 +3,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/widgets/create_task_bottomsheet.dart';
-import 'package:listme/crud/ui/widgets/crud_list.dart';
-import 'package:listme/crud/ui/widgets/input_item.dart';
-import 'package:listme/crud/ui/widgets/list_title.dart';
+import 'package:listme/crud/ui/shared_widgets/create_task_bottomsheet.dart';
+import 'package:listme/crud/ui/crud_screen/widgets/crud_list.dart';
+import 'package:listme/crud/ui/shared_widgets/input_item.dart';
+import 'package:listme/crud/ui/crud_screen/widgets/list_title.dart';
 
 class NewCrudScreen extends StatefulWidget {
   const NewCrudScreen({

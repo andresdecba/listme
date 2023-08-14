@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/widgets/input_item.dart';
+import 'package:listme/crud/ui/shared_widgets/input_item.dart';
 
 class Booorar extends StatefulWidget {
   const Booorar({super.key});
