@@ -1,4 +1,3 @@
-import 'package:chip_list/chip_list.dart';
 import 'package:flutter/material.dart';
 import 'package:listme/core/commons/typedefs.dart';
 import 'package:listme/crud/models/item.dart';
@@ -8,11 +7,13 @@ import 'package:uuid/uuid.dart';
 class InputItem extends StatefulWidget {
   const InputItem({
     required this.returnItem,
+    required this.onTap,
     required this.dbList,
     Key? key,
   }) : super(key: key);
 
   final ReturnItem returnItem;
+  final VoidCallback onTap;
   final Lista dbList;
 
   @override
@@ -88,6 +89,9 @@ class _InputItemState extends State<InputItem> {
             style: Theme.of(context).textTheme.titleLarge!,
             maxLines: null,
             maxLength: 120,
+            onTap: () {
+              widget.onTap();
+            },
             validator: (value) {
               if (value != null && value.length < 3) {
                 return 'Between 3 and 120 characters';

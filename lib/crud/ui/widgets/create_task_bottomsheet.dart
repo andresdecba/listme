@@ -26,8 +26,7 @@ void createTaskBottomSheet({
     useSafeArea: true,
     builder: (context) {
       return Container(
-        //padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        height: screenSize.height * 0.8,
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

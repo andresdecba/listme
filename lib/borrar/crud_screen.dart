@@ -117,11 +117,12 @@ class _CrudScreenState extends State<CrudScreen> {
               },
               // Each item must be wrapped in a Reorderable widget and have an unique key.
               itemBuilder: (context, itemAnimation, item, index) {
+                //TODO
                 // scroll or jump to the category
-                GlobalKey? scrollKey;
-                if (item.isCategory) {
-                  scrollKey = GlobalKey();
-                }
+                // GlobalKey? scrollKey;
+                // if (item.isCategory) {
+                //   scrollKey = GlobalKey();
+                // }
 
                 return Reorderable(
                   key: ValueKey(item),
@@ -142,16 +143,16 @@ class _CrudScreenState extends State<CrudScreen> {
                         delay: item.isCategory ? const Duration(milliseconds: 500) : const Duration(milliseconds: 250),
                         child: item.isCategory
                             ? ItemCategoryTile(
-                                key: scrollKey,
+                                //key: scrollKey,
                                 text: item.content,
                                 onRemove: () => onRemoveItem(item),
                                 onAdd: () async {
-                                  //setState(() => bottomSpaceForScroll = screenSize.height);
-                                  await Scrollable.ensureVisible(
-                                    scrollKey!.currentContext!,
-                                    curve: Curves.easeIn,
-                                    duration: const Duration(milliseconds: 300),
-                                  );
+                                  // TODO
+                                  // await Scrollable.ensureVisible(
+                                  //   scrollKey!.currentContext!,
+                                  //   curve: Curves.easeIn,
+                                  //   duration: const Duration(milliseconds: 300),
+                                  // );
                                   onCreateCategoryBtn(screenSize.height, index);
                                 },
                               )
@@ -159,7 +160,7 @@ class _CrudScreenState extends State<CrudScreen> {
                                 // espacio dinámico entre el título y el primer elemento de la lista
                                 padding: index == 0 ? const EdgeInsets.fromLTRB(0, 20, 0, 0) : EdgeInsets.zero,
                                 child: ItemTile(
-                                  key: scrollKey,
+                                  //key: scrollKey,
                                   onTapIsDone: () => onDone(item),
                                   onRemove: () => onRemoveItem(item),
                                   text: item.content,
@@ -208,6 +209,7 @@ class _CrudScreenState extends State<CrudScreen> {
         bottomSpaceForScroll = 0.0;
       },
       child: InputItem(
+        onTap: () {},
         dbList: _dbList,
         returnItem: (value) {
           setState(() {
@@ -235,6 +237,7 @@ class _CrudScreenState extends State<CrudScreen> {
       enableDrag: true,
       onClose: () => toNewCategory = false,
       child: InputItem(
+        onTap: () {},
         dbList: _dbList,
         returnItem: (value) {
           setState(() {
