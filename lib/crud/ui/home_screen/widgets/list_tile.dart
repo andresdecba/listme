@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class CustomListTile extends StatelessWidget {
   const CustomListTile({
@@ -7,17 +8,22 @@ class CustomListTile extends StatelessWidget {
     required this.subTitleText,
     required this.onTap,
     required this.onRemove,
+    required this.done,
+    required this.undone,
   });
 
   final String titleText;
   final String subTitleText;
   final VoidCallback onTap;
   final VoidCallback onRemove;
+  final int done;
+  final int undone;
 
   @override
   Widget build(BuildContext context) {
     final TextTheme style = Theme.of(context).textTheme;
     final double widthScreen = MediaQuery.of(context).size.width;
+    final double percentage = (done - undone) * 100;
 
     return InkWell(
       onTap: () => onTap(),
@@ -34,9 +40,20 @@ class CustomListTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // PROGRESS //
             const SizedBox(width: 10),
-            const _ProgressWidget(),
+
+            // PROGRESS //
+            CircularPercentIndicator(
+              radius: 25,
+              lineWidth: 5.0,
+              percent: percentage,
+              center: Text(
+                '$done/$undone',
+                style: style.labelMedium,
+              ),
+              progressColor: Colors.cyan,
+              circularStrokeCap: CircularStrokeCap.round,
+            ),
             const SizedBox(width: 20),
 
             // TEXT //
@@ -81,30 +98,6 @@ class CustomListTile extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _ProgressWidget extends StatelessWidget {
-  const _ProgressWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      width: 40,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          width: 2,
-          color: Colors.cyan,
-        ),
-      ),
-      child: const Text(
-        '3/7',
-        style: TextStyle(color: Colors.cyan),
       ),
     );
   }

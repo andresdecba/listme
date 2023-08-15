@@ -7,8 +7,10 @@ void customBottomSheet({
   bool enableDrag = true,
   bool showClose = false,
   VoidCallback? onClose,
+  String? title,
 }) {
   final screenSize = MediaQuery.of(context).size;
+  final TextTheme style = Theme.of(context).textTheme;
 
   // MODAL //
   showModalBottomSheet<dynamic>(
@@ -47,6 +49,18 @@ void customBottomSheet({
               ),
             ),
             // child here //
+
+            if (title != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    title,
+                    style: style.titleMedium,
+                  ),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
               child: child,

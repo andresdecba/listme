@@ -20,6 +20,7 @@ dependencies:
   hive_flutter: ^1.1.0
   implicitly_animated_reorderable_list_2: ^0.5.1
   intl: ^0.18.1
+  percent_indicator: ^4.2.3
   uuid: ^3.0.7
 
 dev_dependencies:

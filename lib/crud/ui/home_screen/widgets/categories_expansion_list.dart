@@ -7,6 +7,8 @@ import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/list_title.dart';
 import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
 
+// MUESTRA LAS LISTAS EN TAB-1 "My lists by categories" //
+
 class CategoriesExpansionList extends StatefulWidget {
   const CategoriesExpansionList({
     required this.categories,
@@ -85,7 +87,17 @@ class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
 
                 // iterate lists
                 ...listas.map((e) {
+                  int totalDone = 0;
+                  int totalUndone = e.items.length;
+                  for (var element in e.items) {
+                    if (element.isDone) {
+                      totalDone++;
+                    }
+                  }
+
                   return CustomListTile(
+                    done: totalDone,
+                    undone: totalUndone,
                     titleText: e.title,
                     subTitleText: Helpers.longDateFormater(e.creationDate),
                     onTap: () {},
@@ -95,7 +107,7 @@ class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
               ],
             ),
           );
-        }),
+        }).toList(),
       ],
     );
   }
