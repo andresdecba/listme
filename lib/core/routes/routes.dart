@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:listme/borrar/tabview_Example.dart';
 import 'package:listme/crud/ui/home_screen/home_screen.dart';
 import 'package:listme/crud/ui/crud_screen/new_crud_screen.dart';
 
@@ -8,6 +9,7 @@ final navigatorKey = GlobalKey<NavigatorState>();
 class AppRoutes {
   static const homeScreen = 'homeScreen';
   static const crudScreen = 'crudScreen';
+  static const tabScreen = 'tabScreen';
 
   static final appRoutes = GoRouter(
     initialLocation: '/',
@@ -18,7 +20,12 @@ class AppRoutes {
         path: '/',
         name: homeScreen,
         builder: (context, state) => const HomeScreen(),
-        //builder: (context, state) => const Booorar(),
+      ),
+
+      GoRoute(
+        path: '/tabScreen',
+        name: tabScreen,
+        builder: (context, state) => const TabviewExample(),
       ),
 
       GoRoute(

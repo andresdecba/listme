@@ -6,19 +6,17 @@ class CustomListTile extends StatelessWidget {
     required this.titleText,
     required this.subTitleText,
     required this.onTap,
-    required this.keyId,
     required this.onRemove,
   });
 
   final String titleText;
   final String subTitleText;
   final VoidCallback onTap;
-  final String keyId;
   final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme;
+    final TextTheme style = Theme.of(context).textTheme;
     final double widthScreen = MediaQuery.of(context).size.width;
 
     return InkWell(
@@ -28,17 +26,20 @@ class CustomListTile extends StatelessWidget {
         width: widthScreen,
         margin: const EdgeInsets.symmetric(vertical: 2),
         //padding: const EdgeInsets.all(10),
-        decoration: const BoxDecoration(
-          color: Colors.cyan,
-          borderRadius: BorderRadius.all(Radius.circular(8)),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
+            // PROGRESS //
             const SizedBox(width: 10),
             const _ProgressWidget(),
             const SizedBox(width: 20),
+
+            // TEXT //
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
@@ -49,8 +50,8 @@ class CustomListTile extends StatelessWidget {
                     child: Text(
                       titleText,
                       maxLines: 2,
-                      overflow: TextOverflow.fade,
-                      style: style.bodyLarge,
+                      overflow: TextOverflow.ellipsis,
+                      style: style.titleMedium,
                     ),
                   ),
                   Flexible(
@@ -58,7 +59,7 @@ class CustomListTile extends StatelessWidget {
                       subTitleText,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: style.bodySmall,
+                      style: style.bodySmall!.copyWith(color: Colors.grey),
                     ),
                   ),
                 ],
@@ -66,13 +67,16 @@ class CustomListTile extends StatelessWidget {
             ),
             const Spacer(),
             Align(
-              alignment: Alignment.topRight,
+              alignment: Alignment.center,
               child: IconButton(
                 onPressed: () => onRemove(),
                 padding: EdgeInsets.zero,
                 visualDensity: VisualDensity.compact,
                 iconSize: 20,
-                icon: const Icon(Icons.close_rounded),
+                icon: const Icon(
+                  Icons.close_rounded,
+                  color: Colors.grey,
+                ),
               ),
             ),
           ],
@@ -90,7 +94,18 @@ class _ProgressWidget extends StatelessWidget {
     return Container(
       height: 40,
       width: 40,
-      decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          width: 2,
+          color: Colors.cyan,
+        ),
+      ),
+      child: const Text(
+        '3/7',
+        style: TextStyle(color: Colors.cyan),
+      ),
     );
   }
 }

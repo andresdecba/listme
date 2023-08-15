@@ -146,7 +146,7 @@ class _CrudListState extends State<CrudList> {
     setState(() {
       bottomSpaceForScroll = screenHeight;
     });
-    createTaskBottomSheet(
+    customBottomSheet(
       context: context,
       showClose: true,
       enableDrag: true,
@@ -154,27 +154,26 @@ class _CrudListState extends State<CrudList> {
         toNewCategory = false;
         bottomSpaceForScroll = 0.0;
       },
-      child: InputItem(
+      child: CustomTextfield(
         onTap: () {
           setState(() {
             _showBottomSheet = !_showBottomSheet;
           });
         },
-        dbList: widget.dbList,
-        returnItem: (value) {
-          setState(() {
-            //debido a que la lista está invertida hay que calcular donde caerá el insert
-            toNewCategory ? idxInsert = widget.dbList.items.length - 1 : idxInsert = widget.dbList.items.length - (index + 1);
-            if (value.isCategory) {
-              scrollTo(0);
-              toNewCategory = true;
-              widget.dbList.items.add(value);
-              widget.dbList.save();
-            } else {
-              widget.dbList.items.insert(idxInsert, value);
-              widget.dbList.save();
-            }
-          });
+        onEditingComplete: (value) {
+          // setState(() {
+          //   //debido a que la lista está invertida hay que calcular donde caerá el insert
+          //   toNewCategory ? idxInsert = widget.dbList.items.length - 1 : idxInsert = widget.dbList.items.length - (index + 1);
+          //   if (value.isCategory) {
+          //     scrollTo(0);
+          //     toNewCategory = true;
+          //     widget.dbList.items.add(value);
+          //     widget.dbList.save();
+          //   } else {
+          //     widget.dbList.items.insert(idxInsert, value);
+          //     widget.dbList.save();
+          //   }
+          // });
         },
       ),
     );

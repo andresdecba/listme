@@ -24,6 +24,20 @@ class Item {
     this.key,
   });
 
+  Item copyWith({
+    required String content,
+    required bool isDone,
+    required String id,
+    required bool isCategory,
+  }) {
+    return Item(
+      content: content,
+      isDone: isDone,
+      id: id,
+      isCategory: isCategory,
+    );
+  }
+
   @override
   String toString() {
     return '$id, $content, $isDone, $isCategory';

@@ -5,6 +5,7 @@ import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/routes/routes.dart';
 import 'package:listme/core/styles/app_theme.dart';
 import 'package:listme/crud/models/item.dart';
+import 'package:listme/crud/models/list_category.dart';
 import 'package:listme/crud/models/lista.dart';
 
 void mainCommon(String envFileName) async {
@@ -16,7 +17,9 @@ void mainCommon(String envFileName) async {
   await Hive.initFlutter();
   Hive.registerAdapter(ListaAdapter());
   Hive.registerAdapter(ItemAdapter());
-  await Hive.openBox<Lista>(AppConstants.listsCollection);
+  Hive.registerAdapter(ListCategoryAdapter());
+  await Hive.openBox<Lista>(AppConstants.listasDb);
+  await Hive.openBox<ListCategory>(AppConstants.categoriesDb);
 
   //var listsBox = Hive.box(AppConstants.listsCollection);
   //print('holis from main ${listsBox.keys}');

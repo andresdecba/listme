@@ -11,13 +11,8 @@ class ListSeparator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(width: 10),
-        const Icon(
-          Icons.circle,
-          size: 15,
-        ),
-        const SizedBox(width: 10),
         Text(
           text,
           style: const TextStyle(fontSize: 20),

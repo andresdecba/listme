@@ -25,6 +25,21 @@ class Lista extends HiveObject {
     this.colorScheme,
   });
 
+  Lista copyWith({
+    required String title,
+    required DateTime creationDate,
+    required List<Item> items,
+    required String id,
+    String? colorScheme,
+  }) {
+    return Lista(
+      title: title,
+      creationDate: creationDate,
+      items: items,
+      id: id,
+    );
+  }
+
   @override
   String toString() {
     return 'id: $id, title: $title, items: $items';

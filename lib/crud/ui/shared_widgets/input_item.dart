@@ -1,35 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:listme/core/commons/typedefs.dart';
-import 'package:listme/crud/models/item.dart';
-import 'package:listme/crud/models/lista.dart';
-import 'package:uuid/uuid.dart';
 
-class InputItem extends StatefulWidget {
-  const InputItem({
-    required this.returnItem,
+class CustomTextfield extends StatefulWidget {
+  const CustomTextfield({
+    required this.onEditingComplete,
     required this.onTap,
-    required this.dbList,
     Key? key,
   }) : super(key: key);
 
-  final ReturnItem returnItem;
+  final ReturnText onEditingComplete;
   final VoidCallback onTap;
-  final Lista dbList;
 
   @override
-  State<InputItem> createState() => _InputItemState();
+  State<CustomTextfield> createState() => _CustomTextfieldState();
 }
 
-class _InputItemState extends State<InputItem> {
+class _CustomTextfieldState extends State<CustomTextfield> {
   late GlobalKey<FormState> formStateKey;
   late FocusNode focusNode;
   late TextEditingController textController;
-  late Uuid _uuid;
   int counter = 0;
-  bool isCategory = false;
-  // chips
-  int currentIndex = 0;
-  List<Item> listOfChips = [];
 
   @override
   void initState() {
@@ -37,14 +27,6 @@ class _InputItemState extends State<InputItem> {
     formStateKey = GlobalKey<FormState>();
     focusNode = FocusNode();
     textController = TextEditingController();
-    _uuid = const Uuid();
-    if (widget.dbList.items.isNotEmpty) {
-      for (var e in widget.dbList.items) {
-        if (e.isCategory) {
-          listOfChips.add(e);
-        }
-      }
-    }
 
     textController.addListener(() {
       setState(() {
@@ -63,13 +45,6 @@ class _InputItemState extends State<InputItem> {
   @override
   Widget build(BuildContext context) {
     final txtStyle = Theme.of(context).textTheme;
-
-    final item = Item(
-      content: textController.text,
-      isDone: false,
-      id: _uuid.v4(),
-      isCategory: isCategory,
-    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,9 +76,8 @@ class _InputItemState extends State<InputItem> {
             },
             onEditingComplete: () {
               if (formStateKey.currentState!.validate()) {
-                widget.returnItem(item);
+                widget.onEditingComplete(textController.text);
                 textController.clear();
-                isCategory = false;
               }
             },
             decoration: InputDecoration(
@@ -156,41 +130,6 @@ class _InputItemState extends State<InputItem> {
             ),
           ),
         ),
-
-        // CREAR CATEGORIA //
-        //const Divider(),
-        CheckboxListTile(
-          value: isCategory,
-          onChanged: (value) {
-            setState(() {
-              isCategory = value!;
-            });
-          },
-          controlAffinity: ListTileControlAffinity.leading,
-          contentPadding: EdgeInsets.zero,
-          title: const Text('Create category'),
-          //secondary: const Icon(Icons.category),
-        ),
-
-        // CHIPS //
-        // ChipList(
-        //   shouldWrap: false,
-        //   listOfChipNames: listOfChips.map((e) => e.content).toList(),
-        //   inactiveBgColorList: [Colors.grey.shade300],
-        //   inactiveTextColorList: [Colors.grey.shade500],
-        //   inactiveBorderColorList: [Colors.grey.shade300],
-        //   activeBgColorList: const [Colors.cyan],
-        //   activeTextColorList: const [Colors.black],
-        //   activeBorderColorList: const [Colors.cyan],
-        //   borderRadiiList: const [20],
-        //   style: txtStyle.bodySmall,
-        //   listOfChipIndicesCurrentlySeclected: [currentIndex], // no modificar, ver documentación
-        //   extraOnToggle: (i) {
-        //     setState(() {
-        //       currentIndex = i;
-        //     });
-        //   },
-        // ),
       ],
     );
   }

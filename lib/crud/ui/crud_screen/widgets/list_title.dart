@@ -5,11 +5,17 @@ class ListTitle extends StatefulWidget {
   const ListTitle({
     required this.initialValue,
     required this.onEditingComplete,
+    this.editModeStyle,
+    this.regularModeStyle,
+    this.centerTxt = true,
     super.key,
   });
 
   final String initialValue;
   final ReturnText onEditingComplete;
+  final TextStyle? editModeStyle;
+  final TextStyle? regularModeStyle;
+  final bool centerTxt;
 
   @override
   State<ListTitle> createState() => _ListTitleState();
@@ -32,8 +38,8 @@ class _ListTitleState extends State<ListTitle> {
 
   @override
   Widget build(BuildContext context) {
-    final editModeStyle = Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32, color: Colors.grey);
-    final regularModeStyle = Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32, color: Colors.black);
+    final TextStyle editModeStyle = Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32, color: Colors.grey);
+    final TextStyle regularModeStyle = Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32, color: Colors.black);
 
     return Form(
       key: _formStateKey,
@@ -44,8 +50,15 @@ class _ListTitleState extends State<ListTitle> {
         keyboardType: TextInputType.text,
         textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.done,
-        style: _isEditMode ? editModeStyle : regularModeStyle,
-        textAlign: _isEditMode ? TextAlign.left : TextAlign.center,
+        style: _isEditMode ? widget.editModeStyle ?? editModeStyle : widget.regularModeStyle ?? regularModeStyle,
+
+        textAlign: widget.centerTxt
+            ? _isEditMode
+                ? TextAlign.left
+                : TextAlign.center
+            : _isEditMode
+                ? TextAlign.left
+                : TextAlign.left,
 
         // VALIDATE //
         maxLines: null,

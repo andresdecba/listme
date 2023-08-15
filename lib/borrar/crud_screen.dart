@@ -34,7 +34,7 @@ class _CrudScreenState extends State<CrudScreen> {
   @override
   void initState() {
     super.initState();
-    _box = Hive.box<Lista>(AppConstants.listsCollection);
+    _box = Hive.box<Lista>(AppConstants.listasDb);
     _dbList = _box.get(widget.id)!;
     _scrollCtlr = ScrollController();
   }
@@ -200,7 +200,7 @@ class _CrudScreenState extends State<CrudScreen> {
       print('jajajaj $screenHeight');
       bottomSpaceForScroll = screenHeight;
     });
-    createTaskBottomSheet(
+    customBottomSheet(
       context: context,
       showClose: true,
       enableDrag: true,
@@ -208,50 +208,48 @@ class _CrudScreenState extends State<CrudScreen> {
         toNewCategory = false;
         bottomSpaceForScroll = 0.0;
       },
-      child: InputItem(
+      child: CustomTextfield(
         onTap: () {},
-        dbList: _dbList,
-        returnItem: (value) {
-          setState(() {
-            //debido a que la lista está invertida hay que calcular donde caerá el insert
-            toNewCategory ? idxInsert = _dbList.items.length - 1 : idxInsert = _dbList.items.length - (index + 1);
-            if (value.isCategory) {
-              scrollTo(0);
-              toNewCategory = true;
-              _dbList.items.add(value);
-              _dbList.save();
-            } else {
-              _dbList.items.insert(idxInsert, value);
-              _dbList.save();
-            }
-          });
+        onEditingComplete: (value) {
+          // setState(() {
+          //   //debido a que la lista está invertida hay que calcular donde caerá el insert
+          //   toNewCategory ? idxInsert = _dbList.items.length - 1 : idxInsert = _dbList.items.length - (index + 1);
+          //   if (value.isCategory) {
+          //     scrollTo(0);
+          //     toNewCategory = true;
+          //     _dbList.items.add(value);
+          //     _dbList.save();
+          //   } else {
+          //     _dbList.items.insert(idxInsert, value);
+          //     _dbList.save();
+          //   }
+          // });
         },
       ),
     );
   }
 
   void onCreateFloatingActionBtn() {
-    createTaskBottomSheet(
+    customBottomSheet(
       context: context,
       showClose: true,
       enableDrag: true,
       onClose: () => toNewCategory = false,
-      child: InputItem(
+      child: CustomTextfield(
         onTap: () {},
-        dbList: _dbList,
-        returnItem: (value) {
-          setState(() {
-            scrollTo(0);
-            toNewCategory ? idxInsert = _dbList.items.length - 1 : idxInsert = _dbList.items.length;
-            if (value.isCategory) {
-              toNewCategory = true;
-              _dbList.items.add(value);
-              _dbList.save();
-            } else {
-              _dbList.items.insert(idxInsert, value);
-              _dbList.save();
-            }
-          });
+        onEditingComplete: (value) {
+          // setState(() {
+          //   scrollTo(0);
+          //   toNewCategory ? idxInsert = _dbList.items.length - 1 : idxInsert = _dbList.items.length;
+          //   if (value.isCategory) {
+          //     toNewCategory = true;
+          //     _dbList.items.add(value);
+          //     _dbList.save();
+          //   } else {
+          //     _dbList.items.insert(idxInsert, value);
+          //     _dbList.save();
+          //   }
+          // });
         },
       ),
     );

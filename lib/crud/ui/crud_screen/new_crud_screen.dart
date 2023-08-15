@@ -33,7 +33,7 @@ class _NewCrudScreenState extends State<NewCrudScreen> {
   @override
   void initState() {
     super.initState();
-    _box = Hive.box<Lista>(AppConstants.listsCollection);
+    _box = Hive.box<Lista>(AppConstants.listasDb);
     _dbList = _box.get(widget.id)!;
     _scrollCtlr = ScrollController();
   }
@@ -144,7 +144,7 @@ class _NewCrudScreenState extends State<NewCrudScreen> {
   }
 
   void onCreateFloatingActionBtn() {
-    createTaskBottomSheet(
+    customBottomSheet(
       context: context,
       showClose: true,
       enableDrag: true,
@@ -154,26 +154,25 @@ class _NewCrudScreenState extends State<NewCrudScreen> {
           _showBottomSheet = !_showBottomSheet;
         });
       },
-      child: InputItem(
+      child: CustomTextfield(
         onTap: () {
           setState(() {
             _showBottomSheet = !_showBottomSheet;
           });
         },
-        dbList: _dbList,
-        returnItem: (value) {
-          setState(() {
-            scrollTo(0);
-            toNewCategory ? idxInsert = _dbList.items.length - 1 : idxInsert = _dbList.items.length;
-            if (value.isCategory) {
-              toNewCategory = true;
-              _dbList.items.add(value);
-              _dbList.save();
-            } else {
-              _dbList.items.insert(idxInsert, value);
-              _dbList.save();
-            }
-          });
+        onEditingComplete: (value) {
+          // setState(() {
+          //   scrollTo(0);
+          //   toNewCategory ? idxInsert = _dbList.items.length - 1 : idxInsert = _dbList.items.length;
+          //   if (value.isCategory) {
+          //     toNewCategory = true;
+          //     _dbList.items.add(value);
+          //     _dbList.save();
+          //   } else {
+          //     _dbList.items.insert(idxInsert, value);
+          //     _dbList.save();
+          //   }
+          // });
         },
       ),
     );

@@ -51,10 +51,9 @@ class TextField extends StatelessWidget {
         alignment: Alignment.bottomCenter,
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: InputItem(
+          child: CustomTextfield(
             onTap: () {},
-            returnItem: (p0) {},
-            dbList: emptyList,
+            onEditingComplete: (p0) {},
           ),
         ),
       ),
