@@ -5,7 +5,8 @@ import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/models/list_category.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/home_screen/widgets/categories_expansion_list.dart';
+import 'package:listme/crud/ui/home_screen/widgets/tab_1.dart';
+import 'package:listme/crud/ui/home_screen/widgets/tab_2.dart';
 import 'package:listme/crud/ui/shared_widgets/create_task_bottomsheet.dart';
 import 'package:listme/crud/ui/shared_widgets/input_item.dart';
 import 'package:uuid/uuid.dart';
@@ -22,7 +23,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Box<ListCategory> _categoriesDb;
   late Box<Lista> _listasDb;
-
   late Uuid _uuid;
   late GlobalKey<AnimatedListState> _listKey;
   late Duration _duration1;
@@ -43,73 +43,59 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final TextTheme style = Theme.of(context).textTheme;
 
-    return Scaffold(
-      // APPBAR //
-      appBar: AppBar(
-        title: const Text('ListMe'),
-        titleTextStyle: style.titleLarge!.copyWith(color: Colors.white),
-        centerTitle: true,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.menu_rounded,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        // APPBAR //
+        appBar: AppBar(
+          title: const Text('ListMe'),
+          titleTextStyle: style.titleLarge!.copyWith(color: Colors.white),
+          centerTitle: true,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.menu_rounded,
+            ),
+          ),
+          backgroundColor: Colors.cyan,
+          bottom: const TabBar(
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            tabs: [
+              Tab(text: 'My lists by categories'),
+              Tab(text: 'My lists'),
+            ],
           ),
         ),
-        backgroundColor: Colors.cyan,
-      ),
 
-      // ADD A LIST //
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          customBottomSheet(
-            context: context,
-            showClose: true,
-            enableDrag: true,
-            onClose: () {},
-            child: CustomTextfield(
-              onTap: () => setState(() {}),
-              onEditingComplete: (value) => setState(() {
-                createNewCategory(categoryName: value);
-              }),
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
+        // ADD A LIST //
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            customBottomSheet(
+              context: context,
+              showClose: true,
+              enableDrag: true,
+              onClose: () {},
+              child: CustomTextfield(
+                onTap: () => setState(() {}),
+                onEditingComplete: (value) => setState(() {
+                  createNewCategory(categoryName: value);
+                }),
+              ),
+            );
+          },
+          child: const Icon(Icons.add),
+        ),
 
-      // BODY //
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(15),
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        // BODY //
+        body: const TabBarView(
           children: [
-            ElevatedButton(
-              onPressed: () => context.pushNamed(AppRoutes.tabScreen),
-              child: Text('data'),
-            ),
+            // TAB 1 //
+            TabUno(),
 
-            // TITULO - CATEGORIAS //
-            const SizedBox(height: 10),
-
-            // EXPANSION //
-            ValueListenableBuilder(
-              valueListenable: _categoriesDb.listenable(),
-              builder: (context, Box<ListCategory> categories, child) {
-                // no lists
-                if (categories.values.isEmpty) {
-                  return const Center(
-                    child: Text("No hay categorias"),
-                  );
-                }
-                // iterate catgs
-                return CategoriesExpansionList(
-                  categories: categories.values.toList(),
-                );
-              },
-            )
+            // TAB 2 //
+            TabDos(),
           ],
         ),
       ),
@@ -148,60 +134,3 @@ class _HomeScreenState extends State<HomeScreen> {
     _categoriesDb.put(newCategory.categoryId, newCategory);
   }
 }
-
-
-
-  /*
-            const SizedBox(height: 50),
-            // MOSTRAR LISTAS //
-            ValueListenableBuilder(
-              valueListenable: Hive.box<Lista>(AppConstants.listsCollection).listenable(),
-              builder: (context, Box<Lista> listas, _) {
-                // no lists
-                if (listas.values.isEmpty) {
-                  return const Center(
-                    child: Text("No hay listas"),
-                  );
-                }
-      
-                // lists
-                return ImplicitlyAnimatedList<Lista>(
-                  shrinkWrap: true,
-                  items: listas.values.toList(),
-                  areItemsTheSame: (a, b) => a.id == b.id,
-      
-                  //
-                  itemBuilder: (context, animation, item, index) {
-                    return SizeFadeTransition(
-                      sizeFraction: 0.7,
-                      curve: Curves.easeInOut,
-                      animation: animation,
-                      child: CustomListTile(
-                        titleText: item.title,
-                        subTitleText: "20-06-2023",
-                        onTap: () => context.pushNamed(AppRoutes.crudScreen, extra: item.id),
-                        keyId: item.id,
-                        onRemove: () {
-                          item.delete();
-                        },
-                      ),
-                    );
-                  },
-      
-                  //
-                  removeItemBuilder: (context, animation, oldItem) {
-                    return FadeTransition(
-                      opacity: animation,
-                      child: CustomListTile(
-                        titleText: oldItem.title,
-                        subTitleText: "20-06-2023",
-                        onTap: () {},
-                        keyId: oldItem.id,
-                        onRemove: () {},
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            */
