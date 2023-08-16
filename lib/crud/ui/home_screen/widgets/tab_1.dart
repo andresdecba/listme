@@ -79,55 +79,58 @@ class _TabUnoState extends State<TabUno> {
               return ExpansionTile(
                 tilePadding: EdgeInsets.zero,
                 childrenPadding: EdgeInsets.zero,
-                collapsedIconColor: Colors.grey, //cerrado
-                iconColor: Colors.deepOrange, // abiertop
                 collapsedShape: Border(bottom: BorderSide(color: Colors.grey.shade200)), //cerrado
                 shape: Border(bottom: BorderSide(color: Colors.grey.shade200)), // abiertop
-                subtitle: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    '${listas.length} listas',
-                    style: const TextStyle(color: Colors.grey),
+
+                // HEAD //
+                // agregar nueva lista btn
+                leading: IconButton(
+                  onPressed: () {
+                    createNewList(categId: currentCategory.id);
+                    Future.delayed(const Duration(milliseconds: 400)).then(
+                      (value) => setState(() => currentCategory.isExpanded = true),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.add_circle,
+                    color: Colors.cyan,
                   ),
                 ),
 
-                // HEAD //
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // add btn //
-                    IconButton(
-                      onPressed: () {
-                        createNewList(categId: currentCategory.id);
-                        Future.delayed(const Duration(milliseconds: 400)).then(
-                          (value) => setState(() => currentCategory.isExpanded = true),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.add_circle,
-                        color: Colors.black,
-                      ),
-                    ),
+                // titulo de la categoria
+                title: Text(
+                  currentCategory.name,
+                  style: style.titleMedium!.copyWith(color: Colors.black),
+                ),
 
-                    // title txt //
-                    Expanded(
-                      child: BuildTitle(
-                        initialValue: currentCategory.name,
-                        regularModeStyle: style.titleMedium!.copyWith(color: Colors.black),
-                        editModeStyle: style.titleMedium!.copyWith(color: Colors.grey),
-                        centerTxt: false,
-                        onEditingComplete: (value) {
-                          setState(() {
-                            // currentCategory.name = value;
-                            // currentCategory.save()
-                            //_dbList.title = value;
-                            //_dbList.save();
-                          });
-                        },
+                // cantidad de listas
+                subtitle: Text(
+                  listas.length > 1 ? '${listas.length} lists' : '${listas.length} list',
+                  style: const TextStyle(color: Colors.grey),
+                ),
+
+                // options menu
+                trailing: PopupMenuButton(
+                  color: Colors.grey.shade200,
+                  position: PopupMenuPosition.under,
+                  icon: const Icon(
+                    Icons.more_vert_rounded,
+                    color: Colors.grey,
+                  ),
+                  itemBuilder: (context) {
+                    return [
+                      menuOpts(
+                        icon: Icons.delete_forever,
+                        text: 'Delete',
+                        onTap: () {},
                       ),
-                    ),
-                  ],
+                      menuOpts(
+                        icon: Icons.edit,
+                        text: 'Change name',
+                        onTap: () {},
+                      ),
+                    ];
+                  },
                 ),
 
                 // LISTENABLE DE LAS LISTAS DE LA [currentCateg] //
@@ -160,6 +163,27 @@ class _TabUnoState extends State<TabUno> {
     );
   }
 
+  PopupMenuItem menuOpts({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return PopupMenuItem(
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(text),
+            Icon(icon, color: Colors.grey.shade500),
+          ],
+        ),
+      ),
+      onTap: () => onTap(),
+    );
+  }
+
   void createNewList({required String categId}) {
     customBottomSheet(
       context: context,
@@ -175,23 +199,6 @@ class _TabUnoState extends State<TabUno> {
             category: categId,
           );
         }),
-      ),
-    );
-  }
-}
-
-class _EmptyCategory extends StatelessWidget {
-  const _EmptyCategory();
-
-  @override
-  Widget build(BuildContext context) {
-    final TextTheme style = Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      width: double.infinity,
-      child: Text(
-        'No hay listas',
-        style: style.bodyMedium!.copyWith(color: Colors.grey),
       ),
     );
   }
