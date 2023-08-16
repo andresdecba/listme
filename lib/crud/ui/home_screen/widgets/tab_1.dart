@@ -34,35 +34,25 @@ class _TabUnoState extends State<TabUno> {
       );
     }
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(15),
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // TITULO - CATEGORIAS //
-          const SizedBox(height: 10),
+    return ValueListenableBuilder(
+      valueListenable: Hive.box<ListCategory>(AppConstants.categoriesDb).listenable(),
+      builder: (context, Box<ListCategory> categories, child) {
+        //  no lists
+        // TODO si no hay categorias poner una imagen svg
+        if (categories.values.isEmpty) {
+          return const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Center(
+              child: Text("No hay categorias"),
+            ),
+          );
+        }
 
-          // EXPANSION //
-          //if (!isLoading)
-          ValueListenableBuilder(
-            valueListenable: Hive.box<ListCategory>(AppConstants.categoriesDb).listenable(),
-            builder: (context, Box<ListCategory> categories, child) {
-              //  no lists
-              if (categories.values.isEmpty) {
-                return const Center(
-                  child: Text("No hay categorias"),
-                );
-              }
-              // iterate catgs
-              return CategoriesExpansionList(
-                categories: categories.values.toList(),
-              );
-            },
-          )
-        ],
-      ),
+        // iterate catgs
+        return CategoriesExpansionList(
+          categories: categories.values.toList(),
+        );
+      },
     );
   }
 }

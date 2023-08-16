@@ -6,37 +6,32 @@ part 'list_category.g.dart';
 @HiveType(typeId: 3)
 class ListCategory {
   ListCategory({
-    required this.categoryName,
+    required this.name,
     required this.isExpanded,
-    required this.categoryId,
-    required this.listsIds,
+    required this.id,
   });
 
   @HiveField(0)
-  String categoryName;
-  @HiveField(1)
-  List<String> listsIds;
+  String name;
   @HiveField(2)
   bool isExpanded;
   @HiveField(3)
-  String categoryId;
+  String id;
 
   ListCategory copyWith({
-    required String categoryName,
-    required List<String> ids,
+    required String name,
     required bool isExpanded,
-    required String categoryId,
+    required String id,
   }) {
     return ListCategory(
-      categoryName: categoryName,
+      name: name,
       isExpanded: isExpanded,
-      categoryId: categoryId,
-      listsIds: ids,
+      id: id,
     );
   }
 
   @override
   String toString() {
-    return 'categoryName: $categoryName, ids: $listsIds, isExpanded $isExpanded, categoryId $categoryId';
+    return 'categoryName: $name, isExpanded $isExpanded, categoryId $id';
   }
 }

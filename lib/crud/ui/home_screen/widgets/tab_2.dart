@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reorderable_list_2.dart';
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
 import 'package:listme/core/commons/constants.dart';
+import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
@@ -42,9 +43,8 @@ class _TabDosState extends State<TabDos> {
     return ValueListenableBuilder(
       valueListenable: Hive.box<Lista>(AppConstants.listasDb).listenable(),
       builder: (context, Box<Lista> value, _) {
-        List<Lista> listas = value.values.toList();
-        listas.sort((a, b) => a.creationDate.compareTo(b.creationDate));
-        listas = listas.reversed.toList();
+        //
+        List<Lista> listas = Helpers.sortListsByDateTime(listas: value.values.toList());
 
         // no lists
         if (listas.isEmpty) {

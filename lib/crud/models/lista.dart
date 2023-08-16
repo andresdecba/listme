@@ -16,12 +16,15 @@ class Lista extends HiveObject {
   String id;
   @HiveField(4)
   String? colorScheme;
+  @HiveField(5)
+  String? category;
 
   Lista({
     required this.title,
     required this.creationDate,
     required this.items,
     required this.id,
+    this.category,
     this.colorScheme,
   });
 
@@ -30,19 +33,21 @@ class Lista extends HiveObject {
     required DateTime creationDate,
     required List<Item> items,
     required String id,
+    String? category,
     String? colorScheme,
   }) {
     return Lista(
+      id: id,
       title: title,
       creationDate: creationDate,
       items: items,
-      id: id,
+      category: category,
     );
   }
 
   @override
   String toString() {
-    return 'id: $id, title: $title, items: $items';
+    return 'id: $id, title: $title, creationDate $creationDate, items: $items, category $category';
   }
 }
 

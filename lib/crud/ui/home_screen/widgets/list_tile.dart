@@ -10,6 +10,7 @@ class CustomListTile extends StatelessWidget {
     required this.onRemove,
     required this.done,
     required this.undone,
+    this.bgColor,
   });
 
   final String titleText;
@@ -18,6 +19,7 @@ class CustomListTile extends StatelessWidget {
   final VoidCallback onRemove;
   final int done;
   final int undone;
+  final Color? bgColor;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class CustomListTile extends StatelessWidget {
         margin: const EdgeInsets.symmetric(vertical: 2),
         //padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.grey.shade200,
+          color: bgColor ?? Colors.grey.shade200,
           borderRadius: const BorderRadius.all(Radius.circular(8)),
         ),
         child: Row(

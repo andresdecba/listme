@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/routes/routes.dart';
-import 'package:listme/crud/models/list_category.dart';
-import 'package:listme/crud/models/lista.dart';
+import 'package:listme/crud/data/local_storage_datasource.dart';
 import 'package:listme/crud/ui/home_screen/widgets/tab_1.dart';
 import 'package:listme/crud/ui/home_screen/widgets/tab_2.dart';
 import 'package:listme/crud/ui/shared_widgets/create_task_bottomsheet.dart';
 import 'package:listme/crud/ui/shared_widgets/input_item.dart';
-import 'package:uuid/uuid.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -21,26 +17,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  late Box<ListCategory> _categoriesDb;
-  late Box<Lista> _listasDb;
-  late Uuid _uuid;
   late GlobalKey<AnimatedListState> _listKey;
   late Duration _duration1;
   late Duration _duration2;
   late TabController _tabController;
   late String _bottomSheetTitle;
+  late LocalStorageDatasource _datasource;
 
   @override
   void initState() {
     super.initState();
-    _categoriesDb = Hive.box(AppConstants.categoriesDb);
-    _listasDb = Hive.box(AppConstants.listasDb);
-    _uuid = const Uuid();
     _listKey = GlobalKey<AnimatedListState>();
     _duration1 = const Duration(milliseconds: 400);
     _duration2 = const Duration(milliseconds: 600);
     _tabController = TabController(length: 2, vsync: this);
     _bottomSheetTitle = 'Add a new category';
+    _datasource = LocalStorageDatasourceImpl();
 
     _tabController.addListener(() {
       setState(() {
@@ -131,32 +123,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   void createNewList({required String listName}) async {
     // nueva lista
-    final newList = Lista(
-      title: listName,
-      creationDate: DateTime.now(),
-      items: [],
-      id: _uuid.v4(),
-    );
-    // agregar a la db
-    _listasDb.put(newList.id, newList);
+    var result = _datasource.createNewList(listName: listName);
+
     // agregar a la lista animada
     if (_listKey.currentState != null) {
       _listKey.currentState!.insertItem(0, duration: _duration1);
     }
     // esperar para que se vea la animacion en la lista y navegar
     await Future.delayed(_duration2).then((value) {
-      context.pushNamed(AppRoutes.crudScreen, extra: newList.id);
+      context.pushNamed(AppRoutes.crudScreen, extra: result);
     });
   }
 
   void createNewCategory({required String categoryName}) {
-    final ListCategory newCategory = ListCategory(
-      categoryName: categoryName,
-      isExpanded: true,
-      categoryId: _uuid.v4(),
-      listsIds: [],
-    );
-
-    _categoriesDb.put(newCategory.categoryId, newCategory);
+    _datasource.createNewCategory(categoryName: categoryName);
   }
 }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
+import 'package:listme/crud/data/local_storage_datasource.dart';
 import 'package:listme/crud/models/list_category.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/crud_screen/widgets/list_title.dart';
+import 'package:listme/crud/ui/crud_screen/widgets/build_title.dart';
 import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
+import 'package:listme/crud/ui/shared_widgets/create_task_bottomsheet.dart';
+import 'package:listme/crud/ui/shared_widgets/input_item.dart';
 
 // MUESTRA LAS LISTAS EN TAB-1 "My lists by categories" //
 
@@ -22,93 +23,134 @@ class CategoriesExpansionList extends StatefulWidget {
 }
 
 class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
-  late Box<Lista> _listasDb;
+  late LocalStorageDatasource _datasource;
 
   @override
   void initState() {
     super.initState();
-    _listasDb = Hive.box(AppConstants.listasDb);
+    _datasource = LocalStorageDatasourceImpl();
   }
 
   @override
   Widget build(BuildContext context) {
     final TextTheme style = Theme.of(context).textTheme;
 
-    return ExpansionPanelList(
-      animationDuration: const Duration(milliseconds: 400),
-      expansionCallback: (int panelIndex, bool isOpen) => setState(() {
-        widget.categories[panelIndex].isExpanded = !isOpen;
-      }),
-      expandIconColor: Colors.deepOrange,
-      elevation: 0,
-      expandedHeaderPadding: const EdgeInsets.symmetric(horizontal: 15),
-      dividerColor: Colors.cyan,
+    return ListView(
+      shrinkWrap: true,
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       children: [
         // ITERAR CATEGORIAS //
-        ...widget.categories.map((e) {
-          // buscar listas
+        ...widget.categories.map((currentCategory) {
+          // obtener las listas de [currentCateg]
+          var getDb = _datasource.getListsOfCategory(categId: currentCategory.id);
+          List<Lista> listas = Helpers.sortListsByDateTime(listas: getDb);
 
-          final List<Lista> listas = [];
-          for (var element in e.listsIds) {
-            var lista = _listasDb.get(element);
-            if (lista != null) {
-              listas.add(lista);
-            }
-          }
-
-          return ExpansionPanel(
-            isExpanded: e.isExpanded,
-            canTapOnHeader: true,
-            backgroundColor: Colors.white,
-
-            // HEADER: titulo
-            headerBuilder: (context, isOpen2) => Center(
-              child: ListTitle(
-                initialValue: e.categoryName,
-                regularModeStyle: style.titleMedium!.copyWith(color: Colors.black),
-                editModeStyle: style.titleMedium!.copyWith(color: Colors.grey),
-                centerTxt: false,
-                onEditingComplete: (value) {
-                  setState(() {
-                    //_dbList.title = value;
-                    //_dbList.save();
-                  });
-                },
+          return ExpansionTile(
+            tilePadding: EdgeInsets.zero,
+            childrenPadding: EdgeInsets.zero,
+            collapsedIconColor: Colors.grey, //cerrado
+            iconColor: Colors.deepOrange, // abiertop
+            collapsedShape: Border(bottom: BorderSide(color: Colors.grey.shade200)), //cerrado
+            shape: Border(bottom: BorderSide(color: Colors.grey.shade200)), // abiertop
+            subtitle: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Text(
+                '${listas.length} listas',
+                style: const TextStyle(color: Colors.grey),
               ),
             ),
 
-            //  BODY: listas
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
+            // HEAD //
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // if empty
-                if (e.listsIds.isEmpty) const _EmptyCategory(),
+                // add btn //
+                IconButton(
+                  onPressed: () {
+                    createNewList(categId: currentCategory.id);
+                    Future.delayed(const Duration(milliseconds: 400)).then(
+                      (value) => setState(() => currentCategory.isExpanded = true),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.add_circle,
+                    color: Colors.black,
+                  ),
+                ),
 
-                // iterate lists
-                ...listas.map((e) {
-                  int totalDone = 0;
-                  int totalUndone = e.items.length;
-                  for (var element in e.items) {
-                    if (element.isDone) {
-                      totalDone++;
-                    }
-                  }
-
-                  return CustomListTile(
-                    done: totalDone,
-                    undone: totalUndone,
-                    titleText: e.title,
-                    subTitleText: Helpers.longDateFormater(e.creationDate),
-                    onTap: () {},
-                    onRemove: () {},
-                  );
-                })
+                // title txt //
+                Expanded(
+                  child: BuildTitle(
+                    initialValue: currentCategory.name,
+                    regularModeStyle: style.titleMedium!.copyWith(color: Colors.black),
+                    editModeStyle: style.titleMedium!.copyWith(color: Colors.grey),
+                    centerTxt: false,
+                    onEditingComplete: (value) {
+                      setState(() {
+                        //_dbList.title = value;
+                        //_dbList.save();
+                      });
+                    },
+                  ),
+                ),
               ],
             ),
+
+            // ITERAR LISTAS DE LA CATEGORIA //
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // if no lists in [currentCateg]
+                  if (listas.isEmpty) const _EmptyCategory(),
+
+                  // lists in [currentCateg]
+                  ...listas.map((e) {
+                    int totalDone = 0;
+                    int totalUndone = e.items.length;
+                    for (var element in e.items) {
+                      if (element.isDone) {
+                        totalDone++;
+                      }
+                    }
+                    return CustomListTile(
+                      done: totalDone,
+                      undone: totalUndone,
+                      titleText: e.title,
+                      subTitleText: Helpers.longDateFormater(e.creationDate),
+                      onTap: () {},
+                      onRemove: () {},
+                    );
+                  }),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ],
           );
-        }).toList(),
+        })
       ],
+    );
+  }
+
+  void createNewList({required String categId}) {
+    customBottomSheet(
+      context: context,
+      showClose: true,
+      enableDrag: true,
+      onClose: () {},
+      title: 'Add a new list',
+      child: CustomTextfield(
+        onTap: () => setState(() {}),
+        onEditingComplete: (value) => setState(() {
+          _datasource.createNewList(
+            listName: value,
+            category: categId,
+          );
+        }),
+      ),
     );
   }
 }

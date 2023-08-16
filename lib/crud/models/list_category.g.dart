@@ -17,25 +17,22 @@ class ListCategoryAdapter extends TypeAdapter<ListCategory> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ListCategory(
-      categoryName: fields[0] as String,
+      name: fields[0] as String,
       isExpanded: fields[2] as bool,
-      categoryId: fields[3] as String,
-      listsIds: (fields[1] as List).cast<String>(),
+      id: fields[3] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ListCategory obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.categoryName)
-      ..writeByte(1)
-      ..write(obj.listsIds)
+      ..write(obj.name)
       ..writeByte(2)
       ..write(obj.isExpanded)
       ..writeByte(3)
-      ..write(obj.categoryId);
+      ..write(obj.id);
   }
 
   @override

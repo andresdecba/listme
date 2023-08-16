@@ -6,7 +6,7 @@ import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/shared_widgets/create_task_bottomsheet.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/crud_list.dart';
 import 'package:listme/crud/ui/shared_widgets/input_item.dart';
-import 'package:listme/crud/ui/crud_screen/widgets/list_title.dart';
+import 'package:listme/crud/ui/crud_screen/widgets/build_title.dart';
 
 class NewCrudScreen extends StatefulWidget {
   const NewCrudScreen({
@@ -111,7 +111,7 @@ class _NewCrudScreenState extends State<NewCrudScreen> {
                     child: Column(
                       children: [
                         // title //
-                        ListTitle(
+                        BuildTitle(
                           initialValue: _dbList.title,
                           onEditingComplete: (value) {
                             setState(() {

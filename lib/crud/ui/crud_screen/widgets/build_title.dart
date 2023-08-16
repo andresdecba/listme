@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:listme/core/commons/typedefs.dart';
 
-class ListTitle extends StatefulWidget {
-  const ListTitle({
+class BuildTitle extends StatefulWidget {
+  const BuildTitle({
     required this.initialValue,
     required this.onEditingComplete,
     this.editModeStyle,
@@ -18,10 +18,10 @@ class ListTitle extends StatefulWidget {
   final bool centerTxt;
 
   @override
-  State<ListTitle> createState() => _ListTitleState();
+  State<BuildTitle> createState() => _BuildTitleState();
 }
 
-class _ListTitleState extends State<ListTitle> {
+class _BuildTitleState extends State<BuildTitle> {
   late FocusNode _focusNode;
   late TextEditingController _textCtr;
   late bool _isEditMode;
@@ -51,7 +51,6 @@ class _ListTitleState extends State<ListTitle> {
         textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.done,
         style: _isEditMode ? widget.editModeStyle ?? editModeStyle : widget.regularModeStyle ?? regularModeStyle,
-
         textAlign: widget.centerTxt
             ? _isEditMode
                 ? TextAlign.left
