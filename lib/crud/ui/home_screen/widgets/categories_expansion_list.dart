@@ -109,20 +109,9 @@ class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
 
                   // lists in [currentCateg]
                   ...listas.map((e) {
-                    int totalDone = 0;
-                    int totalUndone = e.items.length;
-                    for (var element in e.items) {
-                      if (element.isDone) {
-                        totalDone++;
-                      }
-                    }
                     return CustomListTile(
-                      done: totalDone,
-                      undone: totalUndone,
-                      titleText: e.title,
-                      subTitleText: Helpers.longDateFormater(e.creationDate),
-                      onTap: () {},
-                      onRemove: () {},
+                      lista: e,
+                      onRemove: () => setState(() => e.delete()),
                     );
                   }),
                   const SizedBox(height: 10),

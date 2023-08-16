@@ -5,7 +5,6 @@ import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reord
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
-import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
 
@@ -33,6 +32,7 @@ class _TabDosState extends State<TabDos> {
 
   @override
   Widget build(BuildContext context) {
+    // LOADER //
     if (isLoading) {
       return const Center(
         child: CircularProgressIndicator(
@@ -40,13 +40,15 @@ class _TabDosState extends State<TabDos> {
         ),
       );
     }
+
+    // RENDER LISTA //
     return ValueListenableBuilder(
       valueListenable: Hive.box<Lista>(AppConstants.listasDb).listenable(),
       builder: (context, Box<Lista> value, _) {
         //
         List<Lista> listas = Helpers.sortListsByDateTime(listas: value.values.toList());
 
-        // no lists
+        // EMPTY SCREEN //
         if (listas.isEmpty) {
           return const Padding(
             padding: EdgeInsets.all(8.0),
@@ -63,51 +65,25 @@ class _TabDosState extends State<TabDos> {
           areItemsTheSame: (a, b) => a.id == b.id,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
 
-          //
+          // add
           itemBuilder: (context, animation, item, index) {
-            int totalDone = 0;
-            int totalUndone = item.items.length;
-            for (var element in item.items) {
-              if (element.isDone) {
-                totalDone++;
-              }
-            }
-
             return SizeFadeTransition(
               sizeFraction: 0.7,
               curve: Curves.easeInOut,
               animation: animation,
               child: CustomListTile(
-                done: totalDone,
-                undone: totalUndone,
-                titleText: item.title,
-                subTitleText: "20-06-2023",
-                onTap: () => context.pushNamed(AppRoutes.crudScreen, extra: item.id),
-                onRemove: () {
-                  item.delete();
-                },
+                lista: item,
+                onRemove: () => item.delete(),
               ),
             );
           },
 
-          //
+          // remove
           removeItemBuilder: (context, animation, oldItem) {
-            int totalDone = 0;
-            int totalUndone = oldItem.items.length;
-            for (var element in oldItem.items) {
-              if (element.isDone) {
-                totalDone++;
-              }
-            }
-
             return FadeTransition(
               opacity: animation,
               child: CustomListTile(
-                done: totalDone,
-                undone: totalUndone,
-                titleText: oldItem.title,
-                subTitleText: "20-06-2023",
-                onTap: () {},
+                lista: oldItem,
                 onRemove: () {},
               ),
             );

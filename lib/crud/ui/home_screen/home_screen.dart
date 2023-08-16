@@ -76,8 +76,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           labelColor: Colors.white,
           onTap: (value) {},
           tabs: const [
-            Tab(text: 'My lists by categories'),
             Tab(text: 'My lists'),
+            Tab(text: 'My lists by categories'),
           ],
         ),
       ),
@@ -111,11 +111,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: const [
-          // TAB 1 //
-          TabUno(),
-
           // TAB 2 //
           TabDos(),
+          // TAB 1 //
+          TabUno(),
         ],
       ),
     );

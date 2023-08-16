@@ -13,6 +13,7 @@ abstract class LocalStorageDatasource {
   String createNewList({required String listName, String? category, String? colorScheme});
   String createNewCategory({required String categoryName});
   List<Lista> getListsOfCategory({required String categId});
+  void deleteLista({required String id});
 }
 
 class LocalStorageDatasourceImpl extends LocalStorageDatasource {
@@ -44,7 +45,6 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
       isExpanded: true,
       id: _uuid.v4(),
     );
-
     _categoriesDb.put(newCategory.id, newCategory);
     return newCategory.id;
   }
@@ -52,14 +52,17 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   @override
   List<Lista> getListsOfCategory({required String categId}) {
     final List<Lista> result = [];
-
     for (var e in _listasDb.values) {
       if (e.category == categId) {
         result.add(e);
       }
     }
-
     return result;
+  }
+
+  @override
+  void deleteLista({required String id}) {
+    _listasDb.delete(id);
   }
 }
 
