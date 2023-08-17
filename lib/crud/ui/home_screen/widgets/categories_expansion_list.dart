@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:listme/core/commons/helpers.dart';
+import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/data/local_storage_datasource.dart';
 import 'package:listme/crud/models/list_category.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/build_title.dart';
 import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
-import 'package:listme/crud/ui/shared_widgets/create_task_bottomsheet.dart';
-import 'package:listme/crud/ui/shared_widgets/input_item.dart';
 
 // MUESTRA LAS LISTAS EN TAB-1 "My lists by categories" //
 
@@ -24,11 +23,13 @@ class CategoriesExpansionList extends StatefulWidget {
 
 class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
   late LocalStorageDatasource _datasource;
+  late CrudUseCases _crudUseCases;
 
   @override
   void initState() {
     super.initState();
     _datasource = LocalStorageDatasourceImpl();
+    _crudUseCases = CrudUseCasesImpl();
   }
 
   @override
@@ -69,7 +70,7 @@ class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
                 // add btn //
                 IconButton(
                   onPressed: () {
-                    createNewList(categId: currentCategory.id);
+                    _crudUseCases.createNewList(context: context, categoryId: currentCategory.id);
                     Future.delayed(const Duration(milliseconds: 400)).then(
                       (value) => setState(() => currentCategory.isExpanded = true),
                     );
@@ -121,25 +122,6 @@ class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
           );
         })
       ],
-    );
-  }
-
-  void createNewList({required String categId}) {
-    customBottomSheet(
-      context: context,
-      showClose: true,
-      enableDrag: true,
-      onClose: () {},
-      title: 'Add a new list',
-      child: CustomTextfield(
-        onTap: () => setState(() {}),
-        onEditingComplete: (value) => setState(() {
-          _datasource.createNewList(
-            listName: value,
-            category: categId,
-          );
-        }),
-      ),
     );
   }
 }

@@ -1,34 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/crud/data/local_storage_datasource.dart';
+import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/list_category.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/crud_screen/widgets/build_title.dart';
 import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
-import 'package:listme/crud/ui/shared_widgets/create_task_bottomsheet.dart';
+import 'package:listme/crud/ui/shared_widgets/custom_bottomsheet.dart';
 import 'package:listme/crud/ui/shared_widgets/input_item.dart';
 
-class TabUno extends StatefulWidget {
-  const TabUno({
+class CategoriesTab extends StatefulWidget {
+  const CategoriesTab({
     super.key,
   });
 
   @override
-  State<TabUno> createState() => _TabUnoState();
+  State<CategoriesTab> createState() => _CategoriesTabState();
 }
 
-class _TabUnoState extends State<TabUno> {
+class _CategoriesTabState extends State<CategoriesTab> {
   bool isLoading = true;
   late LocalStorageDatasource _datasource;
-  final Box<ListCategory> categoryDb = Hive.box<ListCategory>(AppConstants.categoriesDb);
-  final Box<Lista> listaDb = Hive.box<Lista>(AppConstants.listasDb);
+  late CrudUseCases _crudUseCases;
+  late Box<ListCategory> _categoryDb;
+  late Box<Lista> _listaDb;
+  late LocalStorageDatasource _dataSource;
 
   @override
   void initState() {
     super.initState();
     _datasource = LocalStorageDatasourceImpl();
+    _crudUseCases = CrudUseCasesImpl();
+    _dataSource = LocalStorageDatasourceImpl();
+    _categoryDb = Hive.box<ListCategory>(AppConstants.categoriesDb);
+    _listaDb = Hive.box<Lista>(AppConstants.listasDb);
+
     Future.delayed(const Duration(milliseconds: 350)).then((value) => setState(() {
           isLoading = false;
         }));
@@ -49,7 +57,7 @@ class _TabUnoState extends State<TabUno> {
 
     // LISTENEABLE DE LAS CATEGORIAS //
     return ValueListenableBuilder(
-      valueListenable: categoryDb.listenable(),
+      valueListenable: _categoryDb.listenable(),
       builder: (context, Box<ListCategory> value, child) {
         List<ListCategory> categories = value.values.toList();
 
@@ -73,30 +81,23 @@ class _TabUnoState extends State<TabUno> {
             // ITERAR CATEGORIAS //
             ...categories.map((currentCategory) {
               // obtener las listas de [currentCateg]
-              List<Lista> getDb = _datasource.getListsOfCategory(categId: currentCategory.id);
-              List<Lista> listas = Helpers.sortListsByDateTime(listas: getDb);
+              List<Lista> listas = _datasource.getListsOfCategory(categId: currentCategory.id);
+              ExpansionTileController ctlr = ExpansionTileController();
 
               return ExpansionTile(
+                key: ValueKey(currentCategory.id),
                 tilePadding: EdgeInsets.zero,
                 childrenPadding: EdgeInsets.zero,
                 collapsedShape: Border(bottom: BorderSide(color: Colors.grey.shade200)), //cerrado
                 shape: Border(bottom: BorderSide(color: Colors.grey.shade200)), // abiertop
+                controller: ctlr,
+                initiallyExpanded: currentCategory.isExpanded,
+                onExpansionChanged: (value) {
+                  currentCategory.isExpanded = value;
+                  currentCategory.save();
+                },
 
                 // HEAD //
-                // agregar nueva lista btn
-                leading: IconButton(
-                  onPressed: () {
-                    createNewList(categId: currentCategory.id);
-                    Future.delayed(const Duration(milliseconds: 400)).then(
-                      (value) => setState(() => currentCategory.isExpanded = true),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.add_circle,
-                    color: Colors.cyan,
-                  ),
-                ),
-
                 // titulo de la categoria
                 title: Text(
                   currentCategory.name,
@@ -109,8 +110,47 @@ class _TabUnoState extends State<TabUno> {
                   style: const TextStyle(color: Colors.grey),
                 ),
 
+                // agregar nueva lista btn
+                trailing: IconButton(
+                  onPressed: () {
+                    customBottomSheet(
+                      context: context,
+                      showClose: true,
+                      enableDrag: true,
+                      onClose: () {},
+                      title: 'Create a new list',
+                      child: CustomTextfield(
+                        onTap: () {},
+                        onEditingComplete: (value) {
+                          setState(() {
+                            _dataSource.createNewList(
+                              listName: value,
+                              category: currentCategory.id,
+                            );
+                            context.pop();
+                          });
+                        },
+                      ),
+                    );
+                    //_crudUseCases.createNewList(context: context, categoryId: currentCategory.id);
+                    Future.delayed(const Duration(milliseconds: 400)).then((value) => ctlr.expand());
+                  },
+                  icon: const Icon(
+                    Icons.add_circle,
+                    color: Colors.cyan,
+                  ),
+                ),
+
                 // options menu
-                trailing: PopupMenuButton(
+                leading: PopupMenuButton(
+                  onSelected: (value) {
+                    if (value == _MenuOptions.onChangeName) {
+                      _crudUseCases.changeCategoryName(category: currentCategory, context: context);
+                    }
+                    if (value == _MenuOptions.onDelete) {
+                      _crudUseCases.deleteCategory(categoryId: currentCategory.id, context: context);
+                    }
+                  },
                   color: Colors.grey.shade200,
                   position: PopupMenuPosition.under,
                   icon: const Icon(
@@ -120,14 +160,14 @@ class _TabUnoState extends State<TabUno> {
                   itemBuilder: (context) {
                     return [
                       menuOpts(
+                        value: _MenuOptions.onDelete,
                         icon: Icons.delete_forever,
-                        text: 'Delete',
-                        onTap: () {},
+                        title: const Text('Delete category'),
                       ),
                       menuOpts(
+                        value: _MenuOptions.onChangeName,
                         icon: Icons.edit,
-                        text: 'Change name',
-                        onTap: () {},
+                        title: const Text('Change category name'),
                       ),
                     ];
                   },
@@ -136,7 +176,7 @@ class _TabUnoState extends State<TabUno> {
                 // LISTENABLE DE LAS LISTAS DE LA [currentCateg] //
                 children: [
                   ValueListenableBuilder(
-                    valueListenable: listaDb.listenable(),
+                    valueListenable: _listaDb.listenable(),
                     builder: (context, value, child) {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -145,8 +185,9 @@ class _TabUnoState extends State<TabUno> {
                           // lists in [currentCateg]
                           ...listas.map((e) {
                             return CustomListTile(
+                              key: ValueKey(e.id),
                               lista: e,
-                              onRemove: () => setState(() => _datasource.deleteLista(id: e.id)),
+                              onRemove: () => setState(() => _crudUseCases.deleteLista(listaId: e.id)),
                             );
                           }),
                           const SizedBox(height: 10),
@@ -165,41 +206,24 @@ class _TabUnoState extends State<TabUno> {
 
   PopupMenuItem menuOpts({
     required IconData icon,
-    required String text,
-    required VoidCallback onTap,
+    required Widget title,
+    required _MenuOptions value,
   }) {
     return PopupMenuItem(
+      value: value,
       child: SizedBox(
         width: double.infinity,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(text),
+            title,
             Icon(icon, color: Colors.grey.shade500),
           ],
         ),
       ),
-      onTap: () => onTap(),
-    );
-  }
-
-  void createNewList({required String categId}) {
-    customBottomSheet(
-      context: context,
-      showClose: true,
-      enableDrag: true,
-      onClose: () {},
-      title: 'Add a new list',
-      child: CustomTextfield(
-        onTap: () => setState(() {}),
-        onEditingComplete: (value) => setState(() {
-          _datasource.createNewList(
-            listName: value,
-            category: categId,
-          );
-        }),
-      ),
     );
   }
 }
+
+enum _MenuOptions { onChangeName, onDelete }

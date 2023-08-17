@@ -10,16 +10,16 @@ import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
 
 // MUESTRA TODAS LAS LISTAS EN TAB-2 "My lists" //
 
-class TabDos extends StatefulWidget {
-  const TabDos({
+class AllListsTab extends StatefulWidget {
+  const AllListsTab({
     super.key,
   });
 
   @override
-  State<TabDos> createState() => _TabDosState();
+  State<AllListsTab> createState() => _AllListsTabState();
 }
 
-class _TabDosState extends State<TabDos> {
+class _AllListsTabState extends State<AllListsTab> {
   bool isLoading = true;
 
   @override

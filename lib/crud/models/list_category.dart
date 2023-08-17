@@ -4,7 +4,7 @@ part 'list_category.g.dart';
 // flutter packages pub run build_runner build
 
 @HiveType(typeId: 3)
-class ListCategory {
+class ListCategory extends HiveObject {
   ListCategory({
     required this.name,
     required this.isExpanded,

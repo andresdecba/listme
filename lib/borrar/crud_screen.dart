@@ -7,7 +7,7 @@ import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/crud/models/item.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/shared_widgets/create_task_bottomsheet.dart';
+import 'package:listme/crud/ui/shared_widgets/custom_bottomsheet.dart';
 import 'package:listme/crud/ui/shared_widgets/input_item.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/item_category_tile.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/item_tile.dart';

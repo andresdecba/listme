@@ -5,7 +5,7 @@ part 'item.g.dart';
 // flutter packages pub run build_runner build
 
 @HiveType(typeId: 2)
-class Item {
+class Item extends HiveObject {
   @HiveField(0)
   String content;
   @HiveField(1)

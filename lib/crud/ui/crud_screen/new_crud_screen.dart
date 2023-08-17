@@ -3,7 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/shared_widgets/create_task_bottomsheet.dart';
+import 'package:listme/crud/ui/shared_widgets/custom_bottomsheet.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/crud_list.dart';
 import 'package:listme/crud/ui/shared_widgets/input_item.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/build_title.dart';
