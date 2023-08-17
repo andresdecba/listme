@@ -118,7 +118,8 @@ class _CategoriesTabState extends State<CategoriesTab> {
                       showClose: true,
                       enableDrag: true,
                       onClose: () {},
-                      title: 'Create a new list',
+                      title: 'Create a new list in:',
+                      subTitle: '"${currentCategory.name}"',
                       child: CustomTextfield(
                         onTap: () {},
                         onEditingComplete: (value) {
@@ -145,10 +146,18 @@ class _CategoriesTabState extends State<CategoriesTab> {
                 leading: PopupMenuButton(
                   onSelected: (value) {
                     if (value == _MenuOptions.onChangeName) {
-                      _crudUseCases.changeCategoryName(category: currentCategory, context: context);
+                      _crudUseCases.changeCategoryName(
+                        category: currentCategory,
+                        categoryName: currentCategory.name,
+                        context: context,
+                      );
                     }
                     if (value == _MenuOptions.onDelete) {
-                      _crudUseCases.deleteCategory(categoryId: currentCategory.id, context: context);
+                      _crudUseCases.deleteCategory(
+                        categoryId: currentCategory.id,
+                        categoryName: currentCategory.name,
+                        context: context,
+                      );
                     }
                   },
                   color: Colors.grey.shade200,

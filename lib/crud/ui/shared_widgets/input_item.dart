@@ -5,11 +5,13 @@ class CustomTextfield extends StatefulWidget {
   const CustomTextfield({
     required this.onEditingComplete,
     required this.onTap,
+    this.hintText = 'Description here',
     Key? key,
   }) : super(key: key);
 
   final ReturnText onEditingComplete;
   final VoidCallback onTap;
+  final String hintText;
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
@@ -105,7 +107,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
               errorText: null,
               errorStyle: txtStyle.bodyMedium!.copyWith(color: Colors.red.shade800, fontStyle: FontStyle.italic),
               // hint STYLE
-              hintText: 'Description here',
+              hintText: widget.hintText,
               hintStyle: txtStyle.bodyLarge!.copyWith(color: Colors.grey.shade400, fontStyle: FontStyle.italic),
               // counter STYLE
               counterText: "$counter",

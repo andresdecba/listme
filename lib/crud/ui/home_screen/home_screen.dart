@@ -102,6 +102,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             title: _bottomSheetTitle,
             child: CustomTextfield(
               onTap: () {},
+              hintText: _tabController.index == 0 ? 'List name' : 'Category name',
               onEditingComplete: (value) => setState(() {
                 if (_tabController.index == 0) {
                   createNewList(listName: value);

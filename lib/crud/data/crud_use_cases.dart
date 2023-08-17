@@ -14,11 +14,13 @@ abstract class CrudUseCases {
 
   void changeCategoryName({
     required ListCategory category,
+    required String categoryName,
     required BuildContext context,
   });
 
   void deleteCategory({
     required String categoryId,
+    required String categoryName,
     required BuildContext context,
   });
 
@@ -60,6 +62,7 @@ class CrudUseCasesImpl extends CrudUseCases {
   @override
   void changeCategoryName({
     required ListCategory category,
+    required String categoryName,
     required BuildContext context,
   }) {
     customBottomSheet(
@@ -68,8 +71,10 @@ class CrudUseCasesImpl extends CrudUseCases {
       enableDrag: true,
       onClose: () {},
       title: 'Change category name',
+      subTitle: '"$categoryName"',
       child: CustomTextfield(
         onTap: () {},
+        hintText: 'New category name',
         onEditingComplete: (value) {
           _dataSource.changeCategoryName(
             newValue: value,
@@ -85,6 +90,7 @@ class CrudUseCasesImpl extends CrudUseCases {
   @override
   void deleteCategory({
     required String categoryId,
+    required String categoryName,
     required BuildContext context,
   }) {
     customBottomSheet(
@@ -93,11 +99,13 @@ class CrudUseCasesImpl extends CrudUseCases {
       enableDrag: true,
       onClose: () {},
       title: 'Delete category',
+      subTitle: '"$categoryName"',
       child: Column(
         children: [
           // BORRAR CATEGORIA //
-          SizedBox(
+          Container(
             width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: ElevatedButton(
               onPressed: () {
                 _dataSource.deleteCategory(categId: categoryId);
@@ -106,11 +114,11 @@ class CrudUseCasesImpl extends CrudUseCases {
               child: const Text('Borrar sólo la categoria'),
             ),
           ),
-          const SizedBox(height: 15),
 
           // BORRAR TODITO //
-          SizedBox(
+          Container(
             width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: ElevatedButton(
               onPressed: () {
                 _dataSource.deleteCategory(categId: categoryId, deleteLists: true);
