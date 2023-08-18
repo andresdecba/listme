@@ -44,7 +44,7 @@ class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
         // ITERAR CATEGORIAS //
         ...widget.categories.map((currentCategory) {
           // obtener las listas de [currentCateg]
-          var getDb = _datasource.getListsOfCategory(categId: currentCategory.id);
+          var getDb = _datasource.getListsFromCategoy(categId: currentCategory.id);
           List<Lista> listas = Helpers.sortListsByDateTime(listas: getDb);
 
           return ExpansionTile(

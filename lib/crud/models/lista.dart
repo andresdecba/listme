@@ -15,17 +15,17 @@ class Lista extends HiveObject {
   @HiveField(3)
   String id;
   @HiveField(4)
-  String? colorScheme;
+  String? colorSchemeId;
   @HiveField(5)
-  String? category;
+  String? categoryId;
 
   Lista({
     required this.title,
     required this.creationDate,
     required this.items,
     required this.id,
-    this.category,
-    this.colorScheme,
+    this.categoryId,
+    this.colorSchemeId,
   });
 
   Lista copyWith({
@@ -41,13 +41,13 @@ class Lista extends HiveObject {
       title: title,
       creationDate: creationDate,
       items: items,
-      category: category,
+      categoryId: category,
     );
   }
 
   @override
   String toString() {
-    return 'id: $id, title: $title, creationDate $creationDate, items: $items, category $category';
+    return 'id: $id, title: $title, creationDate $creationDate, items: $items, category $categoryId';
   }
 }
 

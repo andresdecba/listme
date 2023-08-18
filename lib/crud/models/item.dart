@@ -12,6 +12,8 @@ class Item extends HiveObject {
   bool isDone;
   @HiveField(2)
   String id;
+  // isCategory: define si es una categoria adentro de la lista
+  // bajo la cual agrupar items
   @HiveField(3)
   bool isCategory;
   GlobalKey? key;

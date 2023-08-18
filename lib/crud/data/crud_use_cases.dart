@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/data/local_storage_datasource.dart';
 import 'package:listme/crud/models/list_category.dart';
+import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/shared_widgets/custom_bottomsheet.dart';
 import 'package:listme/crud/ui/shared_widgets/input_item.dart';
 
@@ -9,6 +11,7 @@ abstract class CrudUseCases {
   void createNewList({
     String? categoryId,
     String? colorScheme,
+    bool navigate = true,
     required BuildContext context,
   });
 
@@ -27,6 +30,14 @@ abstract class CrudUseCases {
   void deleteLista({
     required String listaId,
   });
+
+  List<Lista> getListsFromCategoy({
+    required String categId,
+  }); // obtener las listas asociadas a una categoria
+
+  String createNewCategory({
+    required BuildContext context,
+  });
 }
 
 class CrudUseCasesImpl extends CrudUseCases {
@@ -37,8 +48,10 @@ class CrudUseCasesImpl extends CrudUseCases {
   void createNewList({
     String? categoryId,
     String? colorScheme,
+    bool navigate = true,
     required BuildContext context,
-  }) async {
+  }) {
+    var listaId = '';
     customBottomSheet(
       context: context,
       showClose: true,
@@ -47,12 +60,19 @@ class CrudUseCasesImpl extends CrudUseCases {
       title: 'Create a new list',
       child: CustomTextfield(
         onTap: () {},
-        onEditingComplete: (value) {
-          _dataSource.createNewList(
+        onEditingComplete: (value) async {
+          // crear lista
+          listaId = _dataSource.createNewList(
             listName: value,
             category: categoryId,
             colorScheme: colorScheme,
           );
+          // esperar para que se vea la animacion en la lista y navegar
+          if (navigate) {
+            await Future.delayed(const Duration(milliseconds: 600)).then((value) {
+              context.pushNamed(AppRoutes.crudScreen, extra: listaId);
+            });
+          }
         },
       ),
     );
@@ -78,7 +98,7 @@ class CrudUseCasesImpl extends CrudUseCases {
         onEditingComplete: (value) {
           _dataSource.changeCategoryName(
             newValue: value,
-            category: category,
+            categId: category.id,
           );
         },
       ),
@@ -136,6 +156,35 @@ class CrudUseCasesImpl extends CrudUseCases {
   @override
   void deleteLista({required String listaId}) {
     // TODO poner un emergente
-    _dataSource.deleteLista(id: listaId);
+    _dataSource.deleteLista(listId: listaId);
+  }
+
+  @override
+  List<Lista> getListsFromCategoy({required String categId}) {
+    return _dataSource.getListsFromCategoy(categId: categId);
+  }
+
+  @override
+  String createNewCategory({
+    required BuildContext context,
+  }) {
+    var value = '';
+    customBottomSheet(
+      context: context,
+      showClose: true,
+      enableDrag: true,
+      onClose: () {},
+      title: 'Create a new category',
+      child: CustomTextfield(
+        hintText: 'Category name',
+        onTap: () {},
+        onEditingComplete: (value) {
+          value = _dataSource.createNewCategory(
+            categoryName: value,
+          );
+        },
+      ),
+    );
+    return value;
   }
 }

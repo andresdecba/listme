@@ -21,8 +21,8 @@ class ListaAdapter extends TypeAdapter<Lista> {
       creationDate: fields[1] as DateTime,
       items: (fields[2] as List).cast<Item>(),
       id: fields[3] as String,
-      category: fields[5] as String?,
-      colorScheme: fields[4] as String?,
+      categoryId: fields[5] as String?,
+      colorSchemeId: fields[4] as String?,
     );
   }
 
@@ -39,9 +39,9 @@ class ListaAdapter extends TypeAdapter<Lista> {
       ..writeByte(3)
       ..write(obj.id)
       ..writeByte(4)
-      ..write(obj.colorScheme)
+      ..write(obj.colorSchemeId)
       ..writeByte(5)
-      ..write(obj.category);
+      ..write(obj.categoryId);
   }
 
   @override

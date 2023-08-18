@@ -33,7 +33,7 @@ void customBottomSheet({
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // close btn //
+            // CLOSE BTN //
             Visibility(
               visible: showClose,
               child: Align(

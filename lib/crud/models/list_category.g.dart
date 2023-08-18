@@ -20,19 +20,22 @@ class ListCategoryAdapter extends TypeAdapter<ListCategory> {
       name: fields[0] as String,
       isExpanded: fields[2] as bool,
       id: fields[3] as String,
+      listasIds: (fields[4] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, ListCategory obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(2)
       ..write(obj.isExpanded)
       ..writeByte(3)
-      ..write(obj.id);
+      ..write(obj.id)
+      ..writeByte(4)
+      ..write(obj.listasIds);
   }
 
   @override
