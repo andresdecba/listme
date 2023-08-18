@@ -38,6 +38,8 @@ abstract class CrudUseCases {
   String createNewCategory({
     required BuildContext context,
   });
+
+  ListCategory getCategory({required String categId});
 }
 
 class CrudUseCasesImpl extends CrudUseCases {
@@ -52,12 +54,21 @@ class CrudUseCasesImpl extends CrudUseCases {
     required BuildContext context,
   }) {
     var listaId = '';
+    String? categName;
+    String title = 'Create a new list';
+
+    if (categoryId != null) {
+      categName = _dataSource.getCategory(categId: categoryId).name;
+      title = 'Create a new list in:';
+    }
+
     customBottomSheet(
       context: context,
       showClose: true,
       enableDrag: true,
       onClose: () {},
-      title: 'Create a new list',
+      title: title,
+      subTitle: categName,
       child: CustomTextfield(
         onTap: () {},
         onEditingComplete: (value) async {
@@ -67,6 +78,7 @@ class CrudUseCasesImpl extends CrudUseCases {
             category: categoryId,
             colorScheme: colorScheme,
           );
+          context.pop();
           // esperar para que se vea la animacion en la lista y navegar
           if (navigate) {
             await Future.delayed(const Duration(milliseconds: 600)).then((value) {
@@ -90,7 +102,7 @@ class CrudUseCasesImpl extends CrudUseCases {
       showClose: true,
       enableDrag: true,
       onClose: () {},
-      title: 'Change category name',
+      title: 'Change name to:',
       subTitle: '"$categoryName"',
       child: CustomTextfield(
         onTap: () {},
@@ -106,7 +118,6 @@ class CrudUseCasesImpl extends CrudUseCases {
   }
 
   // BORRAR UNA CATEGORÍA //
-
   @override
   void deleteCategory({
     required String categoryId,
@@ -118,11 +129,11 @@ class CrudUseCasesImpl extends CrudUseCases {
       showClose: true,
       enableDrag: true,
       onClose: () {},
-      title: 'Delete category',
+      title: 'Delete category:',
       subTitle: '"$categoryName"',
       child: Column(
         children: [
-          // BORRAR CATEGORIA //
+          // borrar solamente las categporias y desasociar las listas
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -131,11 +142,11 @@ class CrudUseCasesImpl extends CrudUseCases {
                 _dataSource.deleteCategory(categId: categoryId);
                 context.pop();
               },
-              child: const Text('Borrar sólo la categoria'),
+              child: const Text('Delete only the category'),
             ),
           ),
 
-          // BORRAR TODITO //
+          // borrar la categoria mas todas sus listas asociadas
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -144,7 +155,15 @@ class CrudUseCasesImpl extends CrudUseCases {
                 _dataSource.deleteCategory(categId: categoryId, deleteLists: true);
                 context.pop();
               },
-              child: const Text('Borrar la categoria y todas sus listas'),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.warning_rounded),
+                  SizedBox(width: 10),
+                  Text('Delete the category and all its lists'),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 20),
@@ -153,17 +172,20 @@ class CrudUseCasesImpl extends CrudUseCases {
     );
   }
 
+  // BORRAR UNA LISTA //
   @override
   void deleteLista({required String listaId}) {
     // TODO poner un emergente
     _dataSource.deleteLista(listId: listaId);
   }
 
+  // OBTENER TODAS LAS LISTAS QUE PERTENEZCAN A UNA CATEGORIA //
   @override
   List<Lista> getListsFromCategoy({required String categId}) {
     return _dataSource.getListsFromCategoy(categId: categId);
   }
 
+  // CREATE A NEW CATEGORY //
   @override
   String createNewCategory({
     required BuildContext context,
@@ -182,9 +204,15 @@ class CrudUseCasesImpl extends CrudUseCases {
           value = _dataSource.createNewCategory(
             categoryName: value,
           );
+          context.pop();
         },
       ),
     );
     return value;
+  }
+
+  @override
+  ListCategory getCategory({required String categId}) {
+    return _dataSource.getCategory(categId: categId);
   }
 }

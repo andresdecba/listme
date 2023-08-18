@@ -8,12 +8,15 @@ import 'package:uuid/uuid.dart';
 abstract class LocalStorageDatasource {
   String createNewList({required String listName, String? category, String? colorScheme});
   String createNewCategory({required String categoryName});
+  ListCategory getCategory({required String categId});
   List<Lista> getListsFromCategoy({required String categId}); // obtener las listas asociadas a una categoria
   void deleteLista({required String listId});
   void deleteCategory({required String categId, bool deleteLists = false});
   void changeCategoryName({required String categId, required String newValue});
   void changeCategory({required String targetCategId, required String listId}); // cambiar de categoría una lista
 }
+
+// TODO: hacer un manejo de los errores si por si las busquedas devuelven "null"
 
 class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   final Uuid _uuid = const Uuid();
@@ -75,12 +78,12 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   @override
   void deleteLista({required String listId}) {
     var lista = _listasDb.get(listId);
-    // borra la lista de la categoria
     if (lista != null) {
-      var categ = _categoriesDb.get(lista.categoryId);
-      if (categ != null) {
-        categ.listasIds.remove(lista.categoryId);
-        categ.save();
+      // borra la lista de la categoria
+      if (lista.categoryId != null) {
+        var categ = _categoriesDb.get(lista.categoryId);
+        if (categ != null) categ.listasIds.remove(lista.categoryId);
+        categ!.save();
       }
       lista.delete();
     }
@@ -138,5 +141,10 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
       list.categoryId = targetCategId;
       list.save();
     }
+  }
+
+  @override
+  ListCategory getCategory({required String categId}) {
+    return _categoriesDb.get(categId)!;
   }
 }

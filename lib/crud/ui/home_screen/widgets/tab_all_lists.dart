@@ -92,7 +92,10 @@ class _AllListsTabState extends State<AllListsTab> {
                     sizeFraction: 0.7,
                     curve: Curves.easeInOut,
                     animation: animation,
-                    child: CustomListTile(lista: item, onRemove: () => _crudUseCases.deleteLista(listaId: item.id)),
+                    child: CustomListTile(
+                      lista: item,
+                      onRemove: () => _crudUseCases.deleteLista(listaId: item.id),
+                    ),
                   );
                 },
 

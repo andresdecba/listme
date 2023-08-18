@@ -4,7 +4,7 @@ import 'package:listme/crud/models/lista.dart';
 class Helpers {
   static String longDateFormater(DateTime date) {
     // sábado, 26/01/2023
-    return "${DateFormat('EEEE').format(date)}, ${DateFormat.yMd().format(date)}";
+    return "${DateFormat.MEd().format(date)}/${DateFormat('yy').format(date)}";
   }
 
   static List<Lista> sortListsByDateTime({required List<Lista> listas}) {

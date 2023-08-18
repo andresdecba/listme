@@ -14,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late GlobalKey<AnimatedListState> _listKey;
-
   late TabController _tabController;
   late CrudUseCases _crudUseCases;
 
@@ -22,7 +21,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _listKey = GlobalKey<AnimatedListState>();
-
     _tabController = TabController(length: 2, vsync: this);
     _crudUseCases = CrudUseCasesImpl();
   }
