@@ -7,7 +7,6 @@ import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/models/list_category.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/shared_widgets/custom_percent_indicator.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class CustomListTile extends StatelessWidget {
   const CustomListTile({
@@ -35,17 +34,6 @@ class CustomListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextTheme style = Theme.of(context).textTheme;
     final double widthScreen = MediaQuery.of(context).size.width;
-
-    // progress widget //
-    int done = 0;
-    int undone = lista.items.length;
-    for (var element in lista.items) {
-      if (element.isDone) {
-        done++;
-      }
-    }
-    final double percentage = (done - undone) * 100;
-    print('averga $percentage');
 
     return InkWell(
       onTap: () => context.pushNamed(AppRoutes.crudScreen, extra: lista.id),

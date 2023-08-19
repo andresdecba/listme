@@ -5,6 +5,7 @@ import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/list_category.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
+import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
 class CategoriesTab extends StatefulWidget {
   const CategoriesTab({
@@ -28,7 +29,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
     _categoryDb = Hive.box<ListCategory>(AppConstants.categoriesDb);
     _listaDb = Hive.box<Lista>(AppConstants.listasDb);
 
-    Future.delayed(const Duration(milliseconds: 350)).then((value) => setState(() {
+    Future.delayed(AppConstants.initialLoadingDuration).then((value) => setState(() {
           isLoading = false;
         }));
   }
@@ -39,11 +40,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
 
     // LOADER //
     if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(
-          color: Colors.cyan,
-        ),
-      );
+      return const InitialLoading();
     }
 
     // LISTENEABLE DE LAS CATEGORIAS //

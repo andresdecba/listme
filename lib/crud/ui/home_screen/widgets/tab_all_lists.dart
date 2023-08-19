@@ -7,6 +7,7 @@ import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
+import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
 // MUESTRA TODAS LAS LISTAS EN TAB-2 "My lists" //
 
@@ -27,7 +28,7 @@ class _AllListsTabState extends State<AllListsTab> {
   void initState() {
     super.initState();
     _crudUseCases = CrudUseCasesImpl();
-    Future.delayed(const Duration(milliseconds: 350)).then((value) => setState(() {
+    Future.delayed(AppConstants.initialLoadingDuration).then((value) => setState(() {
           isLoading = false;
         }));
   }
@@ -38,11 +39,7 @@ class _AllListsTabState extends State<AllListsTab> {
 
     // LOADER //
     if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(
-          color: Colors.cyan,
-        ),
-      );
+      return const InitialLoading();
     }
 
     // RENDER LISTA //

@@ -5,4 +5,6 @@ class AppConstants {
 
   static const String listasDb = "listsCollection"; // TODO: en prod cambiar el box x "" listasDb "" para unificar los nombres //
   static const String categoriesDb = "categoriesDb";
+
+  static const Duration initialLoadingDuration = Duration(milliseconds: 400);
 }
