@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
+import 'package:listme/crud/models/item.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/shared_widgets/custom_bottomsheet.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/crud_list.dart';
 import 'package:listme/crud/ui/shared_widgets/input_item.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/build_title.dart';
+import 'package:uuid/uuid.dart';
 
 class NewCrudScreen extends StatefulWidget {
   const NewCrudScreen({
@@ -25,10 +27,11 @@ class _NewCrudScreenState extends State<NewCrudScreen> {
   late Box<Lista> _box;
   late Lista _dbList;
   late ScrollController _scrollCtlr;
+  late Uuid _uuid;
+  late bool _isCategory;
   int idxInsert = 0;
   bool toNewCategory = false;
   double bottomSpaceForScroll = 0.0;
-  bool _showBottomSheet = false;
 
   @override
   void initState() {
@@ -36,6 +39,8 @@ class _NewCrudScreenState extends State<NewCrudScreen> {
     _box = Hive.box<Lista>(AppConstants.listasDb);
     _dbList = _box.get(widget.id)!;
     _scrollCtlr = ScrollController();
+    _uuid = const Uuid();
+    _isCategory = false;
   }
 
   @override
@@ -46,43 +51,19 @@ class _NewCrudScreenState extends State<NewCrudScreen> {
 
     // scaffold //
     return Scaffold(
-      // action btn //
-      floatingActionButton: !_showBottomSheet
-          ? FloatingActionButton(
-              backgroundColor: Colors.orangeAccent,
-              onPressed: () {
-                setState(() {
-                  _showBottomSheet = !_showBottomSheet;
-                  onCreateFloatingActionBtn();
-                });
-              },
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-            )
-          : null,
-
-      // bottomSheet: _showBottomSheet
-      //     ? BottomSheet(
-      //         elevation: 10,
-      //         backgroundColor: Colors.amber,
-      //         enableDrag: false,
-      //         onClosing: () {},
-      //         builder: (BuildContext ctx) {
-      //           return Padding(
-      //             padding: const EdgeInsets.all(8.0),
-      //             child: InputItem(
-      //               onTap: () {},
-      //               returnItem: (p0) {
-      //                 setState(() => _showBottomSheet = !_showBottomSheet);
-      //               },
-      //               dbList: _dbList,
-      //             ),
-      //           );
-      //         },
-      //       )
-      //     : null,
+      // ADD LISTA BTN //
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orangeAccent,
+        onPressed: () {
+          setState(() {
+            onCreateFloatingActionBtn();
+          });
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
 
       // BODY //
       body: SafeArea(
@@ -149,31 +130,43 @@ class _NewCrudScreenState extends State<NewCrudScreen> {
       showClose: true,
       enableDrag: true,
       onClose: () {
-        setState(() {
-          toNewCategory = false;
-          _showBottomSheet = !_showBottomSheet;
-        });
+        toNewCategory = false;
       },
-      child: CustomTextfield(
-        onTap: () {
-          setState(() {
-            _showBottomSheet = !_showBottomSheet;
-          });
-        },
-        onEditingComplete: (value) {
-          // setState(() {
-          //   scrollTo(0);
-          //   toNewCategory ? idxInsert = _dbList.items.length - 1 : idxInsert = _dbList.items.length;
-          //   if (value.isCategory) {
-          //     toNewCategory = true;
-          //     _dbList.items.add(value);
-          //     _dbList.save();
-          //   } else {
-          //     _dbList.items.insert(idxInsert, value);
-          //     _dbList.save();
-          //   }
-          // });
-        },
+      child: Column(
+        children: [
+          CustomTextfield(
+            onTap: () {},
+            onEditingComplete: (value) {
+              var newItem = Item(
+                content: value,
+                isDone: false,
+                id: _uuid.v4(),
+                isCategory: false,
+              );
+
+              scrollTo(0);
+              toNewCategory ? idxInsert = _dbList.items.length - 1 : idxInsert = _dbList.items.length;
+              if (_isCategory) {
+                toNewCategory = true;
+                _dbList.items.add(newItem);
+                _dbList.save();
+              }
+              if (!_isCategory) {
+                _dbList.items.insert(idxInsert, newItem);
+                _dbList.save();
+              }
+            },
+          ),
+          CheckboxListTile(
+            value: _isCategory,
+            title: Text('crear sublista'),
+            onChanged: (value) {
+              setState(() {
+                _isCategory = !_isCategory;
+              });
+            },
+          ),
+        ],
       ),
     );
   }

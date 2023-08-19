@@ -6,6 +6,7 @@ import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/models/list_category.dart';
 import 'package:listme/crud/models/lista.dart';
+import 'package:listme/crud/ui/shared_widgets/custom_percent_indicator.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class CustomListTile extends StatelessWidget {
@@ -44,6 +45,7 @@ class CustomListTile extends StatelessWidget {
       }
     }
     final double percentage = (done - undone) * 100;
+    print('averga $percentage');
 
     return InkWell(
       onTap: () => context.pushNamed(AppRoutes.crudScreen, extra: lista.id),
@@ -61,21 +63,11 @@ class CustomListTile extends StatelessWidget {
           children: [
             const SizedBox(width: 10),
 
-            // PROGRESS //
-            CircularPercentIndicator(
-              radius: 25,
-              lineWidth: 5.0,
-              percent: percentage,
-              center: Text(
-                '$done/$undone',
-                style: style.labelMedium,
-              ),
-              progressColor: Colors.cyan,
-              circularStrokeCap: CircularStrokeCap.round,
-            ),
+            // PROGRESS INDICATOR //
+            CustomPercentIndicator(lista: lista),
             const SizedBox(width: 20),
 
-            // TEXT //
+            // TEXTS //
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Column(

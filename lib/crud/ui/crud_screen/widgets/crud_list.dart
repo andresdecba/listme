@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reorderable_list_2.dart';
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
@@ -113,7 +114,10 @@ class _CrudListState extends State<CrudList> {
                               padding: index == 0 ? const EdgeInsets.fromLTRB(0, 20, 0, 0) : EdgeInsets.zero,
                               child: ItemTile(
                                 // TODO key: scrollKey,
-                                onTapIsDone: () => onDone(item),
+                                onTapIsDone: () {
+                                  onDone(item);
+                                  SystemSound.play(SystemSoundType.click);
+                                },
                                 onRemove: () => onRemoveItem(item),
                                 text: item.content,
                                 isDone: item.isDone,
