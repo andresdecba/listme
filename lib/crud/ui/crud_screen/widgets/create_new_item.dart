@@ -71,10 +71,19 @@ mixin CreateNewItem {
 
               // insertar la categoria abajo del último item sin categoria
               if (isSublist) {
-                for (var element in lista.items) {
-                  if (element.isCategory) {
-                    sublistIndex = lista.items.indexOf(element);
-                    break;
+                if (lista.items.isNotEmpty) {
+                  bool isAnySublist = false;
+                  // si hay alguna sub en la lista
+                  for (var element in lista.items) {
+                    if (element.isCategory) {
+                      isAnySublist = true;
+                      sublistIndex = lista.items.indexOf(element);
+                      break;
+                    }
+                  }
+                  // si no hay ninguna sub
+                  if (!isAnySublist) {
+                    sublistIndex = lista.items.length;
                   }
                 }
                 lista.items.insert(sublistIndex, newItem);

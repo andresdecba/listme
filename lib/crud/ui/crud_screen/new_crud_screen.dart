@@ -110,7 +110,7 @@ class _NewCrudScreenState extends State<NewCrudScreen> with CreateNewItem {
                           builder: (context, db, child) {
                             return Column(
                               children: [
-                                if (!lista.items.first.isCategory) const SizedBox(height: 30),
+                                if (lista.items.isNotEmpty && !lista.items.first.isCategory) const SizedBox(height: 30),
                                 CrudList(
                                   scrollCtlr: _scrollCtlr,
                                   lista: lista,
