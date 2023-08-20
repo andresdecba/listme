@@ -7,7 +7,7 @@ import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/models/item.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/create_new_item.dart';
-import 'package:listme/crud/ui/crud_screen/widgets/item_category_tile.dart';
+import 'package:listme/crud/ui/crud_screen/widgets/sublist_tile.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/item_tile.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
@@ -103,7 +103,7 @@ class _CrudListState extends State<CrudList> with CreateNewItem {
                     child: Handle(
                       delay: const Duration(milliseconds: 300),
                       child: item.isCategory
-                          ? ItemCategoryTile(
+                          ? SublistTile(
                               // TODO key: scrollKey,
                               text: item.content,
                               onRemove: () => onRemoveItem(item),

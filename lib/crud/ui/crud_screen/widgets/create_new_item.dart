@@ -38,7 +38,7 @@ mixin CreateNewItem {
       context: context,
       showClose: true,
       enableDrag: true,
-      title: indexUnderSublist != null ? 'Add a new item under:' : 'Add a new item on top',
+      title: indexUnderSublist != null ? 'Add a new item under:' : 'Add a new item',
       subTitle: subListName,
       onClose: () {},
       child: Column(
@@ -124,7 +124,7 @@ class _CustomCheckboxListState extends State<_CustomCheckboxList> {
     return CheckboxListTile(
       contentPadding: EdgeInsets.zero,
       value: _theValue,
-      title: const Text('crear sublista'),
+      title: const Text('create sublist'),
       controlAffinity: ListTileControlAffinity.leading,
       onChanged: (bool? value) {
         setState(() {

@@ -32,11 +32,14 @@ class _CustomPercentIndicatorState extends State<CustomPercentIndicator> {
       builder: (context, value, child) {
         // calculate
         int done = 0;
-        int undone = widget.lista.items.length;
+        int undone = 0;
         double percentage = 0;
         for (var element in widget.lista.items) {
           if (element.isDone) {
             done++;
+          }
+          if (!element.isCategory) {
+            undone++;
           }
         }
         if (undone > 0) {

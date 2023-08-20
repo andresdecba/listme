@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:listme/borrar/tabview_Example.dart';
 import 'package:listme/crud/ui/home_screen/home_screen.dart';
-import 'package:listme/crud/ui/crud_screen/new_crud_screen.dart';
+import 'package:listme/crud/ui/crud_screen/crud_screen.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -33,7 +33,7 @@ class AppRoutes {
           name: crudScreen,
           builder: (context, state) {
             String extra = state.extra as String;
-            return NewCrudScreen(id: extra);
+            return CrudScreen(id: extra);
           }),
     ],
   );

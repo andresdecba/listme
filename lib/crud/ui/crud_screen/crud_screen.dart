@@ -7,8 +7,8 @@ import 'package:listme/crud/ui/crud_screen/widgets/create_new_item.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/crud_list.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/build_title.dart';
 
-class NewCrudScreen extends StatefulWidget {
-  const NewCrudScreen({
+class CrudScreen extends StatefulWidget {
+  const CrudScreen({
     required this.id,
     super.key,
   });
@@ -16,10 +16,10 @@ class NewCrudScreen extends StatefulWidget {
   final String id;
 
   @override
-  State<NewCrudScreen> createState() => _NewCrudScreenState();
+  State<CrudScreen> createState() => _CrudScreenState();
 }
 
-class _NewCrudScreenState extends State<NewCrudScreen> with CreateNewItem {
+class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
   // properties //
   late Box<Lista> _listasDB;
   late Lista lista;

@@ -1,8 +1,7 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
-class ItemCategoryTile extends StatefulWidget {
-  const ItemCategoryTile({
+class SublistTile extends StatelessWidget {
+  const SublistTile({
     required this.text,
     required this.onAdd,
     required this.onRemove,
@@ -14,10 +13,77 @@ class ItemCategoryTile extends StatefulWidget {
   final VoidCallback onRemove;
 
   @override
-  State<ItemCategoryTile> createState() => _ItemCategoryTileState();
+  Widget build(BuildContext context) {
+    final txtStyle = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 25, 4, 2),
+      child: Row(
+        children: [
+          // LEADING ICON //
+          IconButton(
+            visualDensity: VisualDensity.compact,
+            onPressed: () => onAdd(),
+            icon: const Icon(
+              Icons.circle,
+              size: 15,
+            ),
+          ),
+          const SizedBox(width: 5),
+
+          // TEXT //
+          Text(
+            text,
+            style: txtStyle.labelLarge,
+          ),
+          const Spacer(),
+
+          // TRAILING //
+          // remove
+          IconButton(
+            visualDensity: VisualDensity.compact,
+            onPressed: () => onRemove(),
+            icon: Icon(
+              Icons.delete_forever,
+              color: Colors.grey.shade400,
+            ),
+          ),
+          const SizedBox(width: 5),
+          // add
+          IconButton(
+            visualDensity: VisualDensity.compact,
+            onPressed: () => onAdd(),
+            icon: const Icon(
+              Icons.add_rounded,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-class _ItemCategoryTileState extends State<ItemCategoryTile> {
+/*
+import 'dart:async';
+import 'package:flutter/material.dart';
+
+class SublistTile extends StatefulWidget {
+  const SublistTile({
+    required this.text,
+    required this.onAdd,
+    required this.onRemove,
+    super.key,
+  });
+
+  final String text;
+  final VoidCallback onAdd;
+  final VoidCallback onRemove;
+
+  @override
+  State<SublistTile> createState() => _SublistTileState();
+}
+
+class _SublistTileState extends State<SublistTile> {
   bool isRemove = false;
   Timer _timer = Timer(const Duration(seconds: 1), () {});
 
@@ -96,3 +162,6 @@ class _ItemCategoryTileState extends State<ItemCategoryTile> {
     );
   }
 }
+
+
+*/
