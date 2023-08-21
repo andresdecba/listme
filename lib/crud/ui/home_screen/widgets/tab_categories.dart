@@ -19,14 +19,14 @@ class CategoriesTab extends StatefulWidget {
 class _CategoriesTabState extends State<CategoriesTab> {
   bool isLoading = true;
   late CrudUseCases _crudUseCases;
-  late Box<ListCategory> _categoryDb;
+  late Box<Category> _categoryDb;
   late Box<Lista> _listaDb;
 
   @override
   void initState() {
     super.initState();
     _crudUseCases = CrudUseCasesImpl();
-    _categoryDb = Hive.box<ListCategory>(AppConstants.categoriesDb);
+    _categoryDb = Hive.box<Category>(AppConstants.categoriesDb);
     _listaDb = Hive.box<Lista>(AppConstants.listasDb);
 
     Future.delayed(AppConstants.initialLoadingDuration).then((value) => setState(() {
@@ -62,7 +62,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
         // LISTA DE LISTAS //
         ValueListenableBuilder(
           valueListenable: _categoryDb.listenable(),
-          builder: (context, Box<ListCategory> value, child) {
+          builder: (context, Box<Category> value, child) {
             //List<ListCategory> categories = value.values.toList();
 
             //  EMPTY SCREEN //
@@ -84,7 +84,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 itemCount: value.values.length,
                 itemBuilder: (context, index) {
-                  ListCategory category = value.values.toList()[index];
+                  Category category = value.values.toList()[index];
                   List<Lista> listas = _crudUseCases.getListsFromCategoy(categId: category.id);
                   ExpansionTileController ctlr = ExpansionTileController();
 
@@ -183,7 +183,11 @@ class _CategoriesTabState extends State<CategoriesTab> {
                                 key: ValueKey(element.id),
                                 lista: element,
                                 onRemove: () {
-                                  _crudUseCases.deleteLista(listaId: element.id);
+                                  _crudUseCases.deleteLista(
+                                    listaId: element.id,
+                                    globalKey: AppConstants.homeScaffoldKey,
+                                    onDelete: () {},
+                                  );
                                   //setState(() {});
                                 },
                               );

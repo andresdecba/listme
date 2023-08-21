@@ -91,7 +91,11 @@ class _AllListsTabState extends State<AllListsTab> {
                     animation: animation,
                     child: CustomListTile(
                       lista: item,
-                      onRemove: () => _crudUseCases.deleteLista(listaId: item.id),
+                      onRemove: () => _crudUseCases.deleteLista(
+                        listaId: item.id,
+                        globalKey: AppConstants.homeScaffoldKey,
+                        onDelete: () {},
+                      ),
                     ),
                   );
                 },

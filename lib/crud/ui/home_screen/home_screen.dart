@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/ui/home_screen/widgets/tab_categories.dart';
 import 'package:listme/crud/ui/home_screen/widgets/tab_all_lists.dart';
@@ -36,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final TextTheme style = Theme.of(context).textTheme;
 
     return Scaffold(
+      key: AppConstants.homeScaffoldKey,
       // APPBAR //
       appBar: AppBar(
         title: const Text('ListMe'),

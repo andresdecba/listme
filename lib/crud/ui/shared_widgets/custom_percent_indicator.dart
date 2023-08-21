@@ -4,13 +4,17 @@ import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+enum CustomPercentIndicatorSize { big, small }
+
 class CustomPercentIndicator extends StatefulWidget {
   const CustomPercentIndicator({
     required this.lista,
+    this.size = CustomPercentIndicatorSize.small,
     super.key,
   });
 
   final Lista lista;
+  final CustomPercentIndicatorSize size;
   @override
   State<CustomPercentIndicator> createState() => _CustomPercentIndicatorState();
 }
@@ -47,6 +51,19 @@ class _CustomPercentIndicatorState extends State<CustomPercentIndicator> {
         }
 
         // widget
+        if (widget.size == CustomPercentIndicatorSize.big) {
+          return CircularPercentIndicator(
+            radius: 50,
+            lineWidth: 10,
+            percent: percentage,
+            center: Text(
+              '$done/$undone',
+              style: style.labelLarge!.copyWith(fontWeight: FontWeight.bold),
+            ),
+            progressColor: Colors.cyan,
+            circularStrokeCap: CircularStrokeCap.round,
+          );
+        }
         return CircularPercentIndicator(
           radius: 25,
           lineWidth: 5.0,

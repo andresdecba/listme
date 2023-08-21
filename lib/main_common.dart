@@ -17,12 +17,9 @@ void mainCommon(String envFileName) async {
   await Hive.initFlutter();
   Hive.registerAdapter(ListaAdapter());
   Hive.registerAdapter(ItemAdapter());
-  Hive.registerAdapter(ListCategoryAdapter());
+  Hive.registerAdapter(CategoryAdapter());
   await Hive.openBox<Lista>(AppConstants.listasDb);
-  await Hive.openBox<ListCategory>(AppConstants.categoriesDb);
-
-  //var listsBox = Hive.box(AppConstants.listsCollection);
-  //print('holis from main ${listsBox.keys}');
+  await Hive.openBox<Category>(AppConstants.categoriesDb);
 
   // run the app
   runApp(const App());

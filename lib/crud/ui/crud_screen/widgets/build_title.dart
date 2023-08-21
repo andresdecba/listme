@@ -38,8 +38,8 @@ class _BuildTitleState extends State<BuildTitle> {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle editModeStyle = Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32, color: Colors.grey);
-    final TextStyle regularModeStyle = Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32, color: Colors.black);
+    final TextStyle editModeStyle = Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 25, color: Colors.grey);
+    final TextStyle regularModeStyle = Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 25, color: Colors.black);
 
     return Form(
       key: _formStateKey,

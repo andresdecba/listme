@@ -74,7 +74,7 @@ class CustomListTile extends StatelessWidget {
 
                   // date + categ
                   ValueListenableBuilder(
-                    valueListenable: Hive.box<ListCategory>(AppConstants.categoriesDb).listenable(),
+                    valueListenable: Hive.box<Category>(AppConstants.categoriesDb).listenable(),
                     builder: (context, value, child) {
                       String subTitle = Helpers.longDateFormater(lista.creationDate);
                       if (lista.categoryId != null) {

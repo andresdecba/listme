@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -50,93 +51,97 @@ class _CrudListState extends State<CrudList> with CreateNewItem {
 
     return widget.lista.items.isEmpty
         // EMPTY LIST //
-        ? SizedBox(
-            height: screenSize.height * 0.75,
-            child: SvgPicture.asset(
-              'assets/add-plus-circle.svg',
-              alignment: Alignment.center,
-              width: 100,
-              color: Colors.grey.shade300,
+        ? FadeIn(
+            child: SizedBox(
+              height: screenSize.height * 0.75,
+              child: SvgPicture.asset(
+                'assets/add-plus-circle.svg',
+                alignment: Alignment.center,
+                width: 100,
+                color: Colors.grey.shade300,
+              ),
             ),
           )
 
         // LIST //
-        : ImplicitlyAnimatedReorderableList<Item>(
-            items: widget.lista.items.toList(),
-            reverse: false,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            areItemsTheSame: (oldItem, newItem) => oldItem.id == newItem.id,
-            // Updates the underlying data when the list has been reordered.
-            onReorderFinished: (item, from, to, newItems) {
-              setState(() {
-                widget.lista.items
-                  ..clear()
-                  ..addAll(newItems.toList());
-                widget.lista.save();
-              });
-            },
-            // Each item must be wrapped in a Reorderable widget and have an unique key.
-            itemBuilder: (context, itemAnimation, item, index) {
-              // scroll or jump to the category
-              // TODO
-              // GlobalKey? scrollKey;
-              // if (item.isCategory) {
-              //   scrollKey = GlobalKey();
-              // }
+        : FadeIn(
+            child: ImplicitlyAnimatedReorderableList<Item>(
+              items: widget.lista.items.toList(),
+              reverse: false,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              areItemsTheSame: (oldItem, newItem) => oldItem.id == newItem.id,
+              // Updates the underlying data when the list has been reordered.
+              onReorderFinished: (item, from, to, newItems) {
+                setState(() {
+                  widget.lista.items
+                    ..clear()
+                    ..addAll(newItems.toList());
+                  widget.lista.save();
+                });
+              },
+              // Each item must be wrapped in a Reorderable widget and have an unique key.
+              itemBuilder: (context, itemAnimation, item, index) {
+                // scroll or jump to the category
+                // TODO
+                // GlobalKey? scrollKey;
+                // if (item.isCategory) {
+                //   scrollKey = GlobalKey();
+                // }
 
-              return Reorderable(
-                key: ValueKey(item.id),
-                builder: (context, dragAnimation, inDrag) {
-                  // TODO con estos valores se puede cambiar el widget mientras es arrastrado
-                  // buscar mas info del widget "Reorderable"
-                  // print('aver dragAnimation: ${dragAnimation.status}');
-                  // print('aver inDrag: $inDrag');
-                  // if (inDrag) {
-                  //   return Text('IN DARG');
-                  // }
+                return Reorderable(
+                  key: ValueKey(item.id),
+                  builder: (context, dragAnimation, inDrag) {
+                    // TODO con estos valores se puede cambiar el widget mientras es arrastrado
+                    // buscar mas info del widget "Reorderable"
+                    // print('aver dragAnimation: ${dragAnimation.status}');
+                    // print('aver inDrag: $inDrag');
+                    // if (inDrag) {
+                    //   return Text('IN DARG');
+                    // }
 
-                  return SizeFadeTransition(
-                    sizeFraction: inDrag ? 1 : 0.2,
-                    curve: Curves.easeInOut,
-                    animation: itemAnimation,
-                    child: Handle(
-                      delay: const Duration(milliseconds: 300),
-                      child: item.isCategory
-                          ? SublistTile(
-                              // TODO key: scrollKey,
-                              text: item.content,
-                              onRemove: () => onRemoveItem(item),
-                              onAdd: () async {
-                                // TODO
-                                // await Scrollable.ensureVisible(
-                                //   scrollKey!.currentContext!,
-                                //   curve: Curves.easeIn,
-                                //   duration: const Duration(milliseconds: 300),
-                                // );
-                                onCreateNewItem(
-                                  context: context,
-                                  lista: widget.lista,
-                                  indexUnderSublist: index,
-                                  scrollCtlr: widget.scrollCtlr,
-                                );
-                              },
-                            )
-                          : ItemTile(
-                              // TODO key: scrollKey,
-                              text: item.content,
-                              isDone: item.isDone,
-                              onTapIsDone: () {
-                                onDone(item);
-                                SystemSound.play(SystemSoundType.click);
-                              },
-                              onRemove: () => onRemoveItem(item),
-                            ),
-                    ),
-                  );
-                },
-              );
-            },
+                    return SizeFadeTransition(
+                      sizeFraction: inDrag ? 1 : 0.2,
+                      curve: Curves.easeInOut,
+                      animation: itemAnimation,
+                      child: Handle(
+                        delay: const Duration(milliseconds: 300),
+                        child: item.isCategory
+                            ? SublistTile(
+                                // TODO key: scrollKey,
+                                text: item.content,
+                                onRemove: () => onRemoveItem(item),
+                                onAdd: () async {
+                                  // TODO
+                                  // await Scrollable.ensureVisible(
+                                  //   scrollKey!.currentContext!,
+                                  //   curve: Curves.easeIn,
+                                  //   duration: const Duration(milliseconds: 300),
+                                  // );
+                                  onCreateNewItem(
+                                    context: context,
+                                    lista: widget.lista,
+                                    indexUnderSublist: index,
+                                    scrollCtlr: widget.scrollCtlr,
+                                  );
+                                },
+                              )
+                            : ItemTile(
+                                // TODO key: scrollKey,
+                                text: item.content,
+                                isDone: item.isDone,
+                                onTapIsDone: () {
+                                  onDone(item);
+                                  SystemSound.play(SystemSoundType.click);
+                                },
+                                onRemove: () => onRemoveItem(item),
+                              ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           );
   }
 

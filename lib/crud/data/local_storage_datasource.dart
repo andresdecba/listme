@@ -8,8 +8,10 @@ import 'package:uuid/uuid.dart';
 abstract class LocalStorageDatasource {
   String createNewList({required String listName, String? category, String? colorScheme});
   String createNewCategory({required String categoryName});
-  ListCategory getCategory({required String categId});
+  Category getCategory({required String categId});
   List<Lista> getListsFromCategoy({required String categId}); // obtener las listas asociadas a una categoria
+  List<Category> getCategories();
+  Lista getList({required String listaId});
   void deleteLista({required String listId});
   void deleteCategory({required String categId, bool deleteLists = false});
   void changeCategoryName({required String categId, required String newValue});
@@ -21,7 +23,7 @@ abstract class LocalStorageDatasource {
 class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   final Uuid _uuid = const Uuid();
   final Box<Lista> _listasDb = Hive.box<Lista>(AppConstants.listasDb);
-  final Box<ListCategory> _categoriesDb = Hive.box<ListCategory>(AppConstants.categoriesDb);
+  final Box<Category> _categoriesDb = Hive.box<Category>(AppConstants.categoriesDb);
 
   @override
   String createNewList({required String listName, String? category, String? colorScheme}) {
@@ -49,11 +51,12 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
 
   @override
   String createNewCategory({required String categoryName}) {
-    final ListCategory newCategory = ListCategory(
+    final Category newCategory = Category(
       name: categoryName,
       isExpanded: true,
       id: _uuid.v4(),
       listasIds: [],
+      creationDate: DateTime.now(),
     );
     _categoriesDb.put(newCategory.id, newCategory);
     return newCategory.id;
@@ -120,18 +123,25 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
 
   @override
   void changeCategory({required String targetCategId, required String listId}) {
+    print('jajaja dataSource');
+
     var list = _listasDb.get(listId);
 
     if (list != null) {
+      Category? newCateg = _categoriesDb.get(targetCategId);
+      Category? oldCateg;
+
+      if (list.categoryId != null) {
+        oldCateg = _categoriesDb.get(list.categoryId);
+      }
+
       // 1- agregar el lista-id en la categoria nva
-      var targetCateg = _categoriesDb.get(list.categoryId);
-      if (targetCateg != null) {
-        targetCateg.listasIds.add(list.id);
-        targetCateg.save();
+      if (newCateg != null) {
+        newCateg.listasIds.add(list.id);
+        newCateg.save();
       }
 
       // 2- quitar el lista-id en la categoria vieja
-      var oldCateg = _categoriesDb.get(list.categoryId);
       if (oldCateg != null) {
         oldCateg.listasIds.remove(list.id);
         oldCateg.save();
@@ -144,7 +154,17 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   }
 
   @override
-  ListCategory getCategory({required String categId}) {
+  Category getCategory({required String categId}) {
     return _categoriesDb.get(categId)!;
+  }
+
+  @override
+  Lista getList({required String listaId}) {
+    return _listasDb.get(listaId)!;
+  }
+
+  @override
+  List<Category> getCategories() {
+    return _categoriesDb.values.toList();
   }
 }

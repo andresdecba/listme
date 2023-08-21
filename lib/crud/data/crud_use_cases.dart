@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/data/local_storage_datasource.dart';
 import 'package:listme/crud/models/list_category.dart';
@@ -16,9 +17,14 @@ abstract class CrudUseCases {
   });
 
   void changeCategoryName({
-    required ListCategory category,
+    required Category category,
     required String categoryName,
     required BuildContext context,
+  });
+
+  void changeCategory({
+    required String targetCategId,
+    required String listId,
   });
 
   void deleteCategory({
@@ -28,18 +34,24 @@ abstract class CrudUseCases {
   });
 
   void deleteLista({
+    required GlobalKey globalKey,
     required String listaId,
+    required VoidCallback onDelete,
   });
 
   List<Lista> getListsFromCategoy({
     required String categId,
   }); // obtener las listas asociadas a una categoria
 
+  Lista getList({required String listaId});
+
   String createNewCategory({
     required BuildContext context,
   });
 
-  ListCategory getCategory({required String categId});
+  Category getCategory({required String categId});
+
+  List<Category> getCategories();
 }
 
 class CrudUseCasesImpl extends CrudUseCases {
@@ -90,10 +102,19 @@ class CrudUseCasesImpl extends CrudUseCases {
     );
   }
 
+  @override
+  void changeCategory({
+    required String targetCategId,
+    required String listId,
+  }) {
+    print('jajaja useCase');
+    _dataSource.changeCategory(targetCategId: targetCategId, listId: listId);
+  }
+
   // CAMBIARLE EL NOMBRE A LA CATEGORIA //
   @override
   void changeCategoryName({
-    required ListCategory category,
+    required Category category,
     required String categoryName,
     required BuildContext context,
   }) {
@@ -108,6 +129,7 @@ class CrudUseCasesImpl extends CrudUseCases {
         onTap: () {},
         hintText: 'New category name',
         onEditingComplete: (value) {
+          context.pop();
           _dataSource.changeCategoryName(
             newValue: value,
             categId: category.id,
@@ -174,9 +196,37 @@ class CrudUseCasesImpl extends CrudUseCases {
 
   // BORRAR UNA LISTA //
   @override
-  void deleteLista({required String listaId}) {
-    // TODO poner un emergente
-    _dataSource.deleteLista(listId: listaId);
+  void deleteLista({
+    required GlobalKey globalKey, // ej: crudScaffoldKey = GlobalKey<ScaffoldState>();
+    required String listaId,
+    required VoidCallback onDelete,
+  }) async {
+    String listName = _dataSource.getList(listaId: listaId).title;
+
+    customBottomSheet(
+      context: globalKey.currentContext!,
+      showClose: true,
+      enableDrag: true,
+      onClose: () {},
+      title: 'Delete "$listName" ?',
+      child: Column(
+        children: [
+          const SizedBox(height: 30),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                globalKey.currentContext!.pop(); // cerrar el bottomSheet
+                onDelete();
+                _dataSource.deleteLista(listId: listaId);
+              },
+              child: const Text('Delete'),
+            ),
+          ),
+          const SizedBox(height: 30),
+        ],
+      ),
+    );
   }
 
   // OBTENER TODAS LAS LISTAS QUE PERTENEZCAN A UNA CATEGORIA //
@@ -212,7 +262,19 @@ class CrudUseCasesImpl extends CrudUseCases {
   }
 
   @override
-  ListCategory getCategory({required String categId}) {
+  Category getCategory({required String categId}) {
     return _dataSource.getCategory(categId: categId);
+  }
+
+  @override
+  Lista getList({required String listaId}) {
+    return _dataSource.getList(listaId: listaId);
+  }
+
+  @override
+  List<Category> getCategories() {
+    return Helpers.sortCategoriesByDateTime(
+      categories: _dataSource.getCategories(),
+    );
   }
 }

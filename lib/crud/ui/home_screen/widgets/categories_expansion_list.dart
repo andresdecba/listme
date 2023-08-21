@@ -15,7 +15,7 @@ class CategoriesExpansionList extends StatefulWidget {
     super.key,
   });
 
-  final List<ListCategory> categories;
+  final List<Category> categories;
 
   @override
   State<CategoriesExpansionList> createState() => _CategoriesExpansionListState();
@@ -36,6 +36,7 @@ class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
   Widget build(BuildContext context) {
     final TextTheme style = Theme.of(context).textTheme;
 
+    // TODO cambiar por un listview builder
     return ListView(
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
