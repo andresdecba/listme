@@ -114,6 +114,7 @@ class _AllListsTabState extends State<AllListsTab> {
             );
           },
         ),
+        const SizedBox(height: 80),
       ],
     );
   }

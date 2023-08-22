@@ -86,7 +86,7 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
       // borra la lista de la categoria
       if (lista.categoryId != null) {
         var categ = _categoriesDb.get(lista.categoryId);
-        if (categ != null) categ.listasIds.remove(lista.categoryId);
+        if (categ != null) categ.listasIds.remove(lista.id);
         categ!.save();
       }
       lista.delete();

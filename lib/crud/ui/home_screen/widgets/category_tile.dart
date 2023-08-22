@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/core/routes/routes.dart';
-import 'package:listme/crud/models/list_category.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/shared_widgets/custom_percent_indicator.dart';
 
 class CategoryTile extends StatelessWidget {
   const CategoryTile({
@@ -31,8 +27,8 @@ class CategoryTile extends StatelessWidget {
       child: Container(
         height: 56,
         width: widthScreen,
-        decoration: const BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade200,
           //borderRadius: const BorderRadius.all(Radius.circular(8)),
         ),
         child: Row(

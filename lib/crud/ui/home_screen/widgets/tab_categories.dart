@@ -5,7 +5,6 @@ import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/list_category.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/home_screen/widgets/category_tile.dart';
-import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
 class CategoriesTab extends StatefulWidget {
@@ -112,6 +111,9 @@ class _CategoriesTabState extends State<CategoriesTab> {
                           category.save();
                         },
 
+                        // branch icon
+                        leading: category.listasIds.isEmpty ? const _EmptyBranch() : const _Branch(),
+
                         // titulo de la categoria
                         title: Row(
                           children: [
@@ -122,24 +124,10 @@ class _CategoriesTabState extends State<CategoriesTab> {
                           ],
                         ),
 
+                        // menú de opciones
                         trailing: PopupMenuButton(
                           padding: EdgeInsets.zero,
-                          onSelected: (value) {
-                            if (value == _MenuOptions.onChangeName) {
-                              _crudUseCases.changeCategoryName(
-                                category: category,
-                                categoryName: category.name,
-                                context: context,
-                              );
-                            }
-                            if (value == _MenuOptions.onDelete) {
-                              _crudUseCases.deleteCategory(
-                                categoryId: category.id,
-                                categoryName: category.name,
-                                context: context,
-                              );
-                            }
-                          },
+                          onSelected: (value) => onTapOption(value, category),
                           iconSize: 26,
                           color: Colors.grey.shade200,
                           position: PopupMenuPosition.under,
@@ -150,38 +138,42 @@ class _CategoriesTabState extends State<CategoriesTab> {
                           itemBuilder: (context) {
                             return [
                               menuOpts(
-                                value: _MenuOptions.onDelete,
+                                value: _MenuOptions.delete,
                                 icon: Icons.delete_forever,
                                 title: const Text('Delete category'),
                               ),
                               menuOpts(
-                                value: _MenuOptions.onChangeName,
+                                value: _MenuOptions.changeName,
                                 icon: Icons.edit,
                                 title: const Text('Change category name'),
+                              ),
+                              menuOpts(
+                                value: _MenuOptions.createList,
+                                icon: Icons.add_circle_rounded,
+                                title: const Text('Create a new list'),
                               ),
                             ];
                           },
                         ),
 
-                        // options menu
-                        leading: const _Branch(),
-
                         // LISTENABLE DE LAS LISTAS DE LA [currentCateg] //
                         children: [
-                          // agregar nueva lista btn
-                          _AddListaBtn(),
+                          // empty category
+                          if (category.listasIds.isEmpty)
+                            Container(
+                              height: 56,
+                              width: MediaQuery.of(context).size.width,
+                              alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 8),
+                              child: const Text(
+                                'There are no lists here :(',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
 
-                          // IconButton(
-                          //   onPressed: () => _crudUseCases.createNewList(
-                          //     categoryId: category.id,
-                          //     context: context,
-                          //   ),
-                          //   icon: const Icon(
-                          //     Icons.add_circle,
-                          //     color: Colors.cyan,
-                          //   ),
-                          // ),
-
+                          // iterar listas
                           ValueListenableBuilder(
                             valueListenable: _listaDb.listenable(),
                             builder: (context, value, child) {
@@ -206,7 +198,6 @@ class _CategoriesTabState extends State<CategoriesTab> {
                                         globalKey: AppConstants.homeScaffoldKey,
                                         onDelete: () {},
                                       );
-                                      //setState(() {});
                                     },
                                   );
                                 },
@@ -222,8 +213,32 @@ class _CategoriesTabState extends State<CategoriesTab> {
             );
           },
         ),
+        const SizedBox(height: 80),
       ],
     );
+  }
+
+  void onTapOption(_MenuOptions value, Category category) {
+    if (value == _MenuOptions.changeName) {
+      _crudUseCases.changeCategoryName(
+        category: category,
+        categoryName: category.name,
+        context: context,
+      );
+    }
+    if (value == _MenuOptions.delete) {
+      _crudUseCases.deleteCategory(
+        categoryId: category.id,
+        categoryName: category.name,
+        context: context,
+      );
+    }
+    if (value == _MenuOptions.createList) {
+      _crudUseCases.createNewList(
+        categoryId: category.id,
+        context: context,
+      );
+    }
   }
 
   PopupMenuItem menuOpts({
@@ -248,45 +263,32 @@ class _CategoriesTabState extends State<CategoriesTab> {
   }
 }
 
-enum _MenuOptions { onChangeName, onDelete }
+enum _MenuOptions { changeName, delete, createList }
 
-class _AddListaBtn extends StatelessWidget {
-  const _AddListaBtn({super.key});
+class _EmptyBranch extends StatelessWidget {
+  const _EmptyBranch({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      height: 50,
-      padding: const EdgeInsets.only(left: 10),
-      color: Colors.white,
-      child: Row(
+      height: 55,
+      width: 20,
+      //color: Colors.yellow,
+      margin: const EdgeInsets.only(left: 10),
+      child: Stack(
         children: [
-          Container(
-            height: 50,
-            width: 2,
-            margin: const EdgeInsets.only(left: 5),
-            color: Colors.orange,
-          ),
-
-          // IconButton(
-          //   onPressed: () {
-          //     // _crudUseCases.createNewList(
-          //     //   categoryId: category.id,
-          //     //   context: context,
-          //     // )
-          //   },
-          //   icon: const Icon(
-          //     Icons.add_circle,
-          //     color: Colors.cyan,
-          //   ),
-          // ),
-          SizedBox(
-            width: 15,
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Text(' + new list'),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              height: 12,
+              width: 12,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.orange,
+              ),
+            ),
           ),
         ],
       ),
@@ -331,46 +333,3 @@ class _Branch extends StatelessWidget {
     );
   }
 }
-
-
-/*
-leading: PopupMenuButton(
-                      onSelected: (value) {
-                        if (value == _MenuOptions.onChangeName) {
-                          _crudUseCases.changeCategoryName(
-                            category: category,
-                            categoryName: category.name,
-                            context: context,
-                          );
-                        }
-                        if (value == _MenuOptions.onDelete) {
-                          _crudUseCases.deleteCategory(
-                            categoryId: category.id,
-                            categoryName: category.name,
-                            context: context,
-                          );
-                        }
-                      },
-                      color: Colors.grey.shade200,
-                      position: PopupMenuPosition.under,
-                      icon: const Icon(
-                        Icons.more_vert_rounded,
-                        color: Colors.grey,
-                      ),
-                      itemBuilder: (context) {
-                        return [
-                          menuOpts(
-                            value: _MenuOptions.onDelete,
-                            icon: Icons.delete_forever,
-                            title: const Text('Delete category'),
-                          ),
-                          menuOpts(
-                            value: _MenuOptions.onChangeName,
-                            icon: Icons.edit,
-                            title: const Text('Change category name'),
-                          ),
-                        ];
-                      },
-                    ),
-
-*/
