@@ -43,47 +43,48 @@ class _AllListsTabState extends State<AllListsTab> {
     }
 
     // RENDER LISTA //
-    return Column(
-      children: [
-        //
-        // HEADER OR SOMETHING //
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-          child: Expanded(
-            child: Text(
-              'Here you can see all your lists,\ntap "+" to add one.',
-              textAlign: TextAlign.center,
-              style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        children: [
+          // HEADER OR SOMETHING //
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+            child: Expanded(
+              child: Text(
+                'Here you can see all your lists,\ntap "+" to add one.',
+                textAlign: TextAlign.center,
+                style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
+              ),
             ),
           ),
-        ),
 
-        ValueListenableBuilder(
-          valueListenable: Hive.box<Lista>(AppConstants.listasDb).listenable(),
-          builder: (context, Box<Lista> value, _) {
-            //
-            List<Lista> listas = Helpers.sortListsByDateTime(listas: value.values.toList());
+          // LISTENABLE DE LAS LISTAS //
+          ValueListenableBuilder(
+            valueListenable: Hive.box<Lista>(AppConstants.listasDb).listenable(),
+            builder: (context, Box<Lista> value, _) {
+              //
+              List<Lista> listas = Helpers.sortListsByDateTime(listas: value.values.toList());
 
-            // EMPTY SCREEN //
-            if (listas.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text("No hay listas"),
-                ),
-              );
-            }
+              // EMPTY SCREEN //
+              if (listas.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text("No hay listas"),
+                  ),
+                );
+              }
 
-            // lists
-            return Expanded(
-              child: ImplicitlyAnimatedList<Lista>(
+              // Iterar las listas (lista animada)
+              return ImplicitlyAnimatedList<Lista>(
                 shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 items: listas,
                 areItemsTheSame: (a, b) => a.id == b.id,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
 
-                // when add
+                // when add a new list
                 itemBuilder: (context, animation, item, index) {
                   return SizeFadeTransition(
                     sizeFraction: 0.7,
@@ -100,7 +101,7 @@ class _AllListsTabState extends State<AllListsTab> {
                   );
                 },
 
-                // when remove
+                // when remove a list
                 removeItemBuilder: (context, animation, oldItem) {
                   return FadeTransition(
                     opacity: animation,
@@ -110,12 +111,12 @@ class _AllListsTabState extends State<AllListsTab> {
                     ),
                   );
                 },
-              ),
-            );
-          },
-        ),
-        const SizedBox(height: 80),
-      ],
+              );
+            },
+          ),
+          const SizedBox(height: 80),
+        ],
+      ),
     );
   }
 }

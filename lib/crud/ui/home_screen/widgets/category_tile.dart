@@ -23,12 +23,11 @@ class CategoryTile extends StatelessWidget {
 
     return InkWell(
       onTap: () => context.pushNamed(AppRoutes.crudScreen, extra: lista.id),
-      // misma altura que el widget del branch
       child: Container(
-        height: 56,
+        height: 56, // misma altura que el widget branch
         width: widthScreen,
         decoration: BoxDecoration(
-          color: Colors.grey.shade200,
+          color: Colors.grey.shade300,
           //borderRadius: const BorderRadius.all(Radius.circular(8)),
         ),
         child: Row(
@@ -71,7 +70,7 @@ class CategoryTile extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: IconButton(
                 onPressed: () => onRemove(), // lista.delete()
-                padding: EdgeInsets.zero,
+                padding: const EdgeInsets.only(right: 10),
                 visualDensity: VisualDensity.compact,
                 iconSize: 20,
                 icon: const Icon(
@@ -99,7 +98,7 @@ class _Branch extends StatelessWidget {
     // misma altura que el conteiner que lo contiene
     return Container(
       height: 56,
-      width: 35,
+      width: 25,
       //color: Colors.yellow,
       margin: const EdgeInsets.only(left: 10),
       padding: const EdgeInsets.only(left: 5),
@@ -111,7 +110,7 @@ class _Branch extends StatelessWidget {
             child: Container(
               height: isBottom ? 28 : 56,
               width: 2,
-              color: Colors.orange,
+              color: Colors.grey,
             ),
           ),
           // horizontal
@@ -122,15 +121,15 @@ class _Branch extends StatelessWidget {
               children: [
                 Container(
                   height: 2,
-                  width: 20,
-                  color: Colors.orange,
+                  width: 10,
+                  color: Colors.grey,
                 ),
                 Container(
                   height: 10,
                   width: 10,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.orange,
+                    color: Colors.grey,
                   ),
                 ),
               ],

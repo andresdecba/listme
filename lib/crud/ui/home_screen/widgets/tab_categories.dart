@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reorderable_list_2.dart';
+import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/list_category.dart';
@@ -44,54 +46,54 @@ class _CategoriesTabState extends State<CategoriesTab> {
     }
 
     // LISTENEABLE DE LAS CATEGORIAS //
-    return Column(
-      children: [
-        //
-        // HEADER OR SOMETHING //
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-          child: Expanded(
-            child: Text(
-              'Here you can create categories to organize your lists, tap "+" to add one.',
-              textAlign: TextAlign.center,
-              style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        children: [
+          //
+          // HEADER OR SOMETHING //
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+            child: Expanded(
+              child: Text(
+                'Here you can create categories to organize your lists, tap "+" to add one.',
+                textAlign: TextAlign.center,
+                style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
+              ),
             ),
           ),
-        ),
 
-        // LISTA DE LISTAS //
-        ValueListenableBuilder(
-          valueListenable: _categoryDb.listenable(),
-          builder: (context, Box<Category> value, child) {
-            //List<ListCategory> categories = value.values.toList();
+          // LISTENABLE DE LAS CATEGORIAS //
+          ValueListenableBuilder(
+            valueListenable: _categoryDb.listenable(),
+            builder: (context, Box<Category> value, child) {
+              //  EMPTY SCREEN //
+              // TODO si no hay categorias poner una imagen svg
+              if (value.values.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text("No categories"),
+                  ),
+                );
+              }
 
-            //  EMPTY SCREEN //
-            // TODO si no hay categorias poner una imagen svg
-            if (value.values.isEmpty) {
-              return const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Center(
-                  child: Text("No categories"),
-                ),
-              );
-            }
-
-            // RENDER WIDGET //
-            return Expanded(
-              child: ListView.builder(
+              // A - iterar las categorias //
+              return ListView.builder(
                 shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 itemCount: value.values.length,
                 itemBuilder: (context, index) {
                   Category category = value.values.toList()[index];
                   List<Lista> listas = _crudUseCases.getListsFromCategoy(categId: category.id);
                   ExpansionTileController ctlr = ExpansionTileController();
+                  bool isExpanded = category.isExpanded;
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: ExpansionTile(
                         key: ValueKey(category.id),
                         controller: ctlr,
@@ -112,7 +114,22 @@ class _CategoriesTabState extends State<CategoriesTab> {
                         },
 
                         // branch icon
-                        leading: category.listasIds.isEmpty ? const _EmptyBranch() : const _Branch(),
+                        //leading: category.listasIds.isEmpty ? const _EmptyBranch() : const _Branch(),
+                        leading: isExpanded
+                            ? const Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Icon(
+                                  Icons.folder_open,
+                                  color: Colors.orange,
+                                ),
+                              )
+                            : const Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Icon(
+                                  Icons.folder,
+                                  color: Colors.orange,
+                                ),
+                              ),
 
                         // titulo de la categoria
                         title: Row(
@@ -156,15 +173,15 @@ class _CategoriesTabState extends State<CategoriesTab> {
                           },
                         ),
 
-                        // LISTENABLE DE LAS LISTAS DE LA [currentCateg] //
                         children: [
-                          // empty category
+                          // si no hay ninguna categoria
                           if (category.listasIds.isEmpty)
                             Container(
                               height: 56,
                               width: MediaQuery.of(context).size.width,
                               alignment: Alignment.center,
                               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 8),
+                              color: Colors.grey.shade300,
                               child: const Text(
                                 'There are no lists here :(',
                                 style: TextStyle(
@@ -173,33 +190,51 @@ class _CategoriesTabState extends State<CategoriesTab> {
                               ),
                             ),
 
-                          // iterar listas
+                          // LISTENABLE DE LAS LISTAS //
                           ValueListenableBuilder(
                             valueListenable: _listaDb.listenable(),
                             builder: (context, value, child) {
-                              // construir la lista de Listas //
-                              return ListView.builder(
+                              // B - iterar las listas dentro de las categorias (lista animada) //
+                              return ImplicitlyAnimatedList<Lista>(
+                                items: listas,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                //padding: const EdgeInsets.symmetric(horizontal: 10),
-                                itemCount: listas.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  var isBottom = index == (listas.length - 1);
+                                areItemsTheSame: (a, b) => a.id == b.id,
 
-                                  ///
-                                  Lista element = listas[index];
-                                  return CategoryTile(
-                                    key: ValueKey(element.id),
-                                    isBottom: isBottom,
-                                    lista: element,
-                                    onRemove: () {
-                                      _crudUseCases.deleteLista(
-                                        listaId: element.id,
-                                        globalKey: AppConstants.homeScaffoldKey,
-                                        onDelete: () {},
-                                      );
-                                    },
+                                // when add lista
+                                itemBuilder: (context, animation, item, i) {
+                                  var isBottom = i == (listas.length - 1);
+                                  //Lista element = listas[i];
+                                  return SizeFadeTransition(
+                                    sizeFraction: 0.7,
+                                    curve: Curves.easeInOut,
+                                    animation: animation,
+                                    child: CategoryTile(
+                                      key: ValueKey(item.id),
+                                      isBottom: isBottom,
+                                      lista: item,
+                                      onRemove: () {
+                                        _crudUseCases.deleteLista(
+                                          listaId: item.id,
+                                          globalKey: AppConstants.homeScaffoldKey,
+                                          onDelete: () {},
+                                        );
+                                      },
+                                    ),
                                   );
+                                },
+
+                                // when remove lista
+                                removeItemBuilder: (context, animation, oldItem) {
+                                  var isBottom = listas.indexOf(oldItem) == (listas.length - 1);
+                                  return FadeTransition(
+                                      opacity: animation,
+                                      child: CategoryTile(
+                                        key: ValueKey(oldItem.id),
+                                        isBottom: isBottom,
+                                        lista: oldItem,
+                                        onRemove: () {},
+                                      ));
                                 },
                               );
                             },
@@ -209,12 +244,12 @@ class _CategoriesTabState extends State<CategoriesTab> {
                     ),
                   );
                 },
-              ),
-            );
-          },
-        ),
-        const SizedBox(height: 80),
-      ],
+              );
+            },
+          ),
+          const SizedBox(height: 80),
+        ],
+      ),
     );
   }
 
@@ -306,30 +341,31 @@ class _Branch extends StatelessWidget {
       width: 20,
       //color: Colors.yellow,
       margin: const EdgeInsets.only(left: 10),
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
-              height: 25,
-              width: 2,
-              margin: const EdgeInsets.only(left: 5),
-              color: Colors.orange,
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              height: 12,
-              width: 12,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.orange,
-              ),
-            ),
-          ),
-        ],
-      ),
+      child: Icon(Icons.folder),
+      // child: Stack(
+      //   children: [
+      //     Align(
+      //       alignment: Alignment.bottomLeft,
+      //       child: Container(
+      //         height: 25,
+      //         width: 2,
+      //         margin: const EdgeInsets.only(left: 5),
+      //         color: Colors.orange,
+      //       ),
+      //     ),
+      //     Align(
+      //       alignment: Alignment.centerLeft,
+      //       child: Container(
+      //         height: 12,
+      //         width: 12,
+      //         decoration: const BoxDecoration(
+      //           shape: BoxShape.circle,
+      //           color: Colors.orange,
+      //         ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }
