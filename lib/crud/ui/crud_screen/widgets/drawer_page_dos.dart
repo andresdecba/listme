@@ -11,13 +11,13 @@ import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
 class CrudDrawerPageDos extends StatefulWidget {
   const CrudDrawerPageDos({
-    required this.categories,
+    required this.folders,
     required this.lista,
     required this.pageCtlr,
     super.key,
   });
 
-  final List<Folder> categories;
+  final List<Folder> folders;
   final Lista lista;
   final PageController pageCtlr;
 
@@ -52,18 +52,18 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
         Container(
           height: 150,
           alignment: Alignment.center,
-          child: const Text('Change category options'),
+          child: const Text('Change folder'),
         ),
 
         // SI NO HAY CATEGORIAS
-        if (widget.categories.isEmpty)
+        if (widget.folders.isEmpty)
           SizedBox(
             height: MediaQuery.of(context).size.height / 1.3,
             child: const Center(
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  'There are no categories.\nYou can add some, from categories section.',
+                  'There are no folders.\nYou can add some, from folders section.',
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -73,11 +73,11 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
         // LISTA DE CATEGORIAS //
         FadeIn(
             child: ValueListenableBuilder(
-          valueListenable: Hive.box<Folder>(AppConstants.categoriesDb).listenable(),
+          valueListenable: Hive.box<Folder>(AppConstants.foldersDb).listenable(),
           builder: (context, value, child) {
             return ListView.separated(
               shrinkWrap: true,
-              itemCount: widget.categories.length,
+              itemCount: widget.folders.length,
               separatorBuilder: (BuildContext context, int index) {
                 return Divider(
                   color: Colors.grey.shade400,
@@ -85,14 +85,14 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
                 );
               },
               itemBuilder: (BuildContext context, int index) {
-                var isTheLastTile = index == (widget.categories.length - 1);
-                var targetCategId = widget.categories[index].id;
-                var isCurrent = widget.categories[index].id == widget.lista.folderId;
+                var isTheLastTile = index == (widget.folders.length - 1);
+                var targetCategId = widget.folders[index].id;
+                var isCurrent = widget.folders[index].id == widget.lista.folderId;
 
                 // Categoria actual de la lista
 
                 return DrawerTile(
-                  texto: widget.categories[index].name,
+                  texto: widget.folders[index].name,
                   border: isTheLastTile
                       ? null
                       : const Border(

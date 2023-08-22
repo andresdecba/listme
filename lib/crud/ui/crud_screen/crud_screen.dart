@@ -25,7 +25,7 @@ class CrudScreen extends StatefulWidget {
 class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
   // properties //
   late Box<Lista> _listasDB;
-  late Box<Folder> _categoriesDB;
+  late Box<Folder> _foldersDB;
   late Lista lista;
   late ScrollController _scrollCtlr;
   int idxInsert = 0;
@@ -36,7 +36,7 @@ class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
   void initState() {
     super.initState();
     _listasDB = Hive.box<Lista>(AppConstants.listasDb);
-    _categoriesDB = Hive.box<Folder>(AppConstants.categoriesDb);
+    _foldersDB = Hive.box<Folder>(AppConstants.foldersDb);
     lista = _listasDB.get(widget.id)!;
     _scrollCtlr = ScrollController();
   }
@@ -114,7 +114,7 @@ class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
                           builder: (context, value, child) {
                             Folder? coso;
                             if (lista.folderId != null) {
-                              coso = _categoriesDB.get(lista.folderId);
+                              coso = _foldersDB.get(lista.folderId);
                             }
                             return FadeIn(
                               child: Padding(

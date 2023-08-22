@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               text: 'My lists',
             ),
             Tab(
-              text: 'My categories',
+              text: 'Folders',
             ),
           ],
         ),
@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
         onPressed: () async {
           if (_tabController.index == 0) createNewList();
-          if (_tabController.index == 1) createNewCategory();
+          if (_tabController.index == 1) createNewFolder();
         },
       ),
 
@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
-  void createNewCategory() {
+  void createNewFolder() {
     _crudUseCases.createNewFolder(context: context);
   }
 }

@@ -7,15 +7,15 @@ import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/build_title.dart';
 import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
 
-// MUESTRA LAS LISTAS EN TAB-1 "My lists by categories" //
+// MUESTRA LAS LISTAS EN TAB-1 "My lists by folders" //
 
 class FoldersExpansionList extends StatefulWidget {
   const FoldersExpansionList({
-    required this.categories,
+    required this.folders,
     super.key,
   });
 
-  final List<Folder> categories;
+  final List<Folder> folders;
 
   @override
   State<FoldersExpansionList> createState() => _FoldersExpansionListState();
@@ -43,7 +43,7 @@ class _FoldersExpansionListState extends State<FoldersExpansionList> {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       children: [
         // ITERAR CATEGORIAS //
-        ...widget.categories.map((currentCategory) {
+        ...widget.folders.map((currentCategory) {
           // obtener las listas de [currentCateg]
           var getDb = _datasource.getListsFromFolder(folderId: currentCategory.id);
           List<Lista> listas = Helpers.sortListsByDateTime(listas: getDb);

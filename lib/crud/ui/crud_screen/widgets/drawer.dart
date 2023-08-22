@@ -22,7 +22,7 @@ class _CrudDrawerState extends State<CrudDrawer> {
   late CrudUseCases useCases;
   late PageController pageCtlr;
   late int selectedPage;
-  late List<Folder> categories;
+  late List<Folder> folders;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _CrudDrawerState extends State<CrudDrawer> {
     pageCtlr = PageController();
     selectedPage = 0;
     pageCtlr = PageController(initialPage: selectedPage);
-    categories = useCases.getCategories();
+    folders = useCases.getFolders();
   }
 
   @override
@@ -59,7 +59,7 @@ class _CrudDrawerState extends State<CrudDrawer> {
                     ),
 
                     CrudDrawerPageDos(
-                      categories: categories,
+                      folders: folders,
                       lista: widget.lista,
                       pageCtlr: pageCtlr,
                     ),

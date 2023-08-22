@@ -14,9 +14,9 @@ class Helpers {
     return listas;
   }
 
-  static List<Folder> sortCategoriesByDateTime({required List<Folder> categories}) {
-    categories.sort((a, b) => a.creationDate.compareTo(b.creationDate));
-    categories = categories.reversed.toList();
-    return categories;
+  static List<Folder> sortFoldersByDateTime({required List<Folder> folders}) {
+    folders.sort((a, b) => a.creationDate.compareTo(b.creationDate));
+    folders = folders.reversed.toList();
+    return folders;
   }
 }

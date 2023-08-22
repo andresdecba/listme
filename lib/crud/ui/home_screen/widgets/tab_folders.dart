@@ -6,7 +6,7 @@ import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/home_screen/widgets/category_tile.dart';
+import 'package:listme/crud/ui/home_screen/widgets/folder_tile.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
 class TabFolders extends StatefulWidget {
@@ -28,7 +28,7 @@ class _TabFoldersState extends State<TabFolders> {
   void initState() {
     super.initState();
     _crudUseCases = CrudUseCasesImpl();
-    _categoryDb = Hive.box<Folder>(AppConstants.categoriesDb);
+    _categoryDb = Hive.box<Folder>(AppConstants.foldersDb);
     _listaDb = Hive.box<Lista>(AppConstants.listasDb);
 
     Future.delayed(AppConstants.initialLoadingDuration).then((value) => setState(() {
@@ -73,7 +73,7 @@ class _TabFoldersState extends State<TabFolders> {
                 return const Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Center(
-                    child: Text("No categories"),
+                    child: Text("No folders"),
                   ),
                 );
               }
@@ -204,7 +204,7 @@ class _TabFoldersState extends State<TabFolders> {
                                     sizeFraction: 0.7,
                                     curve: Curves.easeInOut,
                                     animation: animation,
-                                    child: CategoryTile(
+                                    child: FolderTile(
                                       key: ValueKey(item.id),
                                       isBottom: isBottom,
                                       lista: item,
@@ -224,7 +224,7 @@ class _TabFoldersState extends State<TabFolders> {
                                   var isBottom = listas.indexOf(oldItem) == (listas.length - 1);
                                   return FadeTransition(
                                       opacity: animation,
-                                      child: CategoryTile(
+                                      child: FolderTile(
                                         key: ValueKey(oldItem.id),
                                         isBottom: isBottom,
                                         lista: oldItem,

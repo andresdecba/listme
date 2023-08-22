@@ -4,8 +4,8 @@ import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/models/lista.dart';
 
-class CategoryTile extends StatelessWidget {
-  const CategoryTile({
+class FolderTile extends StatelessWidget {
+  const FolderTile({
     super.key,
     required this.lista,
     required this.onRemove,

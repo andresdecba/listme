@@ -58,9 +58,9 @@ class CrudDrawerPageUno extends StatelessWidget {
             ),
             onTap: () => deleteThisList(context),
           ),
-          // CHANGE CATEGORY //
+          // CHANGE FOLDER //
           DrawerTile(
-            texto: 'Change category',
+            texto: 'Change folder',
             onTap: () => pageCtlr.animateToPage(
               1,
               duration: const Duration(milliseconds: 300),

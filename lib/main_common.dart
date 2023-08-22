@@ -19,7 +19,7 @@ void mainCommon(String envFileName) async {
   Hive.registerAdapter(ItemAdapter());
   Hive.registerAdapter(FolderAdapter());
   await Hive.openBox<Lista>(AppConstants.listasDb);
-  await Hive.openBox<Folder>(AppConstants.categoriesDb);
+  await Hive.openBox<Folder>(AppConstants.foldersDb);
 
   // run the app
   runApp(const App());

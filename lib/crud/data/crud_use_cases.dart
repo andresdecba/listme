@@ -55,7 +55,7 @@ abstract class CrudUseCases {
     required String folderId,
   });
 
-  List<Folder> getCategories();
+  List<Folder> getFolders();
 }
 
 class CrudUseCasesImpl extends CrudUseCases {
@@ -276,9 +276,9 @@ class CrudUseCasesImpl extends CrudUseCases {
   }
 
   @override
-  List<Folder> getCategories() {
-    return Helpers.sortCategoriesByDateTime(
-      categories: _dataSource.getFolders(),
+  List<Folder> getFolders() {
+    return Helpers.sortFoldersByDateTime(
+      folders: _dataSource.getFolders(),
     );
   }
 }

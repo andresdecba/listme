@@ -23,7 +23,7 @@ abstract class LocalStorageDatasource {
 class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   final Uuid _uuid = const Uuid();
   final Box<Lista> _listasDb = Hive.box<Lista>(AppConstants.listasDb);
-  final Box<Folder> _foldersDb = Hive.box<Folder>(AppConstants.categoriesDb);
+  final Box<Folder> _foldersDb = Hive.box<Folder>(AppConstants.foldersDb);
 
   @override
   String createNewList({required String listName, String? folder, String? colorScheme}) {
