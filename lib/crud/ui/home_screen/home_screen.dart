@@ -60,8 +60,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           unselectedLabelStyle: style.bodyMedium,
           onTap: (value) {},
           tabs: const [
-            Tab(text: 'My lists'),
-            Tab(text: 'My categories'),
+            Tab(
+              text: 'My lists',
+            ),
+            Tab(
+              text: 'My categories',
+            ),
           ],
         ),
       ),

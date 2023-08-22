@@ -4,6 +4,7 @@ import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/list_category.dart';
 import 'package:listme/crud/models/lista.dart';
+import 'package:listme/crud/ui/home_screen/widgets/category_tile.dart';
 import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
@@ -88,46 +89,252 @@ class _CategoriesTabState extends State<CategoriesTab> {
                   List<Lista> listas = _crudUseCases.getListsFromCategoy(categId: category.id);
                   ExpansionTileController ctlr = ExpansionTileController();
 
-                  return ExpansionTile(
-                    key: ValueKey(category.id),
-                    tilePadding: EdgeInsets.zero,
-                    childrenPadding: EdgeInsets.zero,
-                    collapsedShape: Border(bottom: BorderSide(color: Colors.grey.shade200)), //cerrado
-                    shape: Border(bottom: BorderSide(color: Colors.grey.shade200)), // abiertop
-                    controller: ctlr,
-                    initiallyExpanded: category.isExpanded,
-                    onExpansionChanged: (value) {
-                      category.isExpanded = value;
-                      category.save();
-                    },
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: ExpansionTile(
+                        key: ValueKey(category.id),
+                        controller: ctlr,
+                        initiallyExpanded: category.isExpanded,
+                        tilePadding: EdgeInsets.zero,
+                        childrenPadding: EdgeInsets.zero,
+                        collapsedShape: const Border(
+                          bottom: BorderSide.none,
+                        ), //cerrado
+                        shape: const Border(
+                          bottom: BorderSide.none,
+                        ), // abiertop
+                        backgroundColor: Colors.grey.shade200,
+                        collapsedBackgroundColor: Colors.grey.shade200,
+                        onExpansionChanged: (value) {
+                          category.isExpanded = value;
+                          category.save();
+                        },
 
-                    // HEAD //
-                    // titulo de la categoria
-                    title: Text(
-                      category.name,
-                      style: style.titleMedium!.copyWith(color: Colors.black),
-                    ),
+                        // titulo de la categoria
+                        title: Row(
+                          children: [
+                            Text(
+                              category.name,
+                              style: style.titleMedium!.copyWith(color: Colors.black),
+                            ),
+                          ],
+                        ),
 
-                    // cantidad de listas
-                    subtitle: Text(
-                      listas.length > 1 ? '${listas.length} lists' : '${listas.length} list',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
+                        trailing: PopupMenuButton(
+                          padding: EdgeInsets.zero,
+                          onSelected: (value) {
+                            if (value == _MenuOptions.onChangeName) {
+                              _crudUseCases.changeCategoryName(
+                                category: category,
+                                categoryName: category.name,
+                                context: context,
+                              );
+                            }
+                            if (value == _MenuOptions.onDelete) {
+                              _crudUseCases.deleteCategory(
+                                categoryId: category.id,
+                                categoryName: category.name,
+                                context: context,
+                              );
+                            }
+                          },
+                          iconSize: 26,
+                          color: Colors.grey.shade200,
+                          position: PopupMenuPosition.under,
+                          icon: const Icon(
+                            Icons.more_vert_rounded,
+                            color: Colors.grey,
+                          ),
+                          itemBuilder: (context) {
+                            return [
+                              menuOpts(
+                                value: _MenuOptions.onDelete,
+                                icon: Icons.delete_forever,
+                                title: const Text('Delete category'),
+                              ),
+                              menuOpts(
+                                value: _MenuOptions.onChangeName,
+                                icon: Icons.edit,
+                                title: const Text('Change category name'),
+                              ),
+                            ];
+                          },
+                        ),
 
-                    // agregar nueva lista btn
-                    trailing: IconButton(
-                      onPressed: () => _crudUseCases.createNewList(
-                        categoryId: category.id,
-                        context: context,
+                        // options menu
+                        leading: const _Branch(),
+
+                        // LISTENABLE DE LAS LISTAS DE LA [currentCateg] //
+                        children: [
+                          // agregar nueva lista btn
+                          _AddListaBtn(),
+
+                          // IconButton(
+                          //   onPressed: () => _crudUseCases.createNewList(
+                          //     categoryId: category.id,
+                          //     context: context,
+                          //   ),
+                          //   icon: const Icon(
+                          //     Icons.add_circle,
+                          //     color: Colors.cyan,
+                          //   ),
+                          // ),
+
+                          ValueListenableBuilder(
+                            valueListenable: _listaDb.listenable(),
+                            builder: (context, value, child) {
+                              // construir la lista de Listas //
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                //padding: const EdgeInsets.symmetric(horizontal: 10),
+                                itemCount: listas.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  var isBottom = index == (listas.length - 1);
+
+                                  ///
+                                  Lista element = listas[index];
+                                  return CategoryTile(
+                                    key: ValueKey(element.id),
+                                    isBottom: isBottom,
+                                    lista: element,
+                                    onRemove: () {
+                                      _crudUseCases.deleteLista(
+                                        listaId: element.id,
+                                        globalKey: AppConstants.homeScaffoldKey,
+                                        onDelete: () {},
+                                      );
+                                      //setState(() {});
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          )
+                        ],
                       ),
-                      icon: const Icon(
-                        Icons.add_circle,
-                        color: Colors.cyan,
-                      ),
                     ),
+                  );
+                },
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
 
-                    // options menu
-                    leading: PopupMenuButton(
+  PopupMenuItem menuOpts({
+    required IconData icon,
+    required Widget title,
+    required _MenuOptions value,
+  }) {
+    return PopupMenuItem(
+      value: value,
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            title,
+            Icon(icon, color: Colors.grey.shade500),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+enum _MenuOptions { onChangeName, onDelete }
+
+class _AddListaBtn extends StatelessWidget {
+  const _AddListaBtn({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 50,
+      padding: const EdgeInsets.only(left: 10),
+      color: Colors.white,
+      child: Row(
+        children: [
+          Container(
+            height: 50,
+            width: 2,
+            margin: const EdgeInsets.only(left: 5),
+            color: Colors.orange,
+          ),
+
+          // IconButton(
+          //   onPressed: () {
+          //     // _crudUseCases.createNewList(
+          //     //   categoryId: category.id,
+          //     //   context: context,
+          //     // )
+          //   },
+          //   icon: const Icon(
+          //     Icons.add_circle,
+          //     color: Colors.cyan,
+          //   ),
+          // ),
+          SizedBox(
+            width: 15,
+          ),
+          TextButton(
+            onPressed: () {},
+            child: Text(' + new list'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Branch extends StatelessWidget {
+  const _Branch({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 55,
+      width: 20,
+      //color: Colors.yellow,
+      margin: const EdgeInsets.only(left: 10),
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Container(
+              height: 25,
+              width: 2,
+              margin: const EdgeInsets.only(left: 5),
+              color: Colors.orange,
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              height: 12,
+              width: 12,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.orange,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+/*
+leading: PopupMenuButton(
                       onSelected: (value) {
                         if (value == _MenuOptions.onChangeName) {
                           _crudUseCases.changeCategoryName(
@@ -166,66 +373,4 @@ class _CategoriesTabState extends State<CategoriesTab> {
                       },
                     ),
 
-                    // LISTENABLE DE LAS LISTAS DE LA [currentCateg] //
-                    children: [
-                      ValueListenableBuilder(
-                        valueListenable: _listaDb.listenable(),
-                        builder: (context, value, child) {
-                          // construir la lista de Listas
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            //padding: const EdgeInsets.symmetric(horizontal: 10),
-                            itemCount: listas.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              Lista element = listas[index];
-                              return CustomListTile(
-                                key: ValueKey(element.id),
-                                lista: element,
-                                onRemove: () {
-                                  _crudUseCases.deleteLista(
-                                    listaId: element.id,
-                                    globalKey: AppConstants.homeScaffoldKey,
-                                    onDelete: () {},
-                                  );
-                                  //setState(() {});
-                                },
-                              );
-                            },
-                          );
-                        },
-                      )
-                    ],
-                  );
-                },
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  PopupMenuItem menuOpts({
-    required IconData icon,
-    required Widget title,
-    required _MenuOptions value,
-  }) {
-    return PopupMenuItem(
-      value: value,
-      child: SizedBox(
-        width: double.infinity,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            title,
-            Icon(icon, color: Colors.grey.shade500),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-enum _MenuOptions { onChangeName, onDelete }
+*/
