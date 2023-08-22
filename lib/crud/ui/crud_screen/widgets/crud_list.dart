@@ -157,6 +157,28 @@ class _CrudListState extends State<CrudList> with CreateNewItem {
     setState(() {
       widget.lista.items.remove(item);
       widget.lista.save();
+      completedLista();
     });
+  }
+
+  void completedLista() {
+    int done = 0;
+    int undone = 0;
+
+    if (widget.lista.items.isNotEmpty) {
+      for (var element in widget.lista.items) {
+        if (element.isDone) {
+          done++;
+        }
+        if (!element.isCategory) {
+          undone++;
+        }
+      }
+      if (done == undone) {
+        //TODO poner un emergente de felicitaciones
+        widget.lista.isCompleted = true;
+        widget.lista.save();
+      }
+    }
   }
 }

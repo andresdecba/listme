@@ -43,13 +43,17 @@ abstract class CrudUseCases {
     required String categId,
   }); // obtener las listas asociadas a una categoria
 
-  Lista getList({required String listaId});
+  Lista getList({
+    required String listaId,
+  });
 
   String createNewCategory({
     required BuildContext context,
   });
 
-  Category getCategory({required String categId});
+  Category getCategory({
+    required String categId,
+  });
 
   List<Category> getCategories();
 }

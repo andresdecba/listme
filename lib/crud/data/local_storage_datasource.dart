@@ -35,6 +35,7 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
       id: _uuid.v4(),
       categoryId: category,
       colorSchemeId: colorScheme,
+      isCompleted: false,
     );
     // agregar a la db
     _listasDb.put(newList.id, newList);

@@ -15,6 +15,7 @@ class _BooorarState extends State<Booorar> {
     creationDate: DateTime.now(),
     items: [],
     id: 'lalalala',
+    isCompleted: false,
   );
 
   @override

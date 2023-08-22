@@ -80,6 +80,7 @@ class CrudDrawerPageUno extends StatelessWidget {
         element.isDone = true;
       }
     }
+    lista.isCompleted = true;
     lista.save();
     Future.delayed(AppConstants.initialLoadingDuration).then(
       (value) => context.pop(),

@@ -39,9 +39,9 @@ class App extends StatelessWidget {
       theme: AppTheme().getTheme(),
     );
 
-    //  return MaterialApp(
+    // return MaterialApp(
     //   theme: AppTheme().getTheme(),
-    //   home: const CounterScreen(),
+    //   home: ConfettiScreen(),
     // );
   }
 }
