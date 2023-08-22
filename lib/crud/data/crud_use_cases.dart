@@ -97,7 +97,7 @@ class CrudUseCasesImpl extends CrudUseCases {
           context.pop();
           // esperar para que se vea la animacion en la lista y navegar
           if (navigate) {
-            await Future.delayed(const Duration(milliseconds: 600)).then((value) {
+            await Future.delayed(const Duration(milliseconds: 700)).then((value) {
               context.pushNamed(AppRoutes.crudScreen, extra: listaId);
             });
           }

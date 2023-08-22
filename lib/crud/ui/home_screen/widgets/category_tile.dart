@@ -23,22 +23,30 @@ class CategoryTile extends StatelessWidget {
 
     return InkWell(
       onTap: () => context.pushNamed(AppRoutes.crudScreen, extra: lista.id),
+      splashColor: Colors.cyan,
       child: Container(
-        height: 56, // misma altura que el widget branch
+        height: 55, // misma altura que el widget branch
         width: widthScreen,
         decoration: BoxDecoration(
           color: Colors.grey.shade300,
-          //borderRadius: const BorderRadius.all(Radius.circular(8)),
+          border: isBottom
+              ? null
+              : Border(
+                  bottom: BorderSide(color: Colors.grey.shade400),
+                ),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // BRANCH //
-            _Branch(
-              isBottom: isBottom,
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.grey,
+                size: 20,
+              ),
             ),
-            const SizedBox(width: 20),
 
             // TEXTS //
             Column(

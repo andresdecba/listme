@@ -56,7 +56,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
             child: Expanded(
               child: Text(
-                'Here you can create categories to organize your lists, tap "+" to add one.',
+                'Here you can create folders to organize your lists, tap "+" to add one.',
                 textAlign: TextAlign.center,
                 style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
               ),
@@ -91,7 +91,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
                   bool isExpanded = category.isExpanded;
 
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    padding: const EdgeInsets.only(bottom: 15),
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: ExpansionTile(
@@ -100,12 +100,8 @@ class _CategoriesTabState extends State<CategoriesTab> {
                         initiallyExpanded: category.isExpanded,
                         tilePadding: EdgeInsets.zero,
                         childrenPadding: EdgeInsets.zero,
-                        collapsedShape: const Border(
-                          bottom: BorderSide.none,
-                        ), //cerrado
-                        shape: const Border(
-                          bottom: BorderSide.none,
-                        ), // abiertop
+                        collapsedShape: const Border(bottom: BorderSide.none), //cerrado
+                        shape: const Border(bottom: BorderSide.none), // abiertop
                         backgroundColor: Colors.grey.shade200,
                         collapsedBackgroundColor: Colors.grey.shade200,
                         onExpansionChanged: (value) {
@@ -114,7 +110,6 @@ class _CategoriesTabState extends State<CategoriesTab> {
                         },
 
                         // branch icon
-                        //leading: category.listasIds.isEmpty ? const _EmptyBranch() : const _Branch(),
                         leading: isExpanded
                             ? const Padding(
                                 padding: EdgeInsets.only(left: 10),
@@ -204,7 +199,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
                                 // when add lista
                                 itemBuilder: (context, animation, item, i) {
                                   var isBottom = i == (listas.length - 1);
-                                  //Lista element = listas[i];
+
                                   return SizeFadeTransition(
                                     sizeFraction: 0.7,
                                     curve: Curves.easeInOut,
@@ -299,73 +294,3 @@ class _CategoriesTabState extends State<CategoriesTab> {
 }
 
 enum _MenuOptions { changeName, delete, createList }
-
-class _EmptyBranch extends StatelessWidget {
-  const _EmptyBranch({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 55,
-      width: 20,
-      //color: Colors.yellow,
-      margin: const EdgeInsets.only(left: 10),
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              height: 12,
-              width: 12,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.orange,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Branch extends StatelessWidget {
-  const _Branch({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 55,
-      width: 20,
-      //color: Colors.yellow,
-      margin: const EdgeInsets.only(left: 10),
-      child: Icon(Icons.folder),
-      // child: Stack(
-      //   children: [
-      //     Align(
-      //       alignment: Alignment.bottomLeft,
-      //       child: Container(
-      //         height: 25,
-      //         width: 2,
-      //         margin: const EdgeInsets.only(left: 5),
-      //         color: Colors.orange,
-      //       ),
-      //     ),
-      //     Align(
-      //       alignment: Alignment.centerLeft,
-      //       child: Container(
-      //         height: 12,
-      //         width: 12,
-      //         decoration: const BoxDecoration(
-      //           shape: BoxShape.circle,
-      //           color: Colors.orange,
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
-    );
-  }
-}
