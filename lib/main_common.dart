@@ -5,7 +5,7 @@ import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/routes/routes.dart';
 import 'package:listme/core/styles/app_theme.dart';
 import 'package:listme/crud/models/item.dart';
-import 'package:listme/crud/models/list_category.dart';
+import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 
 void mainCommon(String envFileName) async {
@@ -17,9 +17,9 @@ void mainCommon(String envFileName) async {
   await Hive.initFlutter();
   Hive.registerAdapter(ListaAdapter());
   Hive.registerAdapter(ItemAdapter());
-  Hive.registerAdapter(CategoryAdapter());
+  Hive.registerAdapter(FolderAdapter());
   await Hive.openBox<Lista>(AppConstants.listasDb);
-  await Hive.openBox<Category>(AppConstants.categoriesDb);
+  await Hive.openBox<Folder>(AppConstants.categoriesDb);
 
   // run the app
   runApp(const App());

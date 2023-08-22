@@ -17,7 +17,7 @@ class Lista extends HiveObject {
   @HiveField(4)
   String? colorSchemeId;
   @HiveField(5)
-  String? categoryId;
+  String? folderId;
   @HiveField(6)
   bool isCompleted;
 
@@ -27,7 +27,7 @@ class Lista extends HiveObject {
     required this.items,
     required this.id,
     required this.isCompleted,
-    this.categoryId,
+    this.folderId,
     this.colorSchemeId,
   });
 
@@ -37,7 +37,7 @@ class Lista extends HiveObject {
     required List<Item> items,
     required String id,
     required bool isCompleted,
-    String? category,
+    String? folder,
     String? colorScheme,
   }) {
     return Lista(
@@ -45,14 +45,14 @@ class Lista extends HiveObject {
       title: title,
       creationDate: creationDate,
       items: items,
-      categoryId: category,
+      folderId: folder,
       isCompleted: isCompleted,
     );
   }
 
   @override
   String toString() {
-    return 'id: $id, title: $title, creationDate $creationDate, items: $items, category $categoryId, isCompleted $isCompleted';
+    return 'id: $id, title: $title, creationDate $creationDate, items: $items, folder $folderId, isCompleted $isCompleted';
   }
 }
 

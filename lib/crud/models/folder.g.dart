@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'list_category.dart';
+part of 'folder.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CategoryAdapter extends TypeAdapter<Category> {
+class FolderAdapter extends TypeAdapter<Folder> {
   @override
   final int typeId = 3;
 
   @override
-  Category read(BinaryReader reader) {
+  Folder read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Category(
+    return Folder(
       name: fields[0] as String,
       isExpanded: fields[2] as bool,
       id: fields[3] as String,
@@ -26,7 +26,7 @@ class CategoryAdapter extends TypeAdapter<Category> {
   }
 
   @override
-  void write(BinaryWriter writer, Category obj) {
+  void write(BinaryWriter writer, Folder obj) {
     writer
       ..writeByte(5)
       ..writeByte(0)
@@ -45,5 +45,9 @@ class CategoryAdapter extends TypeAdapter<Category> {
   int get hashCode => typeId.hashCode;
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is CategoryAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FolderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }

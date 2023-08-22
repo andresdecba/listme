@@ -4,31 +4,31 @@ import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reord
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
-import 'package:listme/crud/models/list_category.dart';
+import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/home_screen/widgets/category_tile.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
-class CategoriesTab extends StatefulWidget {
-  const CategoriesTab({
+class TabFolders extends StatefulWidget {
+  const TabFolders({
     super.key,
   });
 
   @override
-  State<CategoriesTab> createState() => _CategoriesTabState();
+  State<TabFolders> createState() => _TabFoldersState();
 }
 
-class _CategoriesTabState extends State<CategoriesTab> {
+class _TabFoldersState extends State<TabFolders> {
   bool isLoading = true;
   late CrudUseCases _crudUseCases;
-  late Box<Category> _categoryDb;
+  late Box<Folder> _categoryDb;
   late Box<Lista> _listaDb;
 
   @override
   void initState() {
     super.initState();
     _crudUseCases = CrudUseCasesImpl();
-    _categoryDb = Hive.box<Category>(AppConstants.categoriesDb);
+    _categoryDb = Hive.box<Folder>(AppConstants.categoriesDb);
     _listaDb = Hive.box<Lista>(AppConstants.listasDb);
 
     Future.delayed(AppConstants.initialLoadingDuration).then((value) => setState(() {
@@ -66,7 +66,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
           // LISTENABLE DE LAS CATEGORIAS //
           ValueListenableBuilder(
             valueListenable: _categoryDb.listenable(),
-            builder: (context, Box<Category> value, child) {
+            builder: (context, Box<Folder> value, child) {
               //  EMPTY SCREEN //
               // TODO si no hay categorias poner una imagen svg
               if (value.values.isEmpty) {
@@ -85,7 +85,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 itemCount: value.values.length,
                 itemBuilder: (context, index) {
-                  Category category = value.values.toList()[index];
+                  Folder category = value.values.toList()[index];
                   List<Lista> listas = _crudUseCases.getListsFromCategoy(categId: category.id);
                   ExpansionTileController ctlr = ExpansionTileController();
                   bool isExpanded = category.isExpanded;
@@ -248,24 +248,24 @@ class _CategoriesTabState extends State<CategoriesTab> {
     );
   }
 
-  void onTapOption(_MenuOptions value, Category category) {
+  void onTapOption(_MenuOptions value, Folder category) {
     if (value == _MenuOptions.changeName) {
-      _crudUseCases.changeCategoryName(
-        category: category,
-        categoryName: category.name,
+      _crudUseCases.changeFolderName(
+        folder: category,
+        folderName: category.name,
         context: context,
       );
     }
     if (value == _MenuOptions.delete) {
-      _crudUseCases.deleteCategory(
-        categoryId: category.id,
-        categoryName: category.name,
+      _crudUseCases.deleteFolder(
+        folderId: category.id,
+        folderName: category.name,
         context: context,
       );
     }
     if (value == _MenuOptions.createList) {
       _crudUseCases.createNewList(
-        categoryId: category.id,
+        folderId: category.id,
         context: context,
       );
     }

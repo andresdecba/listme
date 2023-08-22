@@ -2,26 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/data/local_storage_datasource.dart';
-import 'package:listme/crud/models/list_category.dart';
+import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/build_title.dart';
 import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
 
 // MUESTRA LAS LISTAS EN TAB-1 "My lists by categories" //
 
-class CategoriesExpansionList extends StatefulWidget {
-  const CategoriesExpansionList({
+class FoldersExpansionList extends StatefulWidget {
+  const FoldersExpansionList({
     required this.categories,
     super.key,
   });
 
-  final List<Category> categories;
+  final List<Folder> categories;
 
   @override
-  State<CategoriesExpansionList> createState() => _CategoriesExpansionListState();
+  State<FoldersExpansionList> createState() => _FoldersExpansionListState();
 }
 
-class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
+class _FoldersExpansionListState extends State<FoldersExpansionList> {
   late LocalStorageDatasource _datasource;
   late CrudUseCases _crudUseCases;
 
@@ -45,7 +45,7 @@ class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
         // ITERAR CATEGORIAS //
         ...widget.categories.map((currentCategory) {
           // obtener las listas de [currentCateg]
-          var getDb = _datasource.getListsFromCategoy(categId: currentCategory.id);
+          var getDb = _datasource.getListsFromFolder(folderId: currentCategory.id);
           List<Lista> listas = Helpers.sortListsByDateTime(listas: getDb);
 
           return ExpansionTile(
@@ -71,7 +71,7 @@ class _CategoriesExpansionListState extends State<CategoriesExpansionList> {
                 // add btn //
                 IconButton(
                   onPressed: () {
-                    _crudUseCases.createNewList(context: context, categoryId: currentCategory.id);
+                    _crudUseCases.createNewList(context: context, folderId: currentCategory.id);
                     Future.delayed(const Duration(milliseconds: 400)).then(
                       (value) => setState(() => currentCategory.isExpanded = true),
                     );

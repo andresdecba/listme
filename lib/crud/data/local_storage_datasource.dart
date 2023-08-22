@@ -1,21 +1,21 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
-import 'package:listme/crud/models/list_category.dart';
+import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class LocalStorageDatasource {
-  String createNewList({required String listName, String? category, String? colorScheme});
-  String createNewCategory({required String categoryName});
-  Category getCategory({required String categId});
-  List<Lista> getListsFromCategoy({required String categId}); // obtener las listas asociadas a una categoria
-  List<Category> getCategories();
+  String createNewList({required String listName, String? folder, String? colorScheme});
+  String createNewFolder({required String folderName});
+  Folder getFolder({required String folderId});
+  List<Lista> getListsFromFolder({required String folderId}); // obtener las listas asociadas a una categoria
+  List<Folder> getFolders();
   Lista getList({required String listaId});
   void deleteLista({required String listId});
-  void deleteCategory({required String categId, bool deleteLists = false});
-  void changeCategoryName({required String categId, required String newValue});
-  void changeCategory({required String targetCategId, required String listId}); // cambiar de categoría una lista
+  void deleteFolder({required String folderId, bool deleteLists = false});
+  void changeFolderName({required String folderId, required String newValue});
+  void changeFolder({required String targetFolderId, required String listId}); // cambiar de categoría una lista
 }
 
 // TODO: hacer un manejo de los errores si por si las busquedas devuelven "null"
@@ -23,25 +23,25 @@ abstract class LocalStorageDatasource {
 class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   final Uuid _uuid = const Uuid();
   final Box<Lista> _listasDb = Hive.box<Lista>(AppConstants.listasDb);
-  final Box<Category> _categoriesDb = Hive.box<Category>(AppConstants.categoriesDb);
+  final Box<Folder> _foldersDb = Hive.box<Folder>(AppConstants.categoriesDb);
 
   @override
-  String createNewList({required String listName, String? category, String? colorScheme}) {
+  String createNewList({required String listName, String? folder, String? colorScheme}) {
     // nueva lista
     final newList = Lista(
       title: listName,
       creationDate: DateTime.now(),
       items: [],
       id: _uuid.v4(),
-      categoryId: category,
+      folderId: folder,
       colorSchemeId: colorScheme,
       isCompleted: false,
     );
     // agregar a la db
     _listasDb.put(newList.id, newList);
     // agregar a la categoria
-    if (category != null) {
-      var getCtg = _categoriesDb.get(category);
+    if (folder != null) {
+      var getCtg = _foldersDb.get(folder);
       if (getCtg != null) {
         getCtg.listasIds.add(newList.id);
         getCtg.save();
@@ -51,21 +51,21 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   }
 
   @override
-  String createNewCategory({required String categoryName}) {
-    final Category newCategory = Category(
-      name: categoryName,
+  String createNewFolder({required String folderName}) {
+    final Folder newFolder = Folder(
+      name: folderName,
       isExpanded: true,
       id: _uuid.v4(),
       listasIds: [],
       creationDate: DateTime.now(),
     );
-    _categoriesDb.put(newCategory.id, newCategory);
-    return newCategory.id;
+    _foldersDb.put(newFolder.id, newFolder);
+    return newFolder.id;
   }
 
   @override
-  List<Lista> getListsFromCategoy({required String categId}) {
-    var categ = _categoriesDb.get(categId);
+  List<Lista> getListsFromFolder({required String folderId}) {
+    var categ = _foldersDb.get(folderId);
     List<Lista> result = [];
     if (categ != null) {
       for (var element in categ.listasIds) {
@@ -84,8 +84,8 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
     var lista = _listasDb.get(listId);
     if (lista != null) {
       // borra la lista de la categoria
-      if (lista.categoryId != null) {
-        var categ = _categoriesDb.get(lista.categoryId);
+      if (lista.folderId != null) {
+        var categ = _foldersDb.get(lista.folderId);
         if (categ != null) categ.listasIds.remove(lista.id);
         categ!.save();
       }
@@ -94,14 +94,14 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   }
 
   @override
-  void deleteCategory({required String categId, bool deleteLists = false}) {
-    var categ = _categoriesDb.get(categId);
+  void deleteFolder({required String folderId, bool deleteLists = false}) {
+    var categ = _foldersDb.get(folderId);
     for (var element in categ!.listasIds) {
       var lista = _listasDb.get(element);
       if (lista != null) {
         // desasociar categoria
         if (!deleteLists) {
-          lista.categoryId = null;
+          lista.folderId = null;
           lista.save();
         }
         // borrar la lista
@@ -110,12 +110,12 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
         }
       }
     }
-    _categoriesDb.delete(categId);
+    _foldersDb.delete(folderId);
   }
 
   @override
-  void changeCategoryName({required String categId, required String newValue}) {
-    var categ = _categoriesDb.get(categId);
+  void changeFolderName({required String folderId, required String newValue}) {
+    var categ = _foldersDb.get(folderId);
     if (categ != null) {
       categ.name = newValue;
       categ.save();
@@ -123,17 +123,17 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   }
 
   @override
-  void changeCategory({required String targetCategId, required String listId}) {
+  void changeFolder({required String targetFolderId, required String listId}) {
     print('jajaja dataSource');
 
     var list = _listasDb.get(listId);
 
     if (list != null) {
-      Category? newCateg = _categoriesDb.get(targetCategId);
-      Category? oldCateg;
+      Folder? newCateg = _foldersDb.get(targetFolderId);
+      Folder? oldCateg;
 
-      if (list.categoryId != null) {
-        oldCateg = _categoriesDb.get(list.categoryId);
+      if (list.folderId != null) {
+        oldCateg = _foldersDb.get(list.folderId);
       }
 
       // 1- agregar el lista-id en la categoria nva
@@ -148,15 +148,15 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
         oldCateg.save();
       }
 
-      // 3- cambiar el category-id en la lista
-      list.categoryId = targetCategId;
+      // 3- cambiar el folder-id en la lista
+      list.folderId = targetFolderId;
       list.save();
     }
   }
 
   @override
-  Category getCategory({required String categId}) {
-    return _categoriesDb.get(categId)!;
+  Folder getFolder({required String folderId}) {
+    return _foldersDb.get(folderId)!;
   }
 
   @override
@@ -165,7 +165,7 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   }
 
   @override
-  List<Category> getCategories() {
-    return _categoriesDb.values.toList();
+  List<Folder> getFolders() {
+    return _foldersDb.values.toList();
   }
 }

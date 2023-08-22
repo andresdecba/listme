@@ -22,7 +22,7 @@ class ListaAdapter extends TypeAdapter<Lista> {
       items: (fields[2] as List).cast<Item>(),
       id: fields[3] as String,
       isCompleted: fields[6] as bool,
-      categoryId: fields[5] as String?,
+      folderId: fields[5] as String?,
       colorSchemeId: fields[4] as String?,
     );
   }
@@ -42,7 +42,7 @@ class ListaAdapter extends TypeAdapter<Lista> {
       ..writeByte(4)
       ..write(obj.colorSchemeId)
       ..writeByte(5)
-      ..write(obj.categoryId)
+      ..write(obj.folderId)
       ..writeByte(6)
       ..write(obj.isCompleted);
   }

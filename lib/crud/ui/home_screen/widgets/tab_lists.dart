@@ -11,16 +11,16 @@ import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
 // MUESTRA TODAS LAS LISTAS EN TAB-2 "My lists" //
 
-class AllListsTab extends StatefulWidget {
-  const AllListsTab({
+class TabLists extends StatefulWidget {
+  const TabLists({
     super.key,
   });
 
   @override
-  State<AllListsTab> createState() => _AllListsTabState();
+  State<TabLists> createState() => _TabListsState();
 }
 
-class _AllListsTabState extends State<AllListsTab> {
+class _TabListsState extends State<TabLists> {
   bool isLoading = true;
   late CrudUseCases _crudUseCases;
 

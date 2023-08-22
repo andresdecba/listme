@@ -3,33 +3,33 @@ import 'package:go_router/go_router.dart';
 import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/data/local_storage_datasource.dart';
-import 'package:listme/crud/models/list_category.dart';
+import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/shared_widgets/custom_bottomsheet.dart';
 import 'package:listme/crud/ui/shared_widgets/input_item.dart';
 
 abstract class CrudUseCases {
   void createNewList({
-    String? categoryId,
+    String? folderId,
     String? colorScheme,
     bool navigate = true,
     required BuildContext context,
   });
 
-  void changeCategoryName({
-    required Category category,
-    required String categoryName,
+  void changeFolderName({
+    required Folder folder,
+    required String folderName,
     required BuildContext context,
   });
 
-  void changeCategory({
-    required String targetCategId,
+  void changeFolder({
+    required String targetFolderId,
     required String listId,
   });
 
-  void deleteCategory({
-    required String categoryId,
-    required String categoryName,
+  void deleteFolder({
+    required String folderId,
+    required String folderName,
     required BuildContext context,
   });
 
@@ -47,15 +47,15 @@ abstract class CrudUseCases {
     required String listaId,
   });
 
-  String createNewCategory({
+  String createNewFolder({
     required BuildContext context,
   });
 
-  Category getCategory({
-    required String categId,
+  Folder getFolder({
+    required String folderId,
   });
 
-  List<Category> getCategories();
+  List<Folder> getCategories();
 }
 
 class CrudUseCasesImpl extends CrudUseCases {
@@ -64,7 +64,7 @@ class CrudUseCasesImpl extends CrudUseCases {
   // CREAR UNA LISTA NUEVA //
   @override
   void createNewList({
-    String? categoryId,
+    String? folderId,
     String? colorScheme,
     bool navigate = true,
     required BuildContext context,
@@ -73,8 +73,8 @@ class CrudUseCasesImpl extends CrudUseCases {
     String? categName;
     String title = 'Create a new list';
 
-    if (categoryId != null) {
-      categName = _dataSource.getCategory(categId: categoryId).name;
+    if (folderId != null) {
+      categName = _dataSource.getFolder(folderId: folderId).name;
       title = 'Create a new list in:';
     }
 
@@ -91,7 +91,7 @@ class CrudUseCasesImpl extends CrudUseCases {
           // crear lista
           listaId = _dataSource.createNewList(
             listName: value,
-            category: categoryId,
+            folder: folderId,
             colorScheme: colorScheme,
           );
           context.pop();
@@ -107,19 +107,19 @@ class CrudUseCasesImpl extends CrudUseCases {
   }
 
   @override
-  void changeCategory({
-    required String targetCategId,
+  void changeFolder({
+    required String targetFolderId,
     required String listId,
   }) {
     print('jajaja useCase');
-    _dataSource.changeCategory(targetCategId: targetCategId, listId: listId);
+    _dataSource.changeFolder(targetFolderId: targetFolderId, listId: listId);
   }
 
   // CAMBIARLE EL NOMBRE A LA CATEGORIA //
   @override
-  void changeCategoryName({
-    required Category category,
-    required String categoryName,
+  void changeFolderName({
+    required Folder folder,
+    required String folderName,
     required BuildContext context,
   }) {
     customBottomSheet(
@@ -128,15 +128,15 @@ class CrudUseCasesImpl extends CrudUseCases {
       enableDrag: true,
       onClose: () {},
       title: 'Change name to:',
-      subTitle: '"$categoryName"',
+      subTitle: '"$folderName"',
       child: CustomTextfield(
         onTap: () {},
-        hintText: 'New category name',
+        hintText: 'New folder name',
         onEditingComplete: (value) {
           context.pop();
-          _dataSource.changeCategoryName(
+          _dataSource.changeFolderName(
             newValue: value,
-            categId: category.id,
+            folderId: folder.id,
           );
         },
       ),
@@ -145,9 +145,9 @@ class CrudUseCasesImpl extends CrudUseCases {
 
   // BORRAR UNA CATEGORÍA //
   @override
-  void deleteCategory({
-    required String categoryId,
-    required String categoryName,
+  void deleteFolder({
+    required String folderId,
+    required String folderName,
     required BuildContext context,
   }) {
     customBottomSheet(
@@ -155,8 +155,8 @@ class CrudUseCasesImpl extends CrudUseCases {
       showClose: true,
       enableDrag: true,
       onClose: () {},
-      title: 'Delete category:',
-      subTitle: '"$categoryName"',
+      title: 'Delete folder:',
+      subTitle: '"$folderName"',
       child: Column(
         children: [
           // borrar solamente las categporias y desasociar las listas
@@ -165,10 +165,10 @@ class CrudUseCasesImpl extends CrudUseCases {
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: ElevatedButton(
               onPressed: () {
-                _dataSource.deleteCategory(categId: categoryId);
+                _dataSource.deleteFolder(folderId: folderId);
                 context.pop();
               },
-              child: const Text('Delete only the category'),
+              child: const Text('Delete only the folder'),
             ),
           ),
 
@@ -178,7 +178,7 @@ class CrudUseCasesImpl extends CrudUseCases {
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: ElevatedButton(
               onPressed: () {
-                _dataSource.deleteCategory(categId: categoryId, deleteLists: true);
+                _dataSource.deleteFolder(folderId: folderId, deleteLists: true);
                 context.pop();
               },
               child: const Row(
@@ -187,7 +187,7 @@ class CrudUseCasesImpl extends CrudUseCases {
                 children: [
                   Icon(Icons.warning_rounded),
                   SizedBox(width: 10),
-                  Text('Delete the category and all its lists'),
+                  Text('Delete the folder and all its lists'),
                 ],
               ),
             ),
@@ -236,12 +236,12 @@ class CrudUseCasesImpl extends CrudUseCases {
   // OBTENER TODAS LAS LISTAS QUE PERTENEZCAN A UNA CATEGORIA //
   @override
   List<Lista> getListsFromCategoy({required String categId}) {
-    return _dataSource.getListsFromCategoy(categId: categId);
+    return _dataSource.getListsFromFolder(folderId: categId);
   }
 
-  // CREATE A NEW CATEGORY //
+  // CREATE A NEW FOLDER //
   @override
-  String createNewCategory({
+  String createNewFolder({
     required BuildContext context,
   }) {
     var value = '';
@@ -250,13 +250,13 @@ class CrudUseCasesImpl extends CrudUseCases {
       showClose: true,
       enableDrag: true,
       onClose: () {},
-      title: 'Create a new category',
+      title: 'Create a new folder',
       child: CustomTextfield(
-        hintText: 'Category name',
+        hintText: 'folder name',
         onTap: () {},
         onEditingComplete: (value) {
-          value = _dataSource.createNewCategory(
-            categoryName: value,
+          value = _dataSource.createNewFolder(
+            folderName: value,
           );
           context.pop();
         },
@@ -266,8 +266,8 @@ class CrudUseCasesImpl extends CrudUseCases {
   }
 
   @override
-  Category getCategory({required String categId}) {
-    return _dataSource.getCategory(categId: categId);
+  Folder getFolder({required String folderId}) {
+    return _dataSource.getFolder(folderId: folderId);
   }
 
   @override
@@ -276,9 +276,9 @@ class CrudUseCasesImpl extends CrudUseCases {
   }
 
   @override
-  List<Category> getCategories() {
+  List<Folder> getCategories() {
     return Helpers.sortCategoriesByDateTime(
-      categories: _dataSource.getCategories(),
+      categories: _dataSource.getFolders(),
     );
   }
 }

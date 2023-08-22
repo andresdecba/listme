@@ -4,7 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/core/routes/routes.dart';
-import 'package:listme/crud/models/list_category.dart';
+import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/shared_widgets/custom_percent_indicator.dart';
 
@@ -74,11 +74,11 @@ class CustomListTile extends StatelessWidget {
 
                   // date + categ
                   ValueListenableBuilder(
-                    valueListenable: Hive.box<Category>(AppConstants.categoriesDb).listenable(),
+                    valueListenable: Hive.box<Folder>(AppConstants.categoriesDb).listenable(),
                     builder: (context, value, child) {
                       String subTitle = Helpers.longDateFormater(lista.creationDate);
-                      if (lista.categoryId != null) {
-                        var ctg = value.get(lista.categoryId);
+                      if (lista.folderId != null) {
+                        var ctg = value.get(lista.folderId);
                         if (ctg != null) {
                           subTitle = '${Helpers.longDateFormater(lista.creationDate)} - ${ctg.name}';
                         }

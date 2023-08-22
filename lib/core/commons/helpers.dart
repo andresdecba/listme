@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:listme/crud/models/list_category.dart';
+import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 
 class Helpers {
@@ -14,7 +14,7 @@ class Helpers {
     return listas;
   }
 
-  static List<Category> sortCategoriesByDateTime({required List<Category> categories}) {
+  static List<Folder> sortCategoriesByDateTime({required List<Folder> categories}) {
     categories.sort((a, b) => a.creationDate.compareTo(b.creationDate));
     categories = categories.reversed.toList();
     return categories;

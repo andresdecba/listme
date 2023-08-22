@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
-import 'package:listme/crud/models/list_category.dart';
+import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/drawer_page_dos.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/drawer_page_uno.dart';
@@ -22,7 +22,7 @@ class _CrudDrawerState extends State<CrudDrawer> {
   late CrudUseCases useCases;
   late PageController pageCtlr;
   late int selectedPage;
-  late List<Category> categories;
+  late List<Folder> categories;
 
   @override
   void initState() {

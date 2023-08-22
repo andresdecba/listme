@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
-import 'package:listme/crud/ui/home_screen/widgets/tab_categories.dart';
-import 'package:listme/crud/ui/home_screen/widgets/tab_all_lists.dart';
+import 'package:listme/crud/ui/home_screen/widgets/tab_folders.dart';
+import 'package:listme/crud/ui/home_screen/widgets/tab_lists.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -89,9 +89,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         controller: _tabController,
         children: const [
           // lists TAB  //
-          AllListsTab(),
+          TabLists(),
           // ctegories TAB //
-          CategoriesTab(),
+          TabFolders(),
         ],
       ),
     );
@@ -107,6 +107,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   void createNewCategory() {
-    _crudUseCases.createNewCategory(context: context);
+    _crudUseCases.createNewFolder(context: context);
   }
 }

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
-import 'package:listme/crud/models/list_category.dart';
+import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/drawer_page_uno.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
@@ -17,7 +17,7 @@ class CrudDrawerPageDos extends StatefulWidget {
     super.key,
   });
 
-  final List<Category> categories;
+  final List<Folder> categories;
   final Lista lista;
   final PageController pageCtlr;
 
@@ -73,7 +73,7 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
         // LISTA DE CATEGORIAS //
         FadeIn(
             child: ValueListenableBuilder(
-          valueListenable: Hive.box<Category>(AppConstants.categoriesDb).listenable(),
+          valueListenable: Hive.box<Folder>(AppConstants.categoriesDb).listenable(),
           builder: (context, value, child) {
             return ListView.separated(
               shrinkWrap: true,
@@ -87,7 +87,7 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
               itemBuilder: (BuildContext context, int index) {
                 var isTheLastTile = index == (widget.categories.length - 1);
                 var targetCategId = widget.categories[index].id;
-                var isCurrent = widget.categories[index].id == widget.lista.categoryId;
+                var isCurrent = widget.categories[index].id == widget.lista.folderId;
 
                 // Categoria actual de la lista
 
@@ -99,8 +99,8 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
                           bottom: BorderSide(color: Colors.cyan),
                         ),
                   onTap: () {
-                    useCases.changeCategory(
-                      targetCategId: targetCategId,
+                    useCases.changeFolder(
+                      targetFolderId: targetCategId,
                       listId: widget.lista.id,
                     );
                     Future.delayed(AppConstants.initialLoadingDuration).then((value) => context.pop());
@@ -112,12 +112,12 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
                     },
                     child: isCurrent
                         ? Icon(
-                            key: ValueKey(widget.lista.categoryId),
+                            key: ValueKey(widget.lista.folderId),
                             Icons.check_box_rounded,
                             color: Colors.cyan,
                           )
                         : Icon(
-                            key: ValueKey(widget.lista.categoryId),
+                            key: ValueKey(widget.lista.folderId),
                             Icons.check_box_outline_blank_rounded,
                           ),
                   ),

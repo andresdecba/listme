@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
-import 'package:listme/crud/models/list_category.dart';
+import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/create_new_item.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/drawer.dart';
@@ -25,7 +25,7 @@ class CrudScreen extends StatefulWidget {
 class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
   // properties //
   late Box<Lista> _listasDB;
-  late Box<Category> _categoriesDB;
+  late Box<Folder> _categoriesDB;
   late Lista lista;
   late ScrollController _scrollCtlr;
   int idxInsert = 0;
@@ -36,7 +36,7 @@ class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
   void initState() {
     super.initState();
     _listasDB = Hive.box<Lista>(AppConstants.listasDb);
-    _categoriesDB = Hive.box<Category>(AppConstants.categoriesDb);
+    _categoriesDB = Hive.box<Folder>(AppConstants.categoriesDb);
     lista = _listasDB.get(widget.id)!;
     _scrollCtlr = ScrollController();
   }
@@ -112,9 +112,9 @@ class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
                         ValueListenableBuilder(
                           valueListenable: _listasDB.listenable(),
                           builder: (context, value, child) {
-                            Category? coso;
-                            if (lista.categoryId != null) {
-                              coso = _categoriesDB.get(lista.categoryId);
+                            Folder? coso;
+                            if (lista.folderId != null) {
+                              coso = _categoriesDB.get(lista.folderId);
                             }
                             return FadeIn(
                               child: Padding(

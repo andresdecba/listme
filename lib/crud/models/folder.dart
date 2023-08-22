@@ -1,11 +1,11 @@
 import 'package:hive/hive.dart';
-part 'list_category.g.dart';
+part 'folder.g.dart';
 
 // flutter packages pub run build_runner build
 
 @HiveType(typeId: 3)
-class Category extends HiveObject {
-  Category({
+class Folder extends HiveObject {
+  Folder({
     required this.name,
     required this.isExpanded,
     required this.id,
@@ -24,14 +24,14 @@ class Category extends HiveObject {
   @HiveField(4)
   List<String> listasIds;
 
-  Category copyWith({
+  Folder copyWith({
     required String name,
     required bool isExpanded,
     required String id,
     required List<String> listasIds,
     required DateTime creationDate,
   }) {
-    return Category(
+    return Folder(
       name: name,
       isExpanded: isExpanded,
       id: id,
@@ -42,6 +42,6 @@ class Category extends HiveObject {
 
   @override
   String toString() {
-    return 'categoryName: $name, isExpanded $isExpanded, categoryId $id, listasIds $listasIds';
+    return 'folderyName: $name, isExpanded $isExpanded, folderId $id, listasIds $listasIds';
   }
 }
