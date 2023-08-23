@@ -13,22 +13,10 @@ class TileList extends StatelessWidget {
     super.key,
     required this.lista,
     required this.onRemove,
-    // required this.titleText,
-    // required this.subTitleText,
-    // required this.onTap,
-    // required this.done,
-    // required this.undone,
-    // this.bgColor,
   });
 
   final Lista lista;
   final VoidCallback onRemove;
-  // final VoidCallback onTap;
-  // final String titleText;
-  // final String subTitleText;
-  // final int done;
-  // final int undone;
-  // final Color? bgColor;
 
   @override
   Widget build(BuildContext context) {

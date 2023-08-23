@@ -7,6 +7,7 @@ import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/drawer_page_uno.dart';
+import 'package:listme/crud/ui/shared_widgets/empty_screen_bg.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
 class CrudDrawerPageDos extends StatefulWidget {
@@ -41,6 +42,8 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
 
   @override
   Widget build(BuildContext context) {
+    final TextTheme txtStyle = Theme.of(context).textTheme;
+
     // LOADER //
     if (isLoading) {
       return const InitialLoading();
@@ -48,26 +51,21 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
 
     return Column(
       children: [
-        // TITLO
+        // TITLE
         Container(
           height: 150,
           alignment: Alignment.center,
-          child: const Text('Change folder'),
+          child: Text(
+            'Change folder',
+            style: txtStyle.titleMedium,
+          ),
         ),
 
         // SI NO HAY CATEGORIAS
         if (widget.folders.isEmpty)
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 1.3,
-            child: const Center(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  'There are no folders.\nYou can add some, from folders section.',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
+          const EmptyScreenBg(
+            svgPath: 'assets/svg/empty-folder.svg',
+            text: 'There are no folders yet :(\nAdd some from folders section',
           ),
 
         // LISTA DE CATEGORIAS //

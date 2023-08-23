@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:listme/core/commons/constants.dart';
@@ -21,8 +22,10 @@ void mainCommon(String envFileName) async {
   await Hive.openBox<Lista>(AppConstants.listasDb);
   await Hive.openBox<Folder>(AppConstants.foldersDb);
 
-  // run the app
-  runApp(const App());
+  // prevent portrait orientation and then run app
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
+    (value) => runApp(const App()),
+  );
 }
 
 class App extends StatelessWidget {

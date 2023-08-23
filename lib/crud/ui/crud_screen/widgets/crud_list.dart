@@ -1,15 +1,15 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reorderable_list_2.dart';
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/models/item.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/create_new_item.dart';
-import 'package:listme/crud/ui/crud_screen/widgets/sublist_tile.dart';
-import 'package:listme/crud/ui/crud_screen/widgets/item_tile.dart';
+import 'package:listme/crud/ui/crud_screen/widgets/tile_sublist.dart';
+import 'package:listme/crud/ui/crud_screen/widgets/tile_item.dart';
+import 'package:listme/crud/ui/shared_widgets/empty_screen_bg.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
 class CrudList extends StatefulWidget {
@@ -41,9 +41,6 @@ class _CrudListState extends State<CrudList> with CreateNewItem {
 
   @override
   Widget build(BuildContext context) {
-    // variables //
-    final Size screenSize = MediaQuery.of(context).size;
-
     // LOADER //
     if (isLoading) {
       return const InitialLoading();
@@ -51,16 +48,9 @@ class _CrudListState extends State<CrudList> with CreateNewItem {
 
     return widget.lista.items.isEmpty
         // EMPTY LIST //
-        ? FadeIn(
-            child: SizedBox(
-              height: screenSize.height * 0.75,
-              child: SvgPicture.asset(
-                'assets/add-plus-circle.svg',
-                alignment: Alignment.center,
-                width: 100,
-                color: Colors.grey.shade300,
-              ),
-            ),
+        ? const EmptyScreenBg(
+            svgPath: 'assets/svg/empty-list.svg',
+            text: 'Add some items from "+"',
           )
 
         // LIST //
@@ -107,7 +97,7 @@ class _CrudListState extends State<CrudList> with CreateNewItem {
                       child: Handle(
                         delay: const Duration(milliseconds: 300),
                         child: item.isCategory
-                            ? SublistTile(
+                            ? TileSublist(
                                 // TODO key: scrollKey,
                                 text: item.content,
                                 onRemove: () => onRemoveItem(item),
@@ -126,7 +116,7 @@ class _CrudListState extends State<CrudList> with CreateNewItem {
                                   );
                                 },
                               )
-                            : ItemTile(
+                            : TileItem(
                                 // TODO key: scrollKey,
                                 text: item.content,
                                 isDone: item.isDone,

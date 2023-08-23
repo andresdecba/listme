@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ItemTile extends StatefulWidget {
-  const ItemTile({
+class TileItem extends StatefulWidget {
+  const TileItem({
     required this.onTapIsDone,
     required this.onRemove,
     required this.text,
@@ -15,10 +15,10 @@ class ItemTile extends StatefulWidget {
   final bool isDone;
 
   @override
-  State<ItemTile> createState() => _ItemTileState();
+  State<TileItem> createState() => _TileItemState();
 }
 
-class _ItemTileState extends State<ItemTile> {
+class _TileItemState extends State<TileItem> {
   final _duration500 = const Duration(milliseconds: 500);
   final _duration300 = const Duration(milliseconds: 400);
 
