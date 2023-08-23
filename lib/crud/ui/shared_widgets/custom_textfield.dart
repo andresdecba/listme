@@ -6,12 +6,14 @@ class CustomTextfield extends StatefulWidget {
     required this.onEditingComplete,
     required this.onTap,
     this.hintText = 'Description here',
+    this.maxCharacters = 120,
     Key? key,
   }) : super(key: key);
 
   final ReturnText onEditingComplete;
   final VoidCallback onTap;
   final String hintText;
+  final int maxCharacters;
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
@@ -65,13 +67,13 @@ class _CustomTextfieldState extends State<CustomTextfield> {
             textCapitalization: TextCapitalization.sentences,
             style: Theme.of(context).textTheme.titleLarge!,
             maxLines: null,
-            maxLength: 120,
+            maxLength: widget.maxCharacters,
             onTap: () {
               widget.onTap();
             },
             validator: (value) {
-              if (value != null && value.length < 3) {
-                return 'Between 3 and 120 characters';
+              if (value != null && value.isEmpty) {
+                return 'Between 1 and ${widget.maxCharacters} characters';
               } else {
                 return null;
               }
@@ -113,7 +115,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
               counterText: "$counter",
               counterStyle: txtStyle.bodyMedium!.copyWith(color: Colors.grey.shade400, fontStyle: FontStyle.italic),
               // helper STYLE
-              helperText: 'between 3 and 120 characters',
+              helperText: 'between 1 and ${widget.maxCharacters} characters',
               helperStyle: txtStyle.bodyMedium!.copyWith(color: Colors.grey.shade400, fontStyle: FontStyle.italic),
               // enabled BORDERS
               enabledBorder: OutlineInputBorder(

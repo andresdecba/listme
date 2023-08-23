@@ -6,7 +6,7 @@ import 'package:listme/crud/data/local_storage_datasource.dart';
 import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/shared_widgets/custom_bottomsheet.dart';
-import 'package:listme/crud/ui/shared_widgets/input_item.dart';
+import 'package:listme/crud/ui/shared_widgets/custom_textfield.dart';
 
 abstract class CrudUseCases {
   void createNewList({
@@ -86,6 +86,7 @@ class CrudUseCasesImpl extends CrudUseCases {
       title: title,
       subTitle: categName,
       child: CustomTextfield(
+        maxCharacters: 50,
         onTap: () {},
         onEditingComplete: (value) async {
           // crear lista
@@ -111,8 +112,10 @@ class CrudUseCasesImpl extends CrudUseCases {
     required String targetFolderId,
     required String listId,
   }) {
-    print('jajaja useCase');
-    _dataSource.changeFolder(targetFolderId: targetFolderId, listId: listId);
+    _dataSource.changeFolder(
+      targetFolderId: targetFolderId,
+      listId: listId,
+    );
   }
 
   // CAMBIARLE EL NOMBRE A LA CATEGORIA //
@@ -130,6 +133,7 @@ class CrudUseCasesImpl extends CrudUseCases {
       title: 'Change name to:',
       subTitle: '"$folderName"',
       child: CustomTextfield(
+        maxCharacters: 50,
         onTap: () {},
         hintText: 'New folder name',
         onEditingComplete: (value) {
@@ -252,6 +256,7 @@ class CrudUseCasesImpl extends CrudUseCases {
       onClose: () {},
       title: 'Create a new folder',
       child: CustomTextfield(
+        maxCharacters: 50,
         hintText: 'folder name',
         onTap: () {},
         onEditingComplete: (value) {

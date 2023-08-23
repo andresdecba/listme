@@ -7,7 +7,7 @@ import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/create_new_item.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/drawer.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/crud_list.dart';
-import 'package:listme/crud/ui/crud_screen/widgets/build_title.dart';
+import 'package:listme/crud/ui/crud_screen/widgets/list_title.dart';
 import 'package:animate_do/animate_do.dart';
 
 class CrudScreen extends StatefulWidget {
@@ -95,7 +95,7 @@ class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
                         FadeIn(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: BuildTitle(
+                            child: ListTitle(
                               initialValue: lista.title,
                               onEditingComplete: (value) {
                                 setState(() {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:listme/core/commons/typedefs.dart';
 
-class BuildTitle extends StatefulWidget {
-  const BuildTitle({
+class ListTitle extends StatefulWidget {
+  const ListTitle({
     required this.initialValue,
     required this.onEditingComplete,
     this.editModeStyle,
@@ -18,10 +18,10 @@ class BuildTitle extends StatefulWidget {
   final bool centerTxt;
 
   @override
-  State<BuildTitle> createState() => _BuildTitleState();
+  State<ListTitle> createState() => _ListTitleState();
 }
 
-class _BuildTitleState extends State<BuildTitle> {
+class _ListTitleState extends State<ListTitle> {
   late FocusNode _focusNode;
   late TextEditingController _textCtr;
   late bool _isEditMode;
@@ -63,8 +63,8 @@ class _BuildTitleState extends State<BuildTitle> {
         maxLines: null,
         maxLength: 50,
         validator: (value) {
-          if (value != null && value.length < 3) {
-            return 'Tile must have between 3 and 50 characters';
+          if (value != null && value.isEmpty) {
+            return 'Tile must have between 1 and 50 characters';
           } else {
             return null;
           }

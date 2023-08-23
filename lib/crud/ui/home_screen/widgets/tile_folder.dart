@@ -4,8 +4,8 @@ import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/models/lista.dart';
 
-class FolderTile extends StatelessWidget {
-  const FolderTile({
+class TileFolder extends StatelessWidget {
+  const TileFolder({
     super.key,
     required this.lista,
     required this.onRemove,
@@ -49,31 +49,31 @@ class FolderTile extends StatelessWidget {
             ),
 
             // TEXTS //
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // lista name
-                Text(
-                  lista.title,
-                  maxLines: 2,
-                  softWrap: false,
-                  overflow: TextOverflow.ellipsis,
-                  style: style.titleSmall,
-                ),
-                const SizedBox(height: 5),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // lista name
+                  Text(
+                    lista.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: style.titleSmall,
+                  ),
+                  const SizedBox(height: 5),
 
-                // date
-                Text(
-                  Helpers.longDateFormater(lista.creationDate),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: style.bodySmall!.copyWith(color: Colors.grey, fontStyle: FontStyle.italic),
-                ),
-              ],
+                  // date
+                  Text(
+                    Helpers.longDateFormater(lista.creationDate),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: style.bodySmall!.copyWith(color: Colors.grey, fontStyle: FontStyle.italic),
+                  ),
+                ],
+              ),
             ),
-            const Spacer(),
+
             Align(
               alignment: Alignment.centerRight,
               child: IconButton(

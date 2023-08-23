@@ -8,8 +8,8 @@ import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/shared_widgets/custom_percent_indicator.dart';
 
-class CustomListTile extends StatelessWidget {
-  const CustomListTile({
+class TileList extends StatelessWidget {
+  const TileList({
     super.key,
     required this.lista,
     required this.onRemove,
@@ -56,46 +56,44 @@ class CustomListTile extends StatelessWidget {
             const SizedBox(width: 20),
 
             // TEXTS //
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // lista name
-                  Text(
-                    lista.title,
-                    maxLines: 2,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                    style: style.titleMedium,
-                  ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // lista name
+                    Text(
+                      lista.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: style.titleMedium,
+                    ),
 
-                  // date + categ
-                  ValueListenableBuilder(
-                    valueListenable: Hive.box<Folder>(AppConstants.foldersDb).listenable(),
-                    builder: (context, value, child) {
-                      String subTitle = Helpers.longDateFormater(lista.creationDate);
-                      if (lista.folderId != null) {
-                        var ctg = value.get(lista.folderId);
-                        if (ctg != null) {
-                          subTitle = '${Helpers.longDateFormater(lista.creationDate)} - ${ctg.name}';
+                    // date + categ
+                    ValueListenableBuilder(
+                      valueListenable: Hive.box<Folder>(AppConstants.foldersDb).listenable(),
+                      builder: (context, value, child) {
+                        String subTitle = Helpers.longDateFormater(lista.creationDate);
+                        if (lista.folderId != null) {
+                          var ctg = value.get(lista.folderId);
+                          if (ctg != null) {
+                            subTitle = '${Helpers.longDateFormater(lista.creationDate)} - ${ctg.name}';
+                          }
                         }
-                      }
-                      return Text(
-                        subTitle,
-                        maxLines: 1,
-                        //softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        style: style.bodySmall!.copyWith(color: Colors.grey, fontStyle: FontStyle.italic),
-                      );
-                    },
-                  ),
-                ],
+                        return Text(
+                          subTitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: style.bodySmall!.copyWith(color: Colors.grey, fontStyle: FontStyle.italic),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-            const Spacer(),
             Align(
               alignment: Alignment.centerRight,
               child: IconButton(

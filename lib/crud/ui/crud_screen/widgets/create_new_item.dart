@@ -4,7 +4,7 @@ import 'package:listme/core/commons/typedefs.dart';
 import 'package:listme/crud/models/item.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/shared_widgets/custom_bottomsheet.dart';
-import 'package:listme/crud/ui/shared_widgets/input_item.dart';
+import 'package:listme/crud/ui/shared_widgets/custom_textfield.dart';
 import 'package:uuid/uuid.dart';
 
 mixin CreateNewItem {

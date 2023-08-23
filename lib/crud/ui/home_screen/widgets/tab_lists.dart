@@ -6,7 +6,7 @@ import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/home_screen/widgets/list_tile.dart';
+import 'package:listme/crud/ui/home_screen/widgets/tile_list.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
 // MUESTRA TODAS LAS LISTAS EN TAB-2 "My lists" //
@@ -90,7 +90,7 @@ class _TabListsState extends State<TabLists> {
                     sizeFraction: 0.7,
                     curve: Curves.easeInOut,
                     animation: animation,
-                    child: CustomListTile(
+                    child: TileList(
                       lista: item,
                       onRemove: () => _crudUseCases.deleteLista(
                         listaId: item.id,
@@ -105,7 +105,7 @@ class _TabListsState extends State<TabLists> {
                 removeItemBuilder: (context, animation, oldItem) {
                   return FadeTransition(
                     opacity: animation,
-                    child: CustomListTile(
+                    child: TileList(
                       lista: oldItem,
                       onRemove: () {},
                     ),

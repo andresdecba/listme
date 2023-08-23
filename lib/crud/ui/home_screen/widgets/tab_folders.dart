@@ -3,10 +3,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:implicitly_animated_reorderable_list_2/implicitly_animated_reorderable_list_2.dart';
 import 'package:implicitly_animated_reorderable_list_2/transitions.dart';
 import 'package:listme/core/commons/constants.dart';
+import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/home_screen/widgets/folder_tile.dart';
+import 'package:listme/crud/ui/home_screen/widgets/tile_folder.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
 class TabFolders extends StatefulWidget {
@@ -67,6 +68,8 @@ class _TabFoldersState extends State<TabFolders> {
           ValueListenableBuilder(
             valueListenable: _categoryDb.listenable(),
             builder: (context, Box<Folder> value, child) {
+              var folders = _crudUseCases.getFolders();
+
               //  EMPTY SCREEN //
               // TODO si no hay categorias poner una imagen svg
               if (value.values.isEmpty) {
@@ -83,9 +86,9 @@ class _TabFoldersState extends State<TabFolders> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                itemCount: value.values.length,
+                itemCount: folders.length,
                 itemBuilder: (context, index) {
-                  Folder category = value.values.toList()[index];
+                  Folder category = folders[index];
                   List<Lista> listas = _crudUseCases.getListsFromCategoy(categId: category.id);
                   ExpansionTileController ctlr = ExpansionTileController();
                   bool isExpanded = category.isExpanded;
@@ -109,7 +112,7 @@ class _TabFoldersState extends State<TabFolders> {
                           category.save();
                         },
 
-                        // branch icon
+                        // folder icon
                         leading: isExpanded
                             ? const Padding(
                                 padding: EdgeInsets.only(left: 10),
@@ -127,13 +130,13 @@ class _TabFoldersState extends State<TabFolders> {
                               ),
 
                         // titulo de la categoria
-                        title: Row(
-                          children: [
-                            Text(
-                              category.name,
-                              style: style.titleMedium!.copyWith(color: Colors.black),
-                            ),
-                          ],
+                        title: Expanded(
+                          child: Text(
+                            category.name,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: style.titleMedium!.copyWith(color: Colors.black),
+                          ),
                         ),
 
                         // menú de opciones
@@ -152,12 +155,12 @@ class _TabFoldersState extends State<TabFolders> {
                               menuOpts(
                                 value: _MenuOptions.delete,
                                 icon: Icons.delete_forever,
-                                title: const Text('Delete category'),
+                                title: const Text('Delete folder'),
                               ),
                               menuOpts(
                                 value: _MenuOptions.changeName,
                                 icon: Icons.edit,
-                                title: const Text('Change category name'),
+                                title: const Text('Change folder name'),
                               ),
                               menuOpts(
                                 value: _MenuOptions.createList,
@@ -204,7 +207,7 @@ class _TabFoldersState extends State<TabFolders> {
                                     sizeFraction: 0.7,
                                     curve: Curves.easeInOut,
                                     animation: animation,
-                                    child: FolderTile(
+                                    child: TileFolder(
                                       key: ValueKey(item.id),
                                       isBottom: isBottom,
                                       lista: item,
@@ -224,7 +227,7 @@ class _TabFoldersState extends State<TabFolders> {
                                   var isBottom = listas.indexOf(oldItem) == (listas.length - 1);
                                   return FadeTransition(
                                       opacity: animation,
-                                      child: FolderTile(
+                                      child: TileFolder(
                                         key: ValueKey(oldItem.id),
                                         isBottom: isBottom,
                                         lista: oldItem,
