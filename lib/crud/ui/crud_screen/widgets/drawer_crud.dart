@@ -6,8 +6,8 @@ import 'package:listme/crud/ui/crud_screen/widgets/drawer_page_dos.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/drawer_page_uno.dart';
 import 'package:page_view_dot_indicator/page_view_dot_indicator.dart';
 
-class CrudDrawer extends StatefulWidget {
-  const CrudDrawer({
+class DrawerCrud extends StatefulWidget {
+  const DrawerCrud({
     super.key,
     required this.lista,
   });
@@ -15,10 +15,10 @@ class CrudDrawer extends StatefulWidget {
   final Lista lista;
 
   @override
-  State<CrudDrawer> createState() => _CrudDrawerState();
+  State<DrawerCrud> createState() => _DrawerCrudState();
 }
 
-class _CrudDrawerState extends State<CrudDrawer> {
+class _DrawerCrudState extends State<DrawerCrud> {
   late CrudUseCases useCases;
   late PageController pageCtlr;
   late int selectedPage;

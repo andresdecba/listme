@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
+import 'package:listme/crud/ui/home_screen/widgets/drawer_home.dart';
 import 'package:listme/crud/ui/home_screen/widgets/tab_folders.dart';
 import 'package:listme/crud/ui/home_screen/widgets/tab_lists.dart';
 
@@ -38,18 +39,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     return Scaffold(
       key: AppConstants.homeScaffoldKey,
+
+      drawer: const DrawerHome(),
+
       // APPBAR //
       appBar: AppBar(
         title: const Text('ListMe'),
         titleTextStyle: style.titleLarge!.copyWith(color: Colors.white),
         centerTitle: true,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.menu_rounded,
-          ),
-        ),
         backgroundColor: Colors.cyan,
         bottom: TabBar(
           controller: _tabController,

@@ -6,9 +6,9 @@ import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
-import 'package:listme/crud/ui/crud_screen/widgets/drawer_page_uno.dart';
 import 'package:listme/crud/ui/shared_widgets/empty_screen_bg.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
+import 'package:listme/crud/ui/shared_widgets/drawer_elements.dart';
 
 class CrudDrawerPageDos extends StatefulWidget {
   const CrudDrawerPageDos({
@@ -51,14 +51,9 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
 
     return Column(
       children: [
-        // TITLE
-        Container(
-          height: 150,
-          alignment: Alignment.center,
-          child: Text(
-            'Change folder',
-            style: txtStyle.titleMedium,
-          ),
+        // HEAD
+        const DrawerHead(
+          text: 'Change folder',
         ),
 
         // SI NO HAY CATEGORIAS

@@ -5,7 +5,7 @@ import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/crud/models/folder.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/create_new_item.dart';
-import 'package:listme/crud/ui/crud_screen/widgets/drawer.dart';
+import 'package:listme/crud/ui/crud_screen/widgets/drawer_crud.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/crud_list.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/list_title.dart';
 import 'package:animate_do/animate_do.dart';
@@ -52,7 +52,7 @@ class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
       key: AppConstants.crudScaffoldKey,
 
       // DRAWER
-      endDrawer: CrudDrawer(lista: lista),
+      endDrawer: DrawerCrud(lista: lista),
       endDrawerEnableOpenDragGesture: false,
 
       // ADD LISTA BTN //
