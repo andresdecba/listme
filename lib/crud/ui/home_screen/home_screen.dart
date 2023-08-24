@@ -38,13 +38,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final TextTheme style = Theme.of(context).textTheme;
 
     return Scaffold(
+      // KEY //
       key: AppConstants.homeScaffoldKey,
 
+      // DRAWER //
       drawer: const DrawerHome(),
 
       // APPBAR //
       appBar: AppBar(
-        title: const Text('ListMe'),
+        //title: const Text('ListMe'),
+        title: Image.asset(
+          'assets/logo-blanco.png',
+          height: 20,
+        ),
         titleTextStyle: style.titleLarge!.copyWith(color: Colors.white),
         centerTitle: true,
         elevation: 0,
@@ -59,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           onTap: (value) {},
           tabs: const [
             Tab(
-              text: 'My lists',
+              text: 'All my lists',
             ),
             Tab(
               text: 'Folders',

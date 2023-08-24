@@ -28,7 +28,7 @@ class TileList extends StatelessWidget {
       child: Container(
         height: 70,
         width: widthScreen,
-        margin: const EdgeInsets.symmetric(vertical: 2),
+        margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           color: Colors.grey.shade200,
           borderRadius: const BorderRadius.all(Radius.circular(8)),

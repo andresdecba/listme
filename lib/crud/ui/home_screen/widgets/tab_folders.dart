@@ -68,23 +68,23 @@ class _TabFoldersState extends State<TabFolders> {
             child: Column(
               children: [
                 //  HEADER //
-                if (_categoryDb.values.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                    child: Expanded(
-                      child: Text(
-                        'Here you can create folders to organize your lists, tap "+" to add one.',
-                        textAlign: TextAlign.center,
-                        style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
-                      ),
-                    ),
-                  ),
+                // if (_categoryDb.values.isNotEmpty)
+                //   Padding(
+                //     padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                //     child: Expanded(
+                //       child: Text(
+                //         'Here you can create folders to organize your lists, tap "+" to add one.',
+                //         textAlign: TextAlign.center,
+                //         style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
+                //       ),
+                //     ),
+                //   ),
 
                 // build
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                   itemCount: folders.length,
                   itemBuilder: (context, index) {
                     Folder category = folders[index];
@@ -93,7 +93,7 @@ class _TabFoldersState extends State<TabFolders> {
                     bool isExpanded = category.isExpanded;
 
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 15),
+                      padding: const EdgeInsets.only(bottom: 10),
                       child: ClipRRect(
                         borderRadius: const BorderRadius.all(Radius.circular(10)),
                         child: ExpansionTile(

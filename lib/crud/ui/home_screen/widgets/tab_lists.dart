@@ -68,24 +68,24 @@ class _TabListsState extends State<TabLists> {
             child: Column(
               children: [
                 // HEADER //
-                if (_listaDb.values.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                    child: Expanded(
-                      child: Text(
-                        'Here you can see all your lists,\ntap "+" to add one.',
-                        textAlign: TextAlign.center,
-                        style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
-                      ),
-                    ),
-                  ),
+                // if (_listaDb.values.isNotEmpty)
+                //   Padding(
+                //     padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                //     child: Expanded(
+                //       child: Text(
+                //         'Here you can see all your lists,\ntap "+" to add one.',
+                //         textAlign: TextAlign.center,
+                //         style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
+                //       ),
+                //     ),
+                //   ),
 
                 ImplicitlyAnimatedList<Lista>(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   items: listas,
                   areItemsTheSame: (a, b) => a.id == b.id,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
 
                   // when add a new list
                   itemBuilder: (context, animation, item, index) {
