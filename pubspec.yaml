@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   flutter_dotenv: ^5.1.0
   flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.2
   flutter_svg: ^2.0.7
   go_router: ^10.0.0
   google_mobile_ads: ^3.0.0
@@ -40,3 +41,15 @@ flutter:
     - env/
     - assets/
     - assets/svg/
+    - assets/splash/
+
+flutter_native_splash:
+  color: "#00BCD4"
+  image: assets/splash/splash.png
+  image_dark: assets/splash/splash.png
+  android_12:
+    image: assets/splash/splash.png
+    icon_background_color: "#00BCD4"
+    image_dark: assets/splash/splash.png
+    icon_background_color_dark: "#00BCD4"
+  web: false

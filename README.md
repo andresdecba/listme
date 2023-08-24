@@ -23,5 +23,33 @@ ver: https://developers.google.com/admob/flutter/quick-start?hl=es-419
 6- ubicar el banner en la UI donde nos guste
 
 
-/// PARA GENERAR NUEVOS ICONOS
-run:  flutter pub run flutter_launcher_icons -f flutter_launcher_icons*
+/// PARA GENERAR NUEVOS ICONOS ///
+
+1- paquete: https://pub.dev/packages/flutter_launcher_icons
+
+2- 2- cambiar el/los .pngs en assets/icons
+
+3- cambiar las config en: /flutter_launcher_icons-development.yaml (y las otras dos)
+
+4- run:  flutter pub run flutter_launcher_icons -f flutter_launcher_icons*
+
+
+/// PARA GENERAR NUEV PANTALLA SPLASH ///
+
+1- paquete: https://pub.dev/packages/flutter_native_splash
+
+2- cambiar el/los .pngs en assets/splash
+
+3- cambiar la configuracion en pubspec.yaml:
+flutter_native_splash:
+  color: "#00BCD4"
+  image: assets/splash/splash.png
+  image_dark: assets/splash/splash.png
+  android_12:
+    image: assets/splash/splash.png
+    icon_background_color: "#00BCD4"
+    image_dark: assets/splash/splash.png
+    icon_background_color_dark: "#00BCD4"
+  web: false
+
+4- run: dart run flutter_native_splash:create
