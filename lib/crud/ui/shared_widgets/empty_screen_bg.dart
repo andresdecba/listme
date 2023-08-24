@@ -17,11 +17,12 @@ class EmptyScreenBg extends StatelessWidget {
     final TextTheme txtStyle = Theme.of(context).textTheme;
 
     return FadeIn(
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height / 1.3,
+      child: Align(
+        alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
           children: [
             SvgPicture.asset(
               svgPath,
@@ -29,11 +30,14 @@ class EmptyScreenBg extends StatelessWidget {
               width: 100,
               color: Colors.grey.shade300,
             ),
-            Text(
-              text,
-              style: txtStyle.titleMedium!.copyWith(color: Colors.grey.shade300),
-              textAlign: TextAlign.center,
-            )
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: Text(
+                text,
+                style: txtStyle.titleMedium!.copyWith(color: Colors.grey.shade300),
+                textAlign: TextAlign.center,
+              ),
+            ),
           ],
         ),
       ),

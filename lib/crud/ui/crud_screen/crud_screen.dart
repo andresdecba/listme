@@ -9,6 +9,7 @@ import 'package:listme/crud/ui/crud_screen/widgets/drawer_crud.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/crud_list.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/list_title.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:listme/crud/ui/shared_widgets/empty_screen_bg.dart';
 
 class CrudScreen extends StatefulWidget {
   const CrudScreen({
@@ -73,101 +74,103 @@ class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
 
       // BODY //
       body: SafeArea(
-        child: CustomScrollView(
-          controller: _scrollCtlr,
-          shrinkWrap: true,
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            // APP BAR //
-            const SliverAppBar(
-              floating: true,
-            ),
+        // stack para que quede fuera del scroll el "empty screen" al final
+        child: ValueListenableBuilder(
+          valueListenable: _listasDB.listenable(),
+          builder: (context, value, child) {
+            Folder? coso;
+            if (lista.folderId != null) {
+              coso = _foldersDB.get(lista.folderId);
+            }
 
-            // BODY CONTENT//
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      children: [
-                        // title //
-                        FadeIn(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: ListTitle(
-                              initialValue: lista.title,
-                              onEditingComplete: (value) {
-                                setState(() {
-                                  lista.title = value;
-                                  lista.save();
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 5),
+            return Stack(
+              children: [
+                CustomScrollView(
+                  controller: _scrollCtlr,
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  slivers: [
+                    // APP BAR //
+                    const SliverAppBar(
+                      floating: true,
+                    ),
 
-                        // subtitle //
-                        ValueListenableBuilder(
-                          valueListenable: _listasDB.listenable(),
-                          builder: (context, value, child) {
-                            Folder? coso;
-                            if (lista.folderId != null) {
-                              coso = _foldersDB.get(lista.folderId);
-                            }
-                            return FadeIn(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Expanded(
-                                  child: RichText(
-                                    text: coso != null
-                                        ? TextSpan(
-                                            text: '$date  -  ',
-                                            style: txtStyle.bodyMedium!.copyWith(color: Colors.grey),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text: coso.name,
-                                                style: txtStyle.bodyMedium!.copyWith(color: Colors.grey, fontWeight: FontWeight.bold),
-                                              )
-                                            ],
-                                          )
-                                        : TextSpan(
-                                            text: date,
-                                            style: txtStyle.bodyMedium!.copyWith(color: Colors.grey),
-                                          ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                    // BODY CONTENT//
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 80),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // title //
+                                FadeIn(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
+                                    child: ListTitle(
+                                      initialValue: lista.title,
+                                      onEditingComplete: (value) {
+                                        setState(() {
+                                          lista.title = value;
+                                          lista.save();
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
 
-                        // crear la lista de items  //
-                        ValueListenableBuilder(
-                          valueListenable: _listasDB.listenable(),
-                          builder: (context, db, child) {
-                            return Column(
-                              children: [
-                                if (lista.items.isNotEmpty && !lista.items.first.isCategory) const SizedBox(height: 30),
+                                // subtitle //
+                                FadeIn(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                                    child: Expanded(
+                                      child: RichText(
+                                        text: coso != null
+                                            ? TextSpan(
+                                                text: '$date  -  ',
+                                                style: txtStyle.bodyMedium!.copyWith(color: Colors.grey),
+                                                children: <TextSpan>[
+                                                  TextSpan(
+                                                    text: coso.name,
+                                                    style: txtStyle.bodyMedium!.copyWith(color: Colors.grey, fontWeight: FontWeight.bold),
+                                                  )
+                                                ],
+                                              )
+                                            : TextSpan(
+                                                text: date,
+                                                style: txtStyle.bodyMedium!.copyWith(color: Colors.grey),
+                                              ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                // crear la lista de items  //
                                 CrudList(
                                   scrollCtlr: _scrollCtlr,
                                   lista: lista,
                                 ),
                               ],
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 80),
-                      ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
+                  ],
+                ),
+
+                // EMPTY LIST //
+                if (lista.items.isEmpty)
+                  const EmptyScreenBg(
+                    svgPath: 'assets/svg/empty-list.svg',
+                    text: 'Here you can add, delete or mark items as done, drag them to order and add sublists to organize them.',
                   ),
-                ],
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );

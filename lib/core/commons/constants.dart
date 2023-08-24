@@ -6,8 +6,8 @@ class AppConstants {
   static const String foldersDb = "foldersDb";
 
   // TODO borrar:
-  //static const String listasDb = "listasDb2";
-  //static const String foldersDb = "foldersDb2";
+  // static const String listasDb = "listasDb2";
+  // static const String foldersDb = "foldersDb2";
 
   // others consts
   static const String user = "user_6";

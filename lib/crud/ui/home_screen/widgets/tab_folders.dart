@@ -48,43 +48,22 @@ class _TabFoldersState extends State<TabFolders> {
     }
 
     // LISTENEABLE DE LAS CATEGORIAS //
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: ValueListenableBuilder(
-        valueListenable: _categoryDb.listenable(),
-        builder: (context, Box<Folder> value, child) {
-          var folders = _crudUseCases.getFolders();
+    return ValueListenableBuilder(
+      valueListenable: _categoryDb.listenable(),
+      builder: (context, value, child) {
+        var folders = _crudUseCases.getFolders();
 
-          //  EMPTY SCREEN //
-          if (value.values.isEmpty) {
-            return const EmptyScreenBg(
-              svgPath: 'assets/svg/empty-folder.svg',
-              text: 'There are no folders yet :(\nAdd some from "+"',
-            );
-          }
-
-          // A - iterar las categorias //
-          return FadeIn(
-            child: Column(
-              children: [
-                //  HEADER //
-                // if (_categoryDb.values.isNotEmpty)
-                //   Padding(
-                //     padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                //     child: Expanded(
-                //       child: Text(
-                //         'Here you can create folders to organize your lists, tap "+" to add one.',
-                //         textAlign: TextAlign.center,
-                //         style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
-                //       ),
-                //     ),
-                //   ),
-
-                // build
-                ListView.builder(
+        //return
+        return Stack(
+          children: [
+            // FOLDERS //
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: FadeIn(
+                child: ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  padding: const EdgeInsets.fromLTRB(10, 20, 10, 80),
                   itemCount: folders.length,
                   itemBuilder: (context, index) {
                     Folder category = folders[index];
@@ -238,12 +217,18 @@ class _TabFoldersState extends State<TabFolders> {
                     );
                   },
                 ),
-                const SizedBox(height: 80),
-              ],
+              ),
             ),
-          );
-        },
-      ),
+
+            //  EMPTY SCREEN //
+            if (value.values.isEmpty)
+              const EmptyScreenBg(
+                svgPath: 'assets/svg/empty-folder.svg',
+                text: 'Here you can create folders to organize your lists, tap "+" to add one.',
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -292,3 +277,17 @@ class _TabFoldersState extends State<TabFolders> {
 }
 
 enum _MenuOptions { changeName, delete, createList }
+
+
+       //  HEADER //
+                // if (_categoryDb.values.isNotEmpty)
+                //   Padding(
+                //     padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                //     child: Expanded(
+                //       child: Text(
+                //         'Here you can create folders to organize your lists, tap "+" to add one.',
+                //         textAlign: TextAlign.center,
+                //         style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
+                //       ),
+                //     ),
+                //   ),

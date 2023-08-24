@@ -39,88 +39,66 @@ class _TabListsState extends State<TabLists> {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme style = Theme.of(context).textTheme;
-
     // LOADER //
     if (isLoading) {
       return const InitialLoading();
     }
 
     // RENDER LISTA //
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: ValueListenableBuilder(
-        valueListenable: _listaDb.listenable(),
-        builder: (context, Box<Lista> value, _) {
-          //
-          List<Lista> listas = Helpers.sortListsByDateTime(listas: value.values.toList());
+    return ValueListenableBuilder(
+      valueListenable: _listaDb.listenable(),
+      builder: (context, value, child) {
+        List<Lista> listas = Helpers.sortListsByDateTime(listas: value.values.toList());
 
-          // EMPTY SCREEN //
-          if (listas.isEmpty) {
-            return const EmptyScreenBg(
-              svgPath: 'assets/svg/empty-lists.svg',
-              text: 'There are no lists yet :(\nAdd some from "+"',
-            );
-          }
+        return Stack(
+          children: [
+            FadeIn(
+              child: ImplicitlyAnimatedList<Lista>(
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                items: listas,
+                areItemsTheSame: (a, b) => a.id == b.id,
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 80),
 
-          // Iterar las listas (lista animada)
-          return FadeIn(
-            child: Column(
-              children: [
-                // HEADER //
-                // if (_listaDb.values.isNotEmpty)
-                //   Padding(
-                //     padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                //     child: Expanded(
-                //       child: Text(
-                //         'Here you can see all your lists,\ntap "+" to add one.',
-                //         textAlign: TextAlign.center,
-                //         style: style.titleSmall!.copyWith(color: Colors.grey.shade400),
-                //       ),
-                //     ),
-                //   ),
-
-                ImplicitlyAnimatedList<Lista>(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  items: listas,
-                  areItemsTheSame: (a, b) => a.id == b.id,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-
-                  // when add a new list
-                  itemBuilder: (context, animation, item, index) {
-                    return SizeFadeTransition(
-                      sizeFraction: 0.7,
-                      curve: Curves.easeInOut,
-                      animation: animation,
-                      child: TileList(
-                        lista: item,
-                        onRemove: () => _crudUseCases.deleteLista(
-                          listaId: item.id,
-                          globalKey: AppConstants.homeScaffoldKey,
-                          onDelete: () {},
-                        ),
+                // when add a new list
+                itemBuilder: (context, animation, item, index) {
+                  return SizeFadeTransition(
+                    sizeFraction: 0.7,
+                    curve: Curves.easeInOut,
+                    animation: animation,
+                    child: TileList(
+                      lista: item,
+                      onRemove: () => _crudUseCases.deleteLista(
+                        listaId: item.id,
+                        globalKey: AppConstants.homeScaffoldKey,
+                        onDelete: () {},
                       ),
-                    );
-                  },
+                    ),
+                  );
+                },
 
-                  // when remove a list
-                  removeItemBuilder: (context, animation, oldItem) {
-                    return FadeTransition(
-                      opacity: animation,
-                      child: TileList(
-                        lista: oldItem,
-                        onRemove: () {},
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 80),
-              ],
+                // when remove a list
+                removeItemBuilder: (context, animation, oldItem) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: TileList(
+                      lista: oldItem,
+                      onRemove: () {},
+                    ),
+                  );
+                },
+              ),
             ),
-          );
-        },
-      ),
+
+            // EMPTY SCREEN //
+            if (listas.isEmpty)
+              const EmptyScreenBg(
+                svgPath: 'assets/svg/empty-lists.svg',
+                text: 'Here you can see all your lists, tap "+" to add one.',
+              ),
+          ],
+        );
+      },
     );
   }
 }
