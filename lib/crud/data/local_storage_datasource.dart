@@ -1,4 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:listme/core/app_configs/config_model.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/core/commons/helpers.dart';
 import 'package:listme/crud/models/folder.dart';
@@ -24,6 +25,7 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
   final Uuid _uuid = const Uuid();
   final Box<Lista> _listasDb = Hive.box<Lista>(AppConstants.listasDb);
   final Box<Folder> _foldersDb = Hive.box<Folder>(AppConstants.foldersDb);
+  final Box<AppConfig> _configDb = Hive.box<AppConfig>(AppConstants.configDb);
 
   @override
   String createNewList({required String listName, String? folder, String? colorScheme}) {
@@ -91,6 +93,14 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
       }
       lista.delete();
     }
+    // setear la configuracion de la app
+    if (listId == AppConstants.exampleList0Id || listId == AppConstants.exampleList1Id) {
+      var coso = _configDb.get(AppConstants.configKey);
+      if (coso != null) {
+        coso.examplesDone = true;
+        coso.save();
+      }
+    }
   }
 
   @override
@@ -111,6 +121,14 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
       }
     }
     _foldersDb.delete(folderId);
+    // setear la configuracion de la app
+    if (folderId == AppConstants.exampleFolder0Id) {
+      var coso = _configDb.get(AppConstants.configKey);
+      if (coso != null) {
+        coso.examplesDone = true;
+        coso.save();
+      }
+    }
   }
 
   @override

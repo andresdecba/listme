@@ -23,7 +23,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _listKey = GlobalKey<AnimatedListState>();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: 0,
+    );
     _crudUseCases = CrudUseCasesImpl();
   }
 
