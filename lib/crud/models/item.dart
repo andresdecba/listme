@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 part 'item.g.dart';
 
@@ -16,14 +15,14 @@ class Item extends HiveObject {
   // bajo la cual agrupar items
   @HiveField(3)
   bool isCategory;
-  GlobalKey? key;
+  //GlobalKey? key;
 
   Item({
     required this.content,
     required this.isDone,
     required this.id,
     required this.isCategory,
-    this.key,
+    //this.key,
   });
 
   Item copyWith({

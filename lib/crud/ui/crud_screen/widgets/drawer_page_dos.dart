@@ -42,8 +42,6 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme txtStyle = Theme.of(context).textTheme;
-
     // LOADER //
     if (isLoading) {
       return const InitialLoading();

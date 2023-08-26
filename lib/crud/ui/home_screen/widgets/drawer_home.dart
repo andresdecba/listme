@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:listme/crud/ui/shared_widgets/drawer_elements.dart';
 import 'package:share_plus/share_plus.dart';
@@ -57,20 +56,18 @@ class DrawerHome extends StatelessWidget {
   }
 
   void shareApp(BuildContext context) {
-    String message = 'hi! check this app out...\n"app-url..."'; //TODO apply url https://play.google.com/store/apps/details?id=site.thisweek
+    String message = 'hi! check this app out...\nhttps://play.google.com/store/apps/details?id=listme.theandrewstudio.site';
     Share.share(message);
     context.pop();
   }
 
   void goToPlaystore(BuildContext context) async {
-    Uri url = Uri.parse('app-url...'); // TODO apply url https://play.google.com/store/apps/details?id=site.thisweek
+    Uri url = Uri.parse('https://play.google.com/store/apps/details?id=listme.theandrewstudio.site');
     context.pop();
     if (!await launchUrl(url)) {
       throw Exception('Could not launch $url');
     }
   }
 
-  void getPro(BuildContext context) {
-    // TODO apply pro
-  }
+  void getPro(BuildContext context) {}
 }

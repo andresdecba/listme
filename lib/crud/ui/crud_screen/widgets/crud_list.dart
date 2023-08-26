@@ -9,7 +9,6 @@ import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/create_new_item.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/tile_sublist.dart';
 import 'package:listme/crud/ui/crud_screen/widgets/tile_item.dart';
-import 'package:listme/crud/ui/shared_widgets/empty_screen_bg.dart';
 import 'package:listme/crud/ui/shared_widgets/initial_loading.dart';
 
 class CrudList extends StatefulWidget {

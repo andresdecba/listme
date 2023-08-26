@@ -11,7 +11,7 @@ class AppConstants {
   static const String configDb = "configDb";
   static const String configKey = "configKey";
 
-  // TODO borrar :
+  // alt dbs
   //static const String listasDb = "listas-DB-ALT";
   //static const String foldersDb = "folders-DB-ALT";
 

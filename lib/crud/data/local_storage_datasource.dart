@@ -142,10 +142,7 @@ class LocalStorageDatasourceImpl extends LocalStorageDatasource {
 
   @override
   void changeFolder({required String targetFolderId, required String listId}) {
-    print('jajaja dataSource');
-
     var list = _listasDb.get(listId);
-
     if (list != null) {
       Folder? newCateg = _foldersDb.get(targetFolderId);
       Folder? oldCateg;

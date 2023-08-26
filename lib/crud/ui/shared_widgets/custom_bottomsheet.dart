@@ -10,7 +10,6 @@ void customBottomSheet({
   String? title,
   String? subTitle,
 }) {
-  final screenSize = MediaQuery.of(context).size;
   final TextTheme style = Theme.of(context).textTheme;
 
   // MODAL //

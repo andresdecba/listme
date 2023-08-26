@@ -42,7 +42,6 @@ class _AdMobServiceState extends State<AdMobService> {
         await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(MediaQuery.of(context).size.width.truncate() - (_padding.toInt() * 2));
 
     if (size == null) {
-      print('Unable to get height of anchored banner.');
       return;
     }
 
