@@ -32,23 +32,23 @@ class DrawerHome extends StatelessWidget {
               // OPTION 2
               DrawerTile(
                   texto: 'Rate us',
-                  border: const Border(
-                    bottom: BorderSide(color: Colors.cyan),
-                  ),
+                  // border: const Border(
+                  //   bottom: BorderSide(color: Colors.cyan),
+                  // ),
                   onTap: () {} // () => goToPlaystore(context),
                   ),
               // OPTION 3
-              DrawerTile(
-                  leading: SvgPicture.asset(
-                    'assets/svg/premium.svg',
-                    alignment: Alignment.center,
-                    fit: BoxFit.fill,
-                    width: 32,
-                    color: Colors.amber,
-                  ),
-                  texto: 'Get PRO',
-                  onTap: () {} // () => getPro(context),
-                  ),
+              // DrawerTile(
+              //     leading: SvgPicture.asset(
+              //       'assets/svg/premium.svg',
+              //       alignment: Alignment.center,
+              //       fit: BoxFit.fill,
+              //       width: 32,
+              //       color: Colors.amber,
+              //     ),
+              //     texto: 'Get PRO',
+              //     onTap: () {} // () => getPro(context),
+              //     ),
             ],
           ),
         ),

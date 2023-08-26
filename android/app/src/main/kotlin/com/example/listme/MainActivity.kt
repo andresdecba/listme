@@ -1,4 +1,4 @@
-package com.example.listme
+package listme.theandrewstudio.site
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 /*
@@ -7,13 +8,9 @@ TUTORIAL: https://developers.google.com/admob/flutter/banner/inline-adaptive?hl=
 importante: hay ejemplos de otros tipos de banner, ver !
 */
 
-// KEYS FOR TEST
-const _androidAdUnitKeyTest = 'ca-app-pub-3940256099942544/6300978111';
-const _iOsAdUnitKeyTest = 'ca-app-pub-3940256099942544/6300978111';
-
-// KEYS FOR PRODUCTION
-const _androidAdUnitKeyProd = 'ca-app-pub-9058342620461440/8058325209';
-const _iOsAdUnitKeyProd = '---';
+// UNITS KEYS
+final String _androidAdKey = dotenv.env['ANDROID_AD_KEY']!;
+final String _iOsAdKey = dotenv.env['IOS_AD_KEY']!;
 
 // OTHERS
 const _padding = 5.0;
@@ -21,11 +18,8 @@ const _radius = 5.0;
 
 class AdMobService extends StatefulWidget {
   const AdMobService({
-    required this.isProductionVersion,
     super.key,
   });
-
-  final bool isProductionVersion;
 
   @override
   State<AdMobService> createState() => _AdMobServiceState();
@@ -53,22 +47,7 @@ class _AdMobServiceState extends State<AdMobService> {
     }
 
     _anchoredAdaptiveAd = BannerAd(
-      //  adUnitId: Platform.isAndroid
-      //     ? widget.androidAdUnitKey != null
-      //         ? widget.androidAdUnitKey!
-      //         : _androidAdUnitKeyTest
-      //     : widget.iOsAdUnitKey != null
-      //         ? widget.iOsAdUnitKey!
-      //         : _iOsAdUnitKeyTest,
-
-      adUnitId: Platform.isAndroid
-          ? widget.isProductionVersion
-              ? _androidAdUnitKeyProd
-              : _androidAdUnitKeyTest
-          : widget.isProductionVersion
-              ? _iOsAdUnitKeyProd
-              : _iOsAdUnitKeyTest,
-
+      adUnitId: Platform.isAndroid ? _androidAdKey : _iOsAdKey,
       size: size,
       request: const AdRequest(),
       listener: BannerAdListener(

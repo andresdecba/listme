@@ -31,11 +31,12 @@ class TileSublist extends StatelessWidget {
           const SizedBox(width: 5),
 
           // TEXT //
-          Text(
-            text,
-            style: txtStyle.labelLarge,
+          Expanded(
+            child: Text(
+              text,
+              style: txtStyle.labelLarge,
+            ),
           ),
-          const Spacer(),
 
           // TRAILING //
           // remove
