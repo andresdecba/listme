@@ -124,7 +124,7 @@ class _CustomCheckboxListState extends State<_CustomCheckboxList> {
     return CheckboxListTile(
       contentPadding: EdgeInsets.zero,
       value: _theValue,
-      title: const Text('create sublist'),
+      title: const Text('make separator'),
       controlAffinity: ListTileControlAffinity.leading,
       onChanged: (bool? value) {
         setState(() {

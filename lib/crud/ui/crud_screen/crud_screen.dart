@@ -169,7 +169,7 @@ class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
                 if (lista.items.isEmpty)
                   const EmptyScreenBg(
                     svgPath: 'assets/svg/empty-list.svg',
-                    text: 'Here you can add, delete or mark items as done, drag them to order and add sublists to organize them.',
+                    text: 'Here you can add, delete or mark items as done, drag and drop them to order and add separators to organize them.',
                   ),
               ],
             );
