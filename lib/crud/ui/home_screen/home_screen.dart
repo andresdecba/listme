@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:listme/core/commons/constants.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
-import 'package:listme/crud/ui/home_screen/widgets/drawer_home.dart';
 import 'package:listme/crud/ui/home_screen/widgets/tab_folders.dart';
 import 'package:listme/crud/ui/home_screen/widgets/tab_lists.dart';
+//import 'package:listme/crud/ui/home_screen/widgets/drawer_home.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       key: AppConstants.homeScaffoldKey,
 
       // DRAWER //
-      drawer: const DrawerHome(),
+      //drawer: const DrawerHome(),
 
       // APPBAR //
       appBar: AppBar(

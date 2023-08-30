@@ -9,7 +9,7 @@ environment:
 dependencies:
   animate_do: ^3.0.2
   confetti: ^0.7.0
-  cupertino_icons: ^1.0.5 # hay una dependecia quelo usa, no borrar
+  cupertino_icons: ^1.0.5
   equatable: ^2.0.5
   flutter:
     sdk: flutter
@@ -25,8 +25,6 @@ dependencies:
   intl: ^0.18.1
   page_view_dot_indicator: ^2.3.0
   percent_indicator: ^4.2.3
-  share_plus: ^7.1.0
-  url_launcher: ^6.1.12
   uuid: ^3.0.7
 
 dev_dependencies:
