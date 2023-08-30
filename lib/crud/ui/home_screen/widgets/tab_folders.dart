@@ -107,13 +107,11 @@ class _TabFoldersState extends State<TabFolders> {
                           ),
 
                           // titulo de la categoria
-                          title: Expanded(
-                            child: Text(
-                              category.name,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              style: style.titleMedium!.copyWith(color: Colors.black),
-                            ),
+                          title: Text(
+                            category.name,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: style.titleMedium!.copyWith(color: Colors.black),
                           ),
 
                           // menú de opciones

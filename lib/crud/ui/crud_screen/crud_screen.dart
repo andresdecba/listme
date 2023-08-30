@@ -83,6 +83,11 @@ class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
               coso = _foldersDB.get(lista.folderId);
             }
 
+            // return CrudList(
+            //   scrollCtlr: _scrollCtlr,
+            //   lista: lista,
+            // );
+
             return Stack(
               children: [
                 CustomScrollView(
@@ -124,26 +129,24 @@ class _CrudScreenState extends State<CrudScreen> with CreateNewItem {
                                 FadeIn(
                                   child: Padding(
                                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                                    child: Expanded(
-                                      child: RichText(
-                                        text: coso != null
-                                            ? TextSpan(
-                                                text: '$date  -  ',
-                                                style: txtStyle.bodyMedium!.copyWith(color: Colors.grey),
-                                                children: <TextSpan>[
-                                                  TextSpan(
-                                                    text: coso.name,
-                                                    style: txtStyle.bodyMedium!.copyWith(color: Colors.grey, fontWeight: FontWeight.bold),
-                                                  )
-                                                ],
-                                              )
-                                            : TextSpan(
-                                                text: date,
-                                                style: txtStyle.bodyMedium!.copyWith(color: Colors.grey),
-                                              ),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                      ),
+                                    child: RichText(
+                                      text: coso != null
+                                          ? TextSpan(
+                                              text: '$date  -  ',
+                                              style: txtStyle.bodyMedium!.copyWith(color: Colors.grey),
+                                              children: <TextSpan>[
+                                                TextSpan(
+                                                  text: coso.name,
+                                                  style: txtStyle.bodyMedium!.copyWith(color: Colors.grey, fontWeight: FontWeight.bold),
+                                                )
+                                              ],
+                                            )
+                                          : TextSpan(
+                                              text: date,
+                                              style: txtStyle.bodyMedium!.copyWith(color: Colors.grey),
+                                            ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
                                     ),
                                   ),
                                 ),

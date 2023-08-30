@@ -30,6 +30,7 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
   bool isLoading = true;
   late CrudUseCases useCases;
   final _duration300 = const Duration(milliseconds: 400);
+  final GlobalKey<ScaffoldState> crudKey = AppConstants.crudScaffoldKey;
 
   @override
   void initState() {
@@ -94,7 +95,9 @@ class _CrudDrawerPageDosState extends State<CrudDrawerPageDos> {
                       targetFolderId: targetCategId,
                       listId: widget.lista.id,
                     );
-                    Future.delayed(AppConstants.initialLoadingDuration).then((value) => context.pop());
+                    Future.delayed(AppConstants.initialLoadingDuration).then(
+                      (value) => crudKey.currentState!.closeEndDrawer(),
+                    );
                   },
                   leading: AnimatedSwitcher(
                     duration: _duration300,

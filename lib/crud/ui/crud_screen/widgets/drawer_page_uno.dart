@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:listme/core/commons/constants.dart';
+import 'package:listme/core/routes/routes.dart';
 import 'package:listme/crud/data/crud_use_cases.dart';
 import 'package:listme/crud/models/lista.dart';
 import 'package:listme/crud/ui/shared_widgets/custom_percent_indicator.dart';
@@ -90,7 +91,7 @@ class CrudDrawerPageUno extends StatelessWidget {
     lista.isCompleted = true;
     lista.save();
     Future.delayed(AppConstants.initialLoadingDuration).then(
-      (value) => context.pop(),
+      (value) => crudKey.currentState!.closeEndDrawer(),
     );
   }
 
@@ -102,12 +103,12 @@ class CrudDrawerPageUno extends StatelessWidget {
     }
     lista.save();
     Future.delayed(AppConstants.initialLoadingDuration).then(
-      (value) => context.pop(),
+      (value) => crudKey.currentState!.closeEndDrawer(),
     );
   }
 
   void deleteThisList(BuildContext context) {
-    context.pop(); // cerrar del drawer
+    crudKey.currentState!.closeEndDrawer();
     useCases.deleteLista(
       listaId: lista.id,
       globalKey: AppConstants.homeScaffoldKey,
