@@ -53,3 +53,19 @@ flutter_native_splash:
   web: false
 
 4- run: dart run flutter_native_splash:create
+
+/// GENERAR UN APK PARA TESTEAR ///
+flutter build apk  -t  lib\core\flavors\main_development.dart
+
+
+/// CREAR APP BUNDLE PARA LA PLAYSTYORE ///
+1- En pubspec.yaml actualizar a la siguiente versión ej: "version: 1.2.0" (LINEA 4) (version que ve el publico)
+2- En android\app\build.gradle cambiar:
+	linea 14: def flutterVersionCode = 4 //version para la playstore (incrementar de a 1 en 1)
+	linea 19: def flutterVersionName = "1.2.0" // misma version que en pubspec.yaml (version que ve el publico)
+
+3- Hacer un commit + push para que quede guardada la versión actual
+
+4- Generar el app bundle:
+        flutter build appbundle -t  lib\core\flavors\main_production.dart
+        abrir en -> C:\Users\Andres\Desktop\flutter_projects\listme\build\app\outputs\bundle\productionRelease

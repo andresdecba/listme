@@ -66,13 +66,13 @@
 //   }
 
 //   void shareApp(BuildContext context) {
-//     String message = 'hi! check this app out...\nhttps://play.google.com/store/apps/details?id=listme.theandrewstudio.site';
+//     String message = 'hi! check this app out...\nhttps://play.google.com/store/apps/details?id=site.listme.theandrewstudio';
 //     Share.share(message);
 //     context.pop();
 //   }
 
 //   void goToPlaystore(BuildContext context) async {
-//     Uri url = Uri.parse('https://play.google.com/store/apps/details?id=listme.theandrewstudio.site');
+//     Uri url = Uri.parse('https://play.google.com/store/apps/details?id=site.listme.theandrewstudio');
 //     context.pop();
 //     if (!await launchUrl(url)) {
 //       throw Exception('Could not launch $url');
